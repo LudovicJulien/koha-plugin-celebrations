@@ -49,7 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
             break;
         case 'halloween':
             togglehalloween.style.display = 'block';
-            togglehalloween.style.display = 'block'; 
+            togglefantome.style.display = 'block'; 
+            break;
         case 'paque':
             togglePaque.style.display = 'block';
             break;
@@ -57,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
     activationFlocons.dispatchEvent(new Event('change'));
     activationCoeurs.dispatchEvent(new Event('change'));
     activationSpiders.dispatchEvent(new Event('change'));
+    activationEggs.dispatchEvent(new Event('change'));
 }
 
     updateThemeOptions();

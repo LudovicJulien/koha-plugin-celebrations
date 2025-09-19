@@ -9,8 +9,11 @@ use C4::Languages;
 use File::Slurp;
 use File::Basename;
 use Cwd 'abs_path';
-# use feature 'switch'
-
+#
+#
+#
+#   Informations de base sur le plugin (métadonnées utilisées par Koha)
+#
 our $VERSION = '0.9';
 our $metadata = {
     name   => 'OpacTheme',
@@ -21,39 +24,50 @@ our $metadata = {
     version => $VERSION,
     minimum_version => '24.05',
 };
-
+#
+#
+#
+#   Constructeur du plugin (initialise avec les métadonnées)
+#
 sub new {
     my ($class, $args) = @_;
     $args->{metadata} = $metadata;
     return $class->SUPER::new($args);
 }
-
+#
+#
+#
+#   Namespace API utilisé pour exposer les routes de ce plugin
+#
 sub api_namespace {
     my ( $self ) = @_;
     return 'OpacTheme-api';
 }
-
+#
+#
+#
+#   Définit les routes statiques de l’API en lisant le fichier JSON
+#
 sub static_routes {
     my $self = shift;
     my $spec_str = $self->mbf_read('api/staticapi.json');
     my $spec = decode_json($spec_str);
     return $spec;
 }
-
-#envoie le css a l'OPAC (en inline pour éviter le temps de chargement long)
+#
+#
+#
+#   envoie le css a l'OPAC (en inline pour éviter le temps de chargement long)
+#
 sub opac_head {
     my ($self) = @_;
-
     my $theme = $self->retrieve_data("selected_theme") // 'noel';
-
     my $plugin_pm_path = abs_path(__FILE__);
     my $plugin_dir = dirname($plugin_pm_path);
-
-
     my $css_path = "$plugin_dir/OpacTheme/css/$theme.css";
 
     if (-e $css_path) {
-        my $css_content = read_file($css_path, binmode => ':utf8'); #obligatoire pour lire l'emoji 
+        my $css_content = read_file($css_path, binmode => ':utf8'); #obligatoire pour lire l'emoji coeur
         return qq{
             <style id="theme-inline-css">
             $css_content
@@ -64,15 +78,16 @@ sub opac_head {
         return '';
     }
 }
-
-#envoie le js a l'OPAC
+#
+#
+#
+#   envoie le js a l'OPAC
+#
 sub opac_js {
     my ($self) = @_;
     my $api_ns = $self->api_namespace;
-
     my $theme = $self->retrieve_data("selected_theme") // 'noel';
     return "" if $theme eq 'null';
-
     my $script_options = "";
 
     if ($theme eq 'noel') {
@@ -139,23 +154,19 @@ sub opac_js {
             </script>
         };
     }
-    else {
-        # pas de configuration spécifique
-    }
-
     return qq{
         $script_options
         <script id="theme-js" src="/api/v1/contrib/$api_ns/static/js/$theme.js"></script>
     };
 }
-
-
-
-# Enregistre les sélections de theme dans la BD
+#
+#
+#
+#   Enregistre les sélections de theme dans la BD
+#
 sub apply_theme {
     my ($self) = @_; 
     my $cgi = $self->{cgi};  
-
     my $theme = $cgi->param('theme');
     my %data = ( selected_theme => $theme );
 
@@ -187,13 +198,14 @@ sub apply_theme {
     print $cgi->header('application/json');
     print to_json({ success => JSON::true, theme => $theme });
 }
-
-
-#Sélectionne le bon template de config celon la langue de l'utilisateur
+#
+#
+#
+#   Sélectionne le bon template de config celon la langue de l'utilisateur
+#
 sub retrieve_template {
     my ( $self, $template_prefix ) = @_;
     my $cgi = $self->{cgi};
-
     my $template;
     my $preferredLanguage = C4::Languages::getlanguage();
 
@@ -209,78 +221,78 @@ sub retrieve_template {
         }
     }
     $template = $self->get_template({ file => $template_prefix . '.tt' }) unless $template;
-
     return $template;
 }
-
-# gère l'interface de l'intranet
+#
+#
+#
+#   Gère l'interface de l'intranet
+#
 sub tool {
     my ($self, $args) = @_;
     my $cgi = $self->{cgi};
+    my $template;
 
-    my $koha_session = $cgi->cookie('KohaSession') // $cgi->param('koha_session');
+    if ($self->is_enabled) {
+       my $koha_session = $cgi->cookie('KohaSession') // $cgi->param('koha_session');
+        $template = $self->retrieve_template('templates/homeTheme');
 
-    my $template = $self->retrieve_template('homeTheme');
+        $template->param(
+            enabled => 1,
+            CLASS   => ref $self,
+            METHOD  => 'tool',
+            api_namespace  => $self->api_namespace,
+            koha_session => $koha_session, 
+            selected_theme => $self->retrieve_data("selected_theme") // 'null',
 
-    $template->param(
-        enabled => 1,
-        CLASS   => ref $self,
-        METHOD  => 'tool',
-        api_namespace  => $self->api_namespace,
-        koha_session => $koha_session, 
-        selected_theme => $self->retrieve_data("selected_theme") // 'null',
+            activation_flocons => $self->retrieve_data("activation_flocons") // 'on',
+            neige_vitesse  => $self->retrieve_data("neige_vitesse") // 'normal',
+            taille_flocons => $self->retrieve_data("taille_flocons") // 'normal',
+            vent_flocons   => $self->retrieve_data("vent_flocons") // 'null',
+            quantite_flocons   => $self->retrieve_data("quantite_flocons") // '50',
 
-        activation_flocons => $self->retrieve_data("activation_flocons") // 'on',
-        neige_vitesse  => $self->retrieve_data("neige_vitesse") // 'normal',
-        taille_flocons => $self->retrieve_data("taille_flocons") // 'normal',
-        vent_flocons   => $self->retrieve_data("vent_flocons") // 'null',
-        quantite_flocons   => $self->retrieve_data("quantite_flocons") // '50',
-
-        activation_coeurs => $self->retrieve_data("activation_coeurs") // 'on',
-        vitesse_coeurs  => $self->retrieve_data("vitesse_coeurs") // 'normal',
-        taille_coeurs => $self->retrieve_data("taille_coeurs") // 'normal',
-        vent_coeurs   => $self->retrieve_data("vent_coeurs") // 'null',
-        quantite_coeurs   => $self->retrieve_data("quantite_coeurs") // '50',
-    );
-
+            activation_coeurs => $self->retrieve_data("activation_coeurs") // 'on',
+            vitesse_coeurs  => $self->retrieve_data("vitesse_coeurs") // 'normal',
+            taille_coeurs => $self->retrieve_data("taille_coeurs") // 'normal',
+            vent_coeurs   => $self->retrieve_data("vent_coeurs") // 'null',
+            quantite_coeurs   => $self->retrieve_data("quantite_coeurs") // '50',
+        );
+    }else{
+        $template = $self->retrieve_template('templates/disabled');
+    }
     print $cgi->header(-type => 'text/html', -charset => 'utf-8');
     print $template->output();
 }
-
-
-
+#
+#
+#
+#   Gère la désinstallation du plugin
+#
 sub uninstall {
     my ( $self, $args ) = @_;
     my $dbh = C4::Context->dbh;
-    my $sth_select = $dbh->prepare("SELECT value FROM systempreferences WHERE variable = 'OpacMainUserBlock'");
+    my $sth_select = $dbh->prepare("SELECT * FROM systempreferences WHERE variable = 'OpacMainUserBlock'");
     $sth_select->execute();
 
     my $value;
     if (my $row = $sth_select->fetchrow_hashref) {
-        $value = $row->{value};
+        $value = "$row->{'value'}";
     }
 
     my $start_tag = "<!-- Debut plugin noel -->";
     my $end_tag   = "<!-- Fin plugin noel -->";
+    $value =~ s/$start_tag.*?$end_tag//s;
 
-    if ($value && $value =~ /$start_tag.*?$end_tag/s) {
-        $value =~ s/$start_tag.*?$end_tag//s;
-
-        my $sth_update = $dbh->prepare("UPDATE systempreferences SET value = ? WHERE variable = 'OpacMainUserBlock'");
-        $sth_update->bind_param(1, $value);
-        $sth_update->execute;
-        $sth_update->finish;
-    }
+    my $sth_update = $dbh->prepare("UPDATE systempreferences SET value = ? WHERE variable = 'OpacMainUserBlock'");
+    $sth_update->bind_param(1, $value);
+    $sth_update->execute;
+    $sth_update->finish;
 
     my $sth_delete = $dbh->prepare("DELETE FROM plugin_data WHERE plugin_class = ?");
     $sth_delete->execute($self->class());
     $sth_delete->finish;
-
     $sth_select->finish;
 
     return 1;
 }
-
-
-
 1;

@@ -19,7 +19,7 @@
 
         <div id="inlibro-header">
             <p>This extension was created by</p>
-            <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_fr.svg' alt="inLibro" id="imgInlibro" />
+            <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_en.svg' alt="inLibro" id="imgInlibro" />
             <p class="website">Visit our <a href="https://inlibro.com">website</a> for more Koha extensions</p>
         </div>
 
