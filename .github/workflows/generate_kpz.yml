@@ -46,7 +46,7 @@ jobs:
         release-version: ${{ steps.myvars.outputs.tag_version }}
         release-name: ${{ steps.myvars.outputs.github_repo }}
         minimum-version: "17.05"
-        plugin-module: "Koha/Plugin/PDFtoCover.pm"
+        plugin-module: "Koha/Plugin/Celebrations.pm"
 
     - name: See if kpz was created
       run: |
