@@ -1,6 +1,6 @@
-# koha-plugin-celebrations
+# Plugin Theme OPAC 
 
-Le plugin Celebration OPAC permet aux administrateurs de sélectionner un thème saisonnier pour l’interface OPAC. Ce plugin facilite la personnalisation visuelle et fonctionnelle du catalogue en ligne selon différentes périodes de l’année, telles que Noël, Halloween, la Saint-Valentin, etc.
+Le plugin Theme OPAC permet aux administrateurs de sélectionner un thème saisonnier pour l’interface OPAC. Ce plugin facilite la personnalisation visuelle et fonctionnelle du catalogue en ligne selon différentes périodes de l’année, telles que Noël, Halloween, la Saint-Valentin, etc.
 
 Chaque thème change automatiquement les couleurs principales de l’OPAC pour s’adapter à sa thématique spécifique et ajoute des éléments visuels modernes afin d’améliorer l’expérience utilisateur.
 
@@ -15,7 +15,6 @@ Chaque thème change automatiquement les couleurs principales de l’OPAC pour s
 4. Modifier les paramètres de configuration pour ajuster l’apparence et le comportement des éléments.
 
 5. Enregistrer les modifications pour appliquer le thème au catalogue.
-6. rafraichir ou changer de page sur les apprail connecter au site web de lOPAC dans l'établissement
 
 
 ## Fonctionnalités principales
@@ -29,7 +28,7 @@ Chaque thème applique une palette de couleurs unique qui modifie l’apparence 
 - Ajout d’éléments visuels modernes :
 Des animations, icônes, décorations saisonnières (ex. : flocons de neige, citrouilles, cœurs) sont intégrées dans l’interface pour renforcer l’ambiance du thème.
 
-- ativation/désactivation des éléments visuels :
+- ctivation/désactivation des éléments visuels :
 Certain élément visuel peut être activé ou désactivé indépendamment, permettant une personnalisation fine selon les préférences de l’administrateur.
 
 - Configuration avancée :
