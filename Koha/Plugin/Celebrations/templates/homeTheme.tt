@@ -36,8 +36,8 @@
            <form id="theme-form" method="post" action="javascript:void(0)">
             
                  <input type="hidden" name="koha_session" value="[% koha.sessionID | html %]">
-                <input type="hidden" name="plugin_name" value="OpacTheme">
-                <input type="hidden" name="class" value="Koha::Plugin::OpacTheme">
+                <input type="hidden" name="plugin_name" value="Celebrations">
+                <input type="hidden" name="class" value="Koha::Plugin::Celebrations">
                 <input type="hidden" name="method" value="apply_theme">
                 <input type="hidden" name="action" value="apply_theme">
 

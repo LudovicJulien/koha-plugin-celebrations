@@ -1,4 +1,4 @@
-package Koha::Plugin::OpacTheme;
+package Koha::Plugin::Celebrations;
 use Modern::Perl;
 use base qw(Koha::Plugins::Base);
 use C4::Context;
@@ -14,11 +14,11 @@ use Cwd 'abs_path';
 #
 #   Informations de base sur le plugin (métadonnées utilisées par Koha)
 #
-our $VERSION = '0.9';
+our $VERSION = '0.9.2.2';
 our $metadata = {
-    name   => 'OpacTheme',
+    name   => 'Celebrations',
     author => 'Ludovic Julien',
-    description => 'Add seasonal themes to the OPAC.',
+    description => 'Un OPAC pour chaque saison.',
     date_authored => '2025-09-09',
     date_updated    => '2025-09-15',
     version => $VERSION,
@@ -41,7 +41,7 @@ sub new {
 #
 sub api_namespace {
     my ( $self ) = @_;
-    return 'OpacTheme-api';
+    return 'Celebrations-api';
 }
 #
 #
@@ -64,7 +64,7 @@ sub opac_head {
     my $theme = $self->retrieve_data("selected_theme") // 'noel';
     my $plugin_pm_path = abs_path(__FILE__);
     my $plugin_dir = dirname($plugin_pm_path);
-    my $css_path = "$plugin_dir/OpacTheme/css/$theme.css";
+    my $css_path = "$plugin_dir/Celebrations/css/$theme.css";
 
     if (-e $css_path) {
         my $css_content = read_file($css_path, binmode => ':utf8'); #obligatoire pour lire l'emoji coeur

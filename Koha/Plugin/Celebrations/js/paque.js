@@ -41,10 +41,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const mouse = { x: null, y: null };
 
   const eggImages = [
-        '/api/v1/contrib/OpacTheme-api/static/images/gold-easter-egg.png',
-        '/api/v1/contrib/OpacTheme-api/static/images/purple-easter-egg.png',
-        '/api/v1/contrib/OpacTheme-api/static/images/pink-easter-egg.png',
-        '/api/v1/contrib/OpacTheme-api/static/images/blue-easter-egg.png'
+        '/api/v1/contrib/Celebrations-api/static/images/gold-easter-egg.png',
+        '/api/v1/contrib/Celebrations-api/static/images/purple-easter-egg.png',
+        '/api/v1/contrib/Celebrations-api/static/images/pink-easter-egg.png',
+        '/api/v1/contrib/Celebrations-api/static/images/blue-easter-egg.png'
   ];
 
   const loadedImages = [];

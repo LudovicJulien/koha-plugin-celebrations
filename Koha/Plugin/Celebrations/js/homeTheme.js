@@ -69,8 +69,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = new FormData();
 
-        formData.append('plugin_name', 'OpacTheme');
-        formData.append('class', 'Koha::Plugin::OpacTheme');
+        formData.append('plugin_name', 'Celebrations');
+        formData.append('class', 'Koha::Plugin::Celebrations');
         formData.append('method', 'apply_theme');
         formData.append('action', 'apply_theme');
 
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
-            const response = await fetch('/cgi-bin/koha/plugins/run.pl/run.pl?Koha::Plugin::OpacTheme&method=apply_theme', {
+            const response = await fetch('/cgi-bin/koha/plugins/run.pl/run.pl?Koha::Plugin::Celebrations&method=apply_theme', {
                 method: 'POST',
                 body: formData
             });
