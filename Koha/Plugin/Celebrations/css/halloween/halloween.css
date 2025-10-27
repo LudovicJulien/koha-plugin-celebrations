@@ -3,13 +3,14 @@
 */
 #witch-brew {
   position: absolute;
-  bottom: 0;
+  bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
   height: auto;
   max-width: 810px;
-  width: 7vh;
+  min-width: 48px;
+  width: 8vw;
   & svg {
     height: auto;
     width: 100%;
@@ -107,19 +108,23 @@
   position: absolute;
   bottom: 0;
   left: 46%;
-  transform: translateX(-50%) translateX(-20px);
+  transform: translateX(-50%) translateX(-40px);
   z-index: 1000;
-  height: 25px;
-  width: 25px;
+  height: 5vw;
+  width: 5vw;
+  min-width: 30px;
+  min-height: 30px;
 }
 #pumpkin-right{
   position: absolute;
   bottom: 0;
    left: 54%;
-  transform: translateX(-50%) translateX(20px);
+  transform: translateX(-50%) translateX(40px);
   z-index: 1000;
-  height: 25px;
-  width: 25px;
+  height: 5vw;
+  width: 5vw;
+   min-width: 30px;
+  min-height: 30px;
 }
 .slice {
   width: var(--slice-width);
