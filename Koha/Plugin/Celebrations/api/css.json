@@ -1,9 +1,9 @@
 {
-  "/css/homeTheme.css": {
+  "/css/template/homeTheme.css": {
     "get": {
       "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginNoelTheme_staticGetCSSHomeTheme",
-      "tags": ["pluginStatic"],
+      "operationId": "KohaPluginCelebration_staticGetCSSHomeTheme",
+      "tags": ["pluginCelebration"],
       "responses": {
         "200": {
           "description": "CSS OK",
@@ -50,11 +50,11 @@
       }
     }
   },
-  "/css/noel.css": {
+   "/css/template/disabled.css": {
     "get": {
       "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginNoelTheme_staticGetCSSNoel",
-      "tags": ["pluginStatic"],
+      "operationId": "KohaPluginCelebration_staticGetCSSDisabled",
+      "tags": ["pluginCelebration"],
       "responses": {
         "200": {
           "description": "CSS OK",
@@ -101,11 +101,11 @@
       }
     }
   },
-  "/css/halloween.css": {
+  "/css/noel/noel.css": {
     "get": {
       "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginNoelTheme_staticGetCSSHalloween",
-      "tags": ["pluginStatic"],
+      "operationId": "KohaPluginCelebration_staticGetCSSNoel",
+      "tags": ["pluginCelebration"],
       "responses": {
         "200": {
           "description": "CSS OK",
@@ -152,11 +152,11 @@
       }
     }
   },
-  "/css/saint-valentin.css": {
+   "/css/noel/noel_color.css": {
     "get": {
       "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginNoelTheme_staticGetCSSStValentin",
-      "tags": ["pluginStatic"],
+      "operationId": "KohaPluginCelebration_staticGetCSSNoelColor",
+      "tags": ["pluginCelebration"],
       "responses": {
         "200": {
           "description": "CSS OK",
@@ -203,14 +203,14 @@
       }
     }
   },
-   "/js/homeTheme.js": {
+  "/css/noel/noel_flcon.css": {
     "get": {
       "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginNoelTheme_staticGetJSHomeTheme",
-      "tags": ["pluginStatic"],
+      "operationId": "KohaPluginCelebration_staticGetCSSNoelFlocon",
+      "tags": ["pluginCelebration"],
       "responses": {
         "200": {
-          "description": "JS OK",
+          "description": "CSS OK",
           "schema": {
             "type": "file"
           }
@@ -254,14 +254,14 @@
       }
     }
   },
-  "/js/noel.js": {
+  "/css/halloween/halloween.css": {
     "get": {
       "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginNoelTheme_staticGetJSNoel",
-      "tags": ["pluginStatic"],
+      "operationId": "KohaPluginCelebration_staticGetCSSHalloween",
+      "tags": ["pluginCelebration"],
       "responses": {
         "200": {
-          "description": "JS OK",
+          "description": "CSS OK",
           "schema": {
             "type": "file"
           }
@@ -305,14 +305,14 @@
       }
     }
   },
-  "/js/halloween.js": {
+  "/css/halloween/halloween_color.css": {
     "get": {
       "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginNoelTheme_staticGetJSHalloween",
-      "tags": ["pluginStatic"],
+      "operationId": "KohaPluginCelebration_staticGetCSSHalloweenColor",
+      "tags": ["pluginCelebration"],
       "responses": {
         "200": {
-          "description": "JS OK",
+          "description": "CSS OK",
           "schema": {
             "type": "file"
           }
@@ -356,14 +356,14 @@
       }
     }
   },
-  "/js/saint-valentin.js": {
+  "/css/saint-valentin/saint-valentin.css": {
     "get": {
       "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginNoelTheme_staticGetJSSaintValentin",
-      "tags": ["pluginStatic"],
+      "operationId": "KohaPluginCelebratione_staticGetCSSStValentin",
+      "tags": ["pluginCelebration"],
       "responses": {
         "200": {
-          "description": "JS OK",
+          "description": "CSS OK",
           "schema": {
             "type": "file"
           }
@@ -407,332 +407,14 @@
       }
     }
   },
-    "/js/paque.js": {
+  "/css/saint-valentin/valentin_color.css": {
     "get": {
       "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginPaqueTheme_staticGetJSPaque",
-      "tags": ["pluginStatic"],
+      "operationId": "KohaPluginCelebration_staticGetCSSValentinColor",
+      "tags": ["pluginCelebration"],
       "responses": {
         "200": {
-          "description": "JS OK",
-          "schema": {
-            "type": "file"
-          }
-        },
-        "400": {
-          "description": "Bad request",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "File not found",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal server error",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-   "/images/inLibro_en.svg": {
-    "get": {
-      "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginNoelTheme_staticGetImageInlibro_en",
-      "tags": [
-        "pluginStatic"
-      ],
-      "responses": {
-        "200": {
-          "description": "File found",
-          "schema": {
-            "type": "file"
-          }
-        },
-        "400": {
-          "description": "Bad request",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "File not found",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal server error",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/images/inLibro_fr.svg": {
-    "get": {
-      "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginNoelTheme_staticGetImageInlibro_fr",
-      "tags": [
-        "pluginStatic"
-      ],
-      "responses": {
-        "200": {
-          "description": "File found",
-          "schema": {
-            "type": "file"
-          }
-        },
-        "400": {
-          "description": "Bad request",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "File not found",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal server error",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-    "/images/blue-easter-egg.png": {
-    "get": {
-      "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginPaqueTheme_staticGetImage_blueEasterEgg",
-      "tags": [
-        "pluginStatic"
-      ],
-      "responses": {
-        "200": {
-          "description": "File found",
-          "schema": {
-            "type": "file"
-          }
-        },
-        "400": {
-          "description": "Bad request",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "File not found",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal server error",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-    "/images/gold-easter-egg.png": {
-    "get": {
-      "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginPaqueTheme_staticGetImage_goldEasterEgg",
-      "tags": [
-        "pluginStatic"
-      ],
-      "responses": {
-        "200": {
-          "description": "File found",
-          "schema": {
-            "type": "file"
-          }
-        },
-        "400": {
-          "description": "Bad request",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "File not found",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal server error",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-    "/images/pink-easter-egg.png": {
-    "get": {
-      "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginPaqueTheme_staticGetImage_pinkEasterEgg",
-      "tags": [
-        "pluginStatic"
-      ],
-      "responses": {
-        "200": {
-          "description": "File found",
-          "schema": {
-            "type": "file"
-          }
-        },
-        "400": {
-          "description": "Bad request",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "File not found",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal server error",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-    "/images/purple-easter-egg.png": {
-    "get": {
-      "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginPaqueTheme_staticGetImage_PurpleEasterEgg",
-      "tags": [
-        "pluginStatic"
-      ],
-      "responses": {
-        "200": {
-          "description": "File found",
+          "description": "CSS OK",
           "schema": {
             "type": "file"
           }

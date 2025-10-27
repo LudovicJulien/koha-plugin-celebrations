@@ -1,62 +1,32 @@
-.Coeur{
-	position: fixed;
-	display: block;
-	width: 20px;
-	height: 20px;
-	pointer-events: none;
-	user-select: none;
-	z-index: 9999;
-	opacity: 0.9;
-	animation: float 6s linear infinite;
-	font-size: 20px;
-	color: #e91e63;
-}
-
-.Coeur::before {
-	content: '❤️';
-	display: block;
-	text-align: center;
-}
-
-
-
-/* 
-    Saint-valentin : couleurs personnalisées des composants 
+/*
+    Saint-valentin : couleurs personnalisées des composants
 */
-
 :root {
-  --bs-body-bg: #fff0f5; /* LavenderBlush */
+  --bs-body-bg: #fff0f5;
 }
-
 .nav {
   --bs-nav-link-color: #C2185B;
   --bs-nav-link-hover-color: #E91E63;
 }
-
 a {
-  color: #C2185B !important; /* Framboise foncé */
+  color: #C2185B !important;
 }
-
 a:hover,
 a:active,
 button:hover,
 button:active {
-  color: #E91E63; /* Rose vif */
+  color: #E91E63;
 }
-
 .nav-link {
   color: #C2185B;
 }
-
 .nav-link:hover,
 .nav-link:focus {
   color: #E91E63;
 }
-
-
 .btn-default, .btn-default:hover, #loginModal input[type="submit"]:hover{
   --color: #faa7d8;
-  background: 
+  background:
     linear-gradient(45deg, var(--color) 25%, transparent 25%) -5px 0,
     linear-gradient(-45deg, var(--color) 25%, transparent 25%) -5px 0,
     linear-gradient(45deg, transparent 75%, var(--color) 75%) -5px 0,
@@ -64,8 +34,7 @@ button:active {
   background-color: #e5e5f7;
   background-size: 10px 40px;
   background-repeat: repeat;
-
-  color: #1b1b1b !important; /* Texte sombre */
+  color: #1b1b1b !important;
   font-weight: bold;
   border: none;
   padding: 0.5rem 1rem;
@@ -73,27 +42,22 @@ button:active {
   transition: all 0.3s ease;
   border: 1px solid #faa7d8;
 }
-
 .btn-default:hover {
-  background-color: #fce4ec; /* un rose clair plus doux au hover */
+  background-color: #fce4ec;
   color: black;
   border: 1px solid black;
 }
-
-
 .btn-primary, .btn-primary:hover {
   background: linear-gradient(135deg, #f06292 0%, #f8bbd0 100%);
   color: white;
   font-weight: bold;
   border: none;
 }
-
 .btn-primary:hover {
   color: white;
   border: 1px solid #ad1457;
   background-color: #ad1457;
 }
-
 .dt-button:hover,
 .close:hover,
 #members .dropdown-menu a:hover,
@@ -102,16 +66,14 @@ breadcrumb a,
 #hierarchies a.jstree-anchor.jstree-hovered {
   color: #C2185B !important;
 }
-
 .main{
   border-radius: 20px;
 }
-
-
-
 #wrapper {
   margin-bottom: 10px;
 }
-
-
-
+h1 {
+  font-family: 'Eater', cursive;
+  color: #A084CA;
+  text-shadow: 1px 1px 3px #fff;
+}

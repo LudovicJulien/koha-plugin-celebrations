@@ -1,0 +1,129 @@
+{
+    "feux-artifice": {
+    "font_url": "https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap",
+    "elements": {
+      "couleurs": {
+        "setting": "couleur_feux",
+        "file": "feux_color"
+      }
+    }
+  },
+  "halloween": {
+    "font_url": "https://fonts.googleapis.com/css2?family=Creepster&display=swap",
+    "elements": {
+      "couleurs": {
+      "setting": "couleur_halloween",
+      "file": "halloween_color",
+      "toggle_id": "toggle_halloween_Color"
+      },
+      "ghost": {
+        "setting": "activation_ghost",
+        "file": "halloween_ghost",
+        "toggle_id": "toggle_halloween_spider"
+      },
+      "spider": {
+        "setting": "activation_spiders",
+        "file": "halloween_spider",
+        "toggle_id": "toggle_halloween_ghost",
+        "extra_options": {
+          "quantite_spiders": {
+            "type": "range",
+            "min": 1,
+            "max": 6,
+            "default": 6
+          }
+        }
+      }
+    }
+  },
+  "noel": {
+    "font_url": "https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&display=swap",
+    "elements": {
+      "couleurs": {
+      "setting": "couleur_noel",
+      "file": "noel_color",
+      "toggle_id": "toggle_noel_Color"
+      },
+      "snow": {
+        "setting": "activation_flocons",
+        "file": "noel_flocon",
+        "toggle_id": "toggle_noel",
+        "extra_options": {
+          "vitesse_flocons": {
+              "type": "select",
+              "option_type": "option_vitesse"
+          },
+          "taille_flocons": {
+              "type": "select",
+              "option_type": "option_taille"
+          },
+          "vent_flocons": {
+              "type": "select",
+              "option_type": "option_vent"
+          },
+          "quantite_flocons": {
+              "type": "range",
+              "min": 5,
+              "max": 200,
+              "default": 100
+          }
+        }
+      }
+    }
+  },
+  "paque": {
+    "font_url": "https://fonts.googleapis.com/css2?family=Chewy&display=swap",
+    "elements": {
+      "couleurs": {
+        "setting": "couleur_paque",
+        "file": "paque_color",
+        "toggle_id": "toggle_paque_Color"
+      },
+      "egg": {
+        "setting": "activation_eggs",
+        "file": "paque_egg",
+        "toggle_id": "toggle_paque",
+        "extra_options": {
+          "api_namespace": {
+            "type": "ignore"
+          }
+        }
+      }
+    }
+  },
+  "saint-valentin": {
+    "font_url": "https://fonts.googleapis.com/css2?family=Eater&display=swap",
+    "elements": {
+        "couleurs": {
+        "setting": "couleur_valentin",
+        "file": "valentin_color",
+        "toggle_id": "toggle_valentin_Color"
+      },
+      "coeur": {
+        "setting": "activation_coeurs",
+        "file": "valentin_coeur",
+        "toggle_id": "toggle_stValentin",
+        "extra_options": {
+          "vitesse_coeurs": {
+              "type": "select",
+              "option_type": "option_vitesse"
+          },
+          "taille_coeurs": {
+              "type": "select",
+              "option_type": "option_taille"
+          },
+          "vent_coeurs": {
+              "type": "select",
+              "option_type": "option_vent"
+          },
+          "quantite_coeurs": {
+              "type": "range",
+              "min": 5,
+              "max": 200,
+              "default": 50
+          }
+        }
+      }
+    }
+  }
+}

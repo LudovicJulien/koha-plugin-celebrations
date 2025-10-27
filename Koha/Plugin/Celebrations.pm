@@ -14,7 +14,7 @@ use Cwd 'abs_path';
 #
 #   Informations de base sur le plugin (métadonnées utilisées par Koha)
 #
-our $VERSION = '0.9.2.2';
+our $VERSION = '0.9.3';
 our $metadata = {
     name   => 'Celebrations',
     author => 'Ludovic Julien',
@@ -50,33 +50,52 @@ sub api_namespace {
 #
 sub static_routes {
     my $self = shift;
-    my $spec_str = $self->mbf_read('api/staticapi.json');
-    my $spec = decode_json($spec_str);
-    return $spec;
+    my @files = qw(css.json js.json images.json);
+    my %all_routes;
+    for my $file (@files) {
+        my $path = $self->mbf_read("api/$file");
+        my $spec = decode_json($path);
+        %all_routes = (%all_routes, %$spec);
+    }
+    return \%all_routes;
 }
 #
 #
 #
-#   envoie le css a l'OPAC (en inline pour éviter le temps de chargement long)
+#   envoie le CSS à l'OPAC (en inline pour éviter le temps de chargement long)
 #
 sub opac_head {
     my ($self) = @_;
-    my $theme = $self->retrieve_data("selected_theme") // 'noel';
+    my $theme = $self->retrieve_data("selected_theme");
     my $plugin_pm_path = abs_path(__FILE__);
     my $plugin_dir = dirname($plugin_pm_path);
-    my $css_path = "$plugin_dir/Celebrations/css/$theme.css";
-
-    if (-e $css_path) {
-        my $css_content = read_file($css_path, binmode => ':utf8'); #obligatoire pour lire l'emoji coeur
-        return qq{
-            <style id="theme-inline-css">
-            $css_content
-            </style>
-        };
-    } else {
-        warn "❌ CSS file not found at path: $css_path";
-        return '';
+    my $config_path = "$plugin_dir/Celebrations/config/theme_config.json";
+    my $base_css = "$plugin_dir/Celebrations/css/$theme/$theme.css";
+    return '' unless -e $base_css;
+    my $json_text = read_file($config_path, binmode => ':utf8');
+    my $theme_config = decode_json($json_text);
+    return '' unless exists $theme_config->{$theme};
+    my $conf = $theme_config->{$theme};
+    my $css_content = read_file($base_css, binmode => ':utf8');
+    my $extra_css = '';
+    my $font_link = $conf->{font_url} // '';
+    if (exists $conf->{elements}) {
+        foreach my $element (keys %{ $conf->{elements} }) {
+            my $setting = $conf->{elements}{$element}{setting};
+            my $css_file = "$plugin_dir/Celebrations/css/$theme/$conf->{elements}{$element}{file}.css";
+            my $status = $self->retrieve_data($setting) // 'off';
+            if ($status eq 'on' && -e $css_file) {
+                $extra_css .= read_file($css_file, binmode => ':utf8');
+            }
+        }
     }
+    return qq{
+        <link href="$font_link" rel="stylesheet">
+        <style id="theme-inline-css">
+        $css_content
+        $extra_css
+        </style>
+    };
 }
 #
 #
@@ -85,143 +104,89 @@ sub opac_head {
 #
 sub opac_js {
     my ($self) = @_;
-    my $api_ns = $self->api_namespace;
-    my $theme = $self->retrieve_data("selected_theme") // 'noel';
-    return "" if $theme eq 'null';
-    my $script_options = "";
-
-    if ($theme eq 'noel') {
-        my $activation_flocons = $self->retrieve_data("activation_flocons") // 'on';
-        my $vitesse = $self->retrieve_data("vitesse_flocons") // 'normal';
-        my $taille  = $self->retrieve_data("taille_flocons")  // 'normal';
-        my $vent    = $self->retrieve_data("vent_flocons")    // 'null';
-        my $quantite = $self->retrieve_data("quantite_flocons") // '50';
-
-        $script_options = qq{
-            <script>
-                window.NoelThemeOptions = {
-                    activation_flocons: "$activation_flocons",
-                    vitesse: "$vitesse",
-                    taille: "$taille",
-                    vent: "$vent",
-                    quantite_flocons: "$quantite"
+    my $theme = $self->retrieve_data("selected_theme") // 'null';
+    return '' if $theme eq 'null';
+    my $plugin_pm_path = abs_path(__FILE__);
+    my $plugin_dir     = dirname($plugin_pm_path);
+    my $config_path    = "$plugin_dir/Celebrations/config/theme_config.json";
+    my $json_text = read_file($config_path, binmode => ':utf8');
+    my $theme_config = decode_json($json_text);
+    return '' unless exists $theme_config->{$theme};
+    my $conf = $theme_config->{$theme};
+    my $script_options = '';
+    my @js_tags;
+    if (exists $conf->{elements}) {
+        my %js_options;
+        foreach my $element (keys %{ $conf->{elements} }) {
+            my $setting = $conf->{elements}{$element}{setting};
+            my $status  = $self->retrieve_data($setting) // 'off';
+            next unless $status eq 'on';
+            if (exists $conf->{elements}{$element}{extra_options}) {
+                foreach my $opt_key (keys %{ $conf->{elements}{$element}{extra_options} }) {
+                    $js_options{$opt_key} = $self->retrieve_data($opt_key);
+                }
+            }
+            my $element_file = $conf->{elements}{$element}{file};
+            my $element_js_file = "$plugin_dir/Celebrations/js/$theme/$element_file.js";
+            if (-e $element_js_file) {
+                my $api_ns = $self->api_namespace;
+                push @js_tags, qq{
+                    <script src="/api/v1/contrib/$api_ns/static/js/$theme/$element_file.js"></script>
                 };
-            </script>
+            }
+        }
+        if (%js_options) {
+            my $json_opts = encode_json(\%js_options);
+            $script_options = qq{
+                <script>
+                     window["${theme}ThemeOptions"] = $json_opts;
+                </script>
+            };
+        }
+    }
+    my $js_file = "$plugin_dir/Celebrations/js/$theme/$theme.js";
+    if (-e $js_file) {
+        my $api_ns = $self->api_namespace;
+        push @js_tags, qq{
+            <script id="theme-js" src="/api/v1/contrib/$api_ns/static/js/$theme/$theme.js"></script>
         };
     }
-    elsif ($theme eq 'saint-valentin') {
-        my $activation_coeurs = $self->retrieve_data("activation_coeurs") // 'on';
-        my $vitesse = $self->retrieve_data("vitesse_coeurs") // 'normal';
-        my $taille  = $self->retrieve_data("taille_coeurs")  // 'normal';
-        my $vent    = $self->retrieve_data("vent_coeurs")    // 'null';
-        my $quantite = $self->retrieve_data("quantite_coeurs") // '50';
 
-        $script_options = qq{
-            <script>
-                window.StValentinThemeOptions = {
-                    activation_coeurs: "$activation_coeurs",
-                    vitesse: "$vitesse",
-                    taille: "$taille",
-                    vent: "$vent",
-                    quantite_coeurs: "$quantite"
-                };
-            </script>
-        };
-    }
-    elsif ($theme eq 'halloween') {
-        my $activation_spiders = $self->retrieve_data("activation_spiders") // 'on';
-        my $quantite_spiders = $self->retrieve_data("quantite_spiders") // '2';
-        my $activation_ghost = $self->retrieve_data("activation_ghost") // 'on';
-
-        $script_options = qq{
-            <script>
-                window.HalloweenThemeOptions = {
-                    activation_spiders: "$activation_spiders",
-                    quantite_spiders: "$quantite_spiders",
-                    activation_ghost: "$activation_ghost"
-                };
-            </script>
-        };
-    }
-    elsif ($theme eq 'paque') {
-        my $activation_eggs = $self->retrieve_data("activation_eggs") // 'on';
-
-        $script_options = qq{
-            <script>
-                window.PaqueThemeOptions = {
-                    activation_eggs: "$activation_eggs"
-                };
-            </script>
-        };
-    }
-    return qq{
-        $script_options
-        <script id="theme-js" src="/api/v1/contrib/$api_ns/static/js/$theme.js"></script>
-    };
+    return "$script_options\n" . join("\n", @js_tags);
 }
-#
+
 #
 #
 #   Enregistre les sélections de theme dans la BD
 #
 sub apply_theme {
-    my ($self) = @_; 
-    my $cgi = $self->{cgi};  
+    my ($self) = @_;
+    my $cgi = $self->{cgi};
     my $theme = $cgi->param('theme');
     my %data = ( selected_theme => $theme );
-
-    if ($theme eq 'noel') {
-        $data{activation_flocons} = $cgi->param('activation_flocons') // 'on';
-        $data{vitesse_flocons}    = $cgi->param('vitesse_flocons') // 'normal';
-        $data{taille_flocons}     = $cgi->param('taille_flocons') // 'normal';
-        $data{vent_flocons}       = $cgi->param('vent_flocons') // 'null';
-        $data{quantite_flocons}   = $cgi->param('quantite_flocons') // '50';
-    }
-    elsif ($theme eq 'saint-valentin') {
-        $data{activation_coeurs} = $cgi->param('activation_coeurs') // 'on';
-        $data{vitesse_coeurs}    = $cgi->param('vitesse_coeurs') // 'normal';
-        $data{taille_coeurs}     = $cgi->param('taille_coeurs') // 'normal';
-        $data{vent_coeurs}       = $cgi->param('vent_coeurs') // 'null';
-        $data{quantite_coeurs}   = $cgi->param('quantite_coeurs') // '50';
-    }
-    elsif ($theme eq 'halloween') {
-        $data{activation_spiders} = $cgi->param('activation_spiders') // 'on';
-        $data{quantite_spiders}   = $cgi->param('quantite_spiders') // '2';
-        $data{activation_ghost}   = $cgi->param('activation_ghost') // 'on';
-    }
-    elsif ($theme eq 'paque') {
-        $data{activation_eggs} = $cgi->param('activation_eggs') // 'on';
-    }
-
-    $self->store_data(\%data, { flatten => 0 });
-
-    print $cgi->header('application/json');
-    print to_json({ success => JSON::true, theme => $theme });
-}
-#
-#
-#
-#   Sélectionne le bon template de config celon la langue de l'utilisateur
-#
-sub retrieve_template {
-    my ( $self, $template_prefix ) = @_;
-    my $cgi = $self->{cgi};
-    my $template;
-    my $preferredLanguage = C4::Languages::getlanguage();
-
-    if ($preferredLanguage) {
-        eval {
-            $template = $self->get_template({ file => $template_prefix . '_' . $preferredLanguage . '.tt' });
-        };
-        if (!$template) {
-            $preferredLanguage = substr($preferredLanguage, 0, 2);
-            eval {
-                $template = $self->get_template({ file => $template_prefix . '_' . $preferredLanguage . '.tt' });
-            };
+    my $plugin_pm_path = abs_path(__FILE__);
+    my $plugin_dir     = dirname($plugin_pm_path);
+    my $config_path    = "$plugin_dir/Celebrations/config/theme_config.json";
+    my $json_text = read_file($config_path, binmode => ':utf8');
+    my $theme_config = decode_json($json_text);
+    if (exists $theme_config->{$theme} && exists $theme_config->{$theme}{elements}) {
+        my $conf = $theme_config->{$theme}{elements};
+        foreach my $element (keys %$conf) {
+            my $setting = $conf->{$element}{setting};
+            $data{$setting} = $cgi->param($setting) // 'off';
+            if (exists $conf->{$element}{extra_options}) {
+                foreach my $opt_key (keys %{ $conf->{$element}{extra_options} }) {
+                    my $opt_val = $cgi->param($opt_key);
+                    $opt_val = $self->api_namespace if $opt_key eq 'api_namespace';
+                    $opt_val //= 'off';
+                    $data{$opt_key} = $opt_val;
+                }
+            }
         }
     }
-    $template = $self->get_template({ file => $template_prefix . '.tt' }) unless $template;
-    return $template;
+    $self->store_data(\%data, { flatten => 0 });
+    print $cgi->header('application/json');
+    print to_json({ success => JSON::true, theme => $theme });
 }
 #
 #
@@ -232,33 +197,56 @@ sub tool {
     my ($self, $args) = @_;
     my $cgi = $self->{cgi};
     my $template;
-
+    my $plugin_class = ref $self;
+    my $plugin_name  = $metadata->{name} // $plugin_class;
+    my $plugin_pm_path = abs_path(__FILE__);
+    my $plugin_dir     = dirname($plugin_pm_path);
+    my $config_path    = "$plugin_dir/Celebrations/config/theme_config.json";
+    my $json_text      = read_file($config_path, binmode => ':utf8');
+    my $theme_config   = decode_json($json_text);
+    my $theme_config_json = encode_json($theme_config);
+    my $theme_config_hash = decode_json($json_text);
+    my $selected_theme = $self->retrieve_data("selected_theme") // 'null';
+    my $preferredLanguage = C4::Languages::getlanguage();
     if ($self->is_enabled) {
-       my $koha_session = $cgi->cookie('KohaSession') // $cgi->param('koha_session');
-        $template = $self->retrieve_template('templates/homeTheme');
-
+        my $koha_session = $cgi->cookie('KohaSession') // $cgi->param('koha_session');
+        $template = $self->get_template({ file =>  'templates/homeTheme.tt' });
+        my %theme_data;
+        if ($selected_theme ne 'null' && exists $theme_config->{$selected_theme}{elements}) {
+            foreach my $element (keys %{ $theme_config->{$selected_theme}{elements} }) {
+                my $setting = $theme_config->{$selected_theme}{elements}{$element}{setting};
+                $theme_data{$setting} = $self->retrieve_data($setting) // 'off';
+            }
+        }
         $template->param(
-            enabled => 1,
-            CLASS   => ref $self,
-            METHOD  => 'tool',
-            api_namespace  => $self->api_namespace,
-            koha_session => $koha_session, 
-            selected_theme => $self->retrieve_data("selected_theme") // 'null',
-
-            activation_flocons => $self->retrieve_data("activation_flocons") // 'on',
-            neige_vitesse  => $self->retrieve_data("neige_vitesse") // 'normal',
-            taille_flocons => $self->retrieve_data("taille_flocons") // 'normal',
-            vent_flocons   => $self->retrieve_data("vent_flocons") // 'null',
-            quantite_flocons   => $self->retrieve_data("quantite_flocons") // '50',
-
-            activation_coeurs => $self->retrieve_data("activation_coeurs") // 'on',
-            vitesse_coeurs  => $self->retrieve_data("vitesse_coeurs") // 'normal',
-            taille_coeurs => $self->retrieve_data("taille_coeurs") // 'normal',
-            vent_coeurs   => $self->retrieve_data("vent_coeurs") // 'null',
-            quantite_coeurs   => $self->retrieve_data("quantite_coeurs") // '50',
+            enabled         => 1,
+            CLASS           => $plugin_class,
+            METHOD          => 'tool',
+            plugin_name     => $plugin_name,
+            plugin_class    => $plugin_class,
+            api_namespace   => $self->api_namespace,
+            koha_session    => $koha_session,
+            selected_theme  => $selected_theme,
+            theme_config_json => $theme_config_json,
+            theme_config => $theme_config_hash,
+            PLUGIN_DIR => $plugin_dir,
+            LANG       => $preferredLanguage,
+            %theme_data,
         );
-    }else{
-        $template = $self->retrieve_template('templates/disabled');
+    }
+    else {
+        $template = $self->get_template({ file =>  'templates/disabled.tt' });
+        my $css_template = $self->get_template({ file => 'css/template/disabled-css.tt' });
+        my $css_content  = $css_template->output();
+        $template->param(
+            enabled       => 0,
+            CLASS         => $plugin_class,
+            METHOD        => 'tool',
+            api_namespace => $self->api_namespace,
+            disabled_css  => $css_content,
+            PLUGIN_DIR => $plugin_dir,
+            LANG       => $preferredLanguage
+        );
     }
     print $cgi->header(-type => 'text/html', -charset => 'utf-8');
     print $template->output();
@@ -269,30 +257,19 @@ sub tool {
 #   Gère la désinstallation du plugin
 #
 sub uninstall {
-    my ( $self, $args ) = @_;
+    my ($self, $args) = @_;
     my $dbh = C4::Context->dbh;
-    my $sth_select = $dbh->prepare("SELECT * FROM systempreferences WHERE variable = 'OpacMainUserBlock'");
-    $sth_select->execute();
-
-    my $value;
-    if (my $row = $sth_select->fetchrow_hashref) {
-        $value = "$row->{'value'}";
+     my $plugin_class = ref($self) || 'Koha::Plugin::Celebrations';
+    die "Plugin class is undef" unless defined $plugin_class;
+    eval {
+        my $sth_delete = $dbh->prepare("DELETE FROM plugin_data WHERE plugin_class = ?");
+        $sth_delete->execute($plugin_class);
+        $sth_delete->finish;
+    };
+    if ($@) {
+        warn "Erreur lors de la désinstallation du plugin: $@";
+        return 0;
     }
-
-    my $start_tag = "<!-- Debut plugin noel -->";
-    my $end_tag   = "<!-- Fin plugin noel -->";
-    $value =~ s/$start_tag.*?$end_tag//s;
-
-    my $sth_update = $dbh->prepare("UPDATE systempreferences SET value = ? WHERE variable = 'OpacMainUserBlock'");
-    $sth_update->bind_param(1, $value);
-    $sth_update->execute;
-    $sth_update->finish;
-
-    my $sth_delete = $dbh->prepare("DELETE FROM plugin_data WHERE plugin_class = ?");
-    $sth_delete->execute($self->class());
-    $sth_delete->finish;
-    $sth_select->finish;
-
     return 1;
 }
 1;

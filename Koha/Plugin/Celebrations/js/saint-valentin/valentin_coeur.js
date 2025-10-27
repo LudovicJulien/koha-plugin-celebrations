@@ -1,33 +1,28 @@
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // 2. Script des coeurs
-    var options = window.StValentinThemeOptions || {};
-    var vitesse = options.vitesse || 'normal';  
-    var taille = options.taille || 'normal';   
-    var vent = options.vent || 'null';   
-    var activation = options.activation_coeurs || "on";
+    var options = window["saint-valentinThemeOptions"] || {};
+    if (!options || Object.keys(options).length === 0) {
+        console.error("Les options de thème saint-valentin n'ont pas été trouvées ou sont vides. Les valeurs par défaut seront utilisées. (vitesse:normale, taille:normale, vent:off, quantite:10)");
+        options = {};
+    }
+    var vitesse = options.vitesse || 'vitesse_normal';
+    var taille = options.taille || 'taille_normal';
+    var vent = options.vent || 'vent_null';
     var quantite = parseInt(options.quantite_coeurs) || 10;
-     console.log(activation);
-
-    var vitesseCoeff = 0.1; 
+    var vitesseCoeff = 0.1;
     switch(vitesse) {
-        case 'slow': vitesseCoeff = 0.05; break;
-        case 'quick': vitesseCoeff = 0.2; break;
+        case 'vitesse_lent': vitesseCoeff = 0.05; break;
+        case 'vitesse_rapide': vitesseCoeff = 0.2; break;
     }
-
-    var tailleCoeff = 10; 
+    var tailleCoeff = 10;
     switch(taille) {
-        case 'small': tailleCoeff = 5; break;
-        case 'big': tailleCoeff = 20; break;
+        case 'taille_petit': tailleCoeff = 5; break;
+        case 'taille_grand': tailleCoeff = 20; break;
     }
-
-    var ventCoeff = 0; 
+    var ventCoeff = 0;
     switch(vent) {
-        case 'normal': ventCoeff = 2; break;
-        case 'alot': ventCoeff = 4; break;
+        case 'vent_normale': ventCoeff = 2; break;
+        case 'vent_fort': ventCoeff = 4; break;
     }
-    console.log(quantite);
-
     var Coeur = (function() {
         var flakes;
         var flakesTotal = quantite;
@@ -57,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
     this.div.style.color = '#e91e63';
     this.div.style.opacity = '0.9';
 }
-
         Coeur.prototype.move = function() {
             if (this.hit) {
                 if (Math.random() > 0.995) this.melt = true;
@@ -71,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (this.x < 0) {
                 this.x = window.innerWidth;
             }
-
             if (this.y > window.innerHeight + this.size) {
                 this.x = Math.random() * window.innerWidth;
                 this.y = -this.size;
@@ -81,14 +74,12 @@ document.addEventListener('DOMContentLoaded', function() {
             var dy = mouseY - this.y;
             this.hit = !this.melt && this.y < mouseY && dx * dx + dy * dy < 2400;
         };
-
         Coeur.prototype.draw = function() {
             this.div.style.transform =
             this.div.style.MozTransform =
             this.div.style.webkitTransform =
                 'translate3d(' + this.x + 'px,' + this.y + 'px,0)';
         };
-
         function update() {
             for (var i = flakes.length; i--;) {
                 var flake = flakes[i];
@@ -97,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             requestAnimationFrame(update);
         }
-
         Coeur.init = function(container) {
             flakes = [];
             for (var i = flakesTotal; i--;) {
@@ -119,10 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             update();
         };
-
         return Coeur;
     }());
-    // if(activation === "on"){
          Coeur.init(document.body);
-    // }
 });

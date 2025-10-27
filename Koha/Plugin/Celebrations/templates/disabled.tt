@@ -1,74 +1,31 @@
 [% INCLUDE 'doc-head-open.inc' %]
 <!-- Head-->
     <title>Celebration plugin disabled</title>
-    <style>
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: linear-gradient(135deg, #fdfbfb, #ebedee);
-            text-align: center;
-            padding: 60px;
-            color: #333;
-            height: 100vh;
-        }
-        .card-wrapper {
-            min-height: calc(100vh - 150px); /* total height - nav + footer (adjust if needed) */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-        }
-        .card {
-            background: #fff;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 600px;
-        }
-        .titre_disablePage {
-            color: #2a6ebb;
-            font-size: 2.2em;
-            margin-bottom: 20px;
-        }
-        .emoji {
-            font-size: 3em;
-        }
-        p {
-            margin: 15px 0;
-            font-size: 1.1em;
-        }
-        .btn_diablePage {
-            margin-top: 25px;
-            display: inline-block;
-            background: #2a6ebb;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-        .btn_diablePage:hover {
-            background: #1e5293 !important;
-        }
-    </style>
+    [% disabled_css %]
 [% INCLUDE 'doc-head-close.inc' %]
 
 <!-- Body-->
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
+[%
+    # Chargement du bon fichier de traduction selon la langue utilisateur
+    TRY;
+    PROCESS "$PLUGIN_DIR/Celebrations/lang/${LANG}.inc";
+    CATCH;
+    PROCESS "$PLUGIN_DIR/Celebrations/lang/default.inc";
+    END;
+%]
 <div class="card-wrapper">
     <div class="card">
         <div class="emoji">🎉🥳🎂</div>
-        <h1 class="titre_disablePage">Welcome to the Celebration plugin!</h1>
-        <p>Holidays and celebrations are here to remind us to <b>take time to smile</b>, 
-        share joyful moments, and add a splash of color to our days ✨.</p>
+        <h1 class="titre_disablePage">[% D.title | html %]</h1>
+        <p>[% D.description1 | html %]<b>[% D.description2 | html %]</b>
+        [% D.description3 | html %]</p>
 
-        <p><b>But wait!</b> This plugin is currently <span style="color:red;">disabled</span>.</p>
-        <p>To access its configuration and enjoy all its features, 
-        please return to the plugins page and <b>enable Celebration</b>.</p>
+        <p><b>[% D.description4 | html %]</b> [% D.description5 | html %] <span style="color:red;">[% D.description6 | html %]</span>.</p>
+        <p>[% D.description7 | html %] <b>[% D.description8 | html %]</b>.</p>
 
-        <a class="btn_diablePage" href="/cgi-bin/koha/plugins/plugins-home.pl">← Back to plugins page</a>
+        <a class="btn_diablePage" href="/cgi-bin/koha/plugins/plugins-home.pl">[% D.btn_back | html %]</a>
     </div>
 </div>
 <!-- Footer-->

@@ -1,0 +1,44 @@
+/*
+    Section panier d'oeuf
+*/
+
+/* === Container de l'icône === */
+.icon-block {
+    position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+/* === Bloc SVG === */
+.icon {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === SVG lui-même === */
+.icon svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transition: all 0.2s linear;
+}
+
+/* === Optionnel : effet au survol === */
+.icon:hover svg {
+  transform: scale(1.05);
+}
+
+#celebration-footer{
+  height: 80px;
+   position: relative !important;
+    z-index: 1000 !important;
+}
