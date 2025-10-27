@@ -1,0 +1,99 @@
+/*
+    Halloween : couleurs personnalisées des composants
+*/
+:root {
+  --bs-body-bg: #353333;
+  --bs-body-color: #070707;
+}
+
+body {
+  background-color: #353333 !important;
+  color: #070707 !important;
+}
+
+.nav {
+  --bs-nav-link-color: #ff7518;
+  --bs-nav-link-hover-color: #ffaa33;
+}
+
+a {
+  color: #ff7518 !important;
+}
+
+a:hover,
+a:active,
+button:hover,
+button:active {
+  color: #ffaa33 !important;
+}
+
+.nav-link {
+  color: #ff7518;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  color: #ffaa33;
+}
+
+.btn-default:hover, .btn-primary:hover {
+  color: #1c1c1c !important;
+  background-color: #ffaa33 !important;
+  border: 1px solid #fff;
+}
+
+.dt-button:hover,
+.close:hover,
+#members .dropdown-menu a:hover,
+breadcrumb a,
+#hierarchies a.jstree-anchor.jstree-hovered {
+  color: #fff9ef !important;
+}
+
+.main{
+  background-color: #fff7f1;
+  border-radius: 20px;
+}
+
+.tab-content, .form-select, .form-control{
+  background-color: rgb(233, 233, 233);
+}
+
+.form-select:focus,
+.form-control:focus {
+    border: 2px solid #ffaa33;
+    outline: none;
+}
+
+h1 {
+  font-family: 'Creepster', ens-serif;
+  color: #111;
+  animation: flicker 4s infinite;
+}
+
+@keyframes flicker {
+  0%, 6%, 12% {
+    text-shadow: none;
+    color: #111;
+  }
+  3%, 9% {
+    text-shadow: 0 0 8px rgba(250,103,1,0.6);
+    color: #fa6701;
+  }
+  60%, 100% {
+    text-shadow:
+      0 0 8px rgba(250,103,1,0.6),
+      0 0 16px rgba(250,103,1,0.4),
+      0 0 20px rgba(255,0,84,0.2),
+      0 0 22px rgba(255,0,84,0.1);
+    color: #fa6701;
+  }
+}
+
+.form-select{
+  z-index: 1000;
+}
+
+#wrapper {
+  margin-bottom: 10px;
+}
