@@ -4,7 +4,13 @@
     "elements": {
       "couleurs": {
         "setting": "couleur_feux",
-        "file": "feux_color"
+        "file": "feux-artifice-color",
+        "toggle_id": "toggle_feux_color"
+      },
+      "feux": {
+        "setting": "animation_feux",
+        "file": "feux-artifice-animation",
+        "toggle_id": "toggle_feux_animation"
       }
     }
   },
@@ -13,17 +19,22 @@
     "elements": {
       "couleurs": {
       "setting": "couleur_halloween",
-      "file": "halloween_color",
-      "toggle_id": "toggle_halloween_Color"
+      "file": "halloween-color",
+      "toggle_id": "toggle_halloween_color"
+      },
+       "footer": {
+      "setting": "footer_halloween",
+      "file": "halloween-footer",
+      "toggle_id": "toggle_halloween_footer"
       },
       "ghost": {
         "setting": "activation_ghost",
-        "file": "halloween_ghost",
+        "file": "halloween-ghost",
         "toggle_id": "toggle_halloween_spider"
       },
       "spider": {
         "setting": "activation_spiders",
-        "file": "halloween_spider",
+        "file": "halloween-spider",
         "toggle_id": "toggle_halloween_ghost",
         "extra_options": {
           "quantite_spiders": {
@@ -41,12 +52,17 @@
     "elements": {
       "couleurs": {
       "setting": "couleur_noel",
-      "file": "noel_color",
+      "file": "noel-color",
       "toggle_id": "toggle_noel_Color"
+      },
+      "footer": {
+      "setting": "footer_noel",
+      "file": "noel-footer",
+      "toggle_id": "toggle_noel_footer"
       },
       "snow": {
         "setting": "activation_flocons",
-        "file": "noel_flocon",
+        "file": "noel-flocon",
         "toggle_id": "toggle_noel",
         "extra_options": {
           "vitesse_flocons": {
@@ -76,12 +92,17 @@
     "elements": {
       "couleurs": {
         "setting": "couleur_paque",
-        "file": "paque_color",
+        "file": "paque-color",
         "toggle_id": "toggle_paque_Color"
+      },
+      "footer": {
+        "setting": "footer_paque",
+        "file": "paque-footer",
+        "toggle_id": "toggle_paque_footer"
       },
       "egg": {
         "setting": "activation_eggs",
-        "file": "paque_egg",
+        "file": "paque-egg",
         "toggle_id": "toggle_paque",
         "extra_options": {
           "api_namespace": {
@@ -94,7 +115,7 @@
   "saint-valentin": {
     "font_url": "https://fonts.googleapis.com/css2?family=Eater&display=swap",
     "elements": {
-        "couleurs": {
+      "couleurs": {
         "setting": "couleur_valentin",
         "file": "valentin_color",
         "toggle_id": "toggle_valentin_Color"

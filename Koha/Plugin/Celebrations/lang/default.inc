@@ -29,6 +29,7 @@
     #
     noel = {
         couleur_noel = "Enable Christmas Color 🔴 🟢 ⚪",
+        footer_noel = "Enable Footer elements ✨",
         activation_flocons = "Enable snow effect ❄️",
         vitesse_flocons = "Snow speed:",
         taille_flocons = "Flake size:",
@@ -51,6 +52,7 @@
     #
     halloween = {
         couleur_halloween = "Enable Halloween Color 🟠 ⚫",
+        footer_halloween = "Enable Footer elements 🎃",
         activation_spiders = "Enable spider effect 🕷️",
         quantite_spiders = "Number of spiders:",
         activation_ghost = "Enable ghost cursor 👻",
@@ -60,6 +62,7 @@
     #
     paque = {
         couleur_paque = "Enable Easter Color 🟡 🟢 🟣",
+        footer_paque = "Enable Footer elements 🧺🥚",
         activation_eggs = "Enable eggs cursor 🥚",
     },
     #
@@ -67,7 +70,7 @@
     #
     "feux-artifice" = {
         couleur_feux = "Enable fire work Color 🟣 ⚫ 🟢",
-        activation_feux = "Enable fire work animation 🎆",
+        animation_feux = "Enable fire work animation 🎆",
     },
     #
     # === configuration des option de vitesse ===

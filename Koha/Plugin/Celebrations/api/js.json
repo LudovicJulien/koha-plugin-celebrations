@@ -101,10 +101,61 @@
       }
     }
   },
-  "/js/noel/noel_flocon.js": {
+  "/js/noel/noel-flocon.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSNoelFlocon",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+   "/js/noel/noel-footer.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSNoelFooter",
       "tags": ["pluginCelebration"],
       "responses": {
         "200": {
@@ -203,7 +254,58 @@
       }
     }
   },
-  "/js/halloween/halloween_ghost.js": {
+   "/js/halloween/halloween-footer.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSHalloweenFooter",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/js/halloween/halloween-ghost.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSHalloweenGhost",
@@ -254,7 +356,7 @@
       }
     }
   },
-  "/js/halloween/halloween_spider.js": {
+  "/js/halloween/halloween-spider.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSHalloweenSpider",
@@ -458,7 +560,7 @@
       }
     }
   },
-  "/js/paque/paque_egg.js": {
+  "/js/paque/paque-egg.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSPaqueEgg",
@@ -509,10 +611,112 @@
       }
     }
   },
-  "/js/feux-artifice/feux-artifice.js": {
+   "/js/paque/paque-footer.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSPaqueFooter",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/js/feux-artifice/feux-artifice-animation.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSFeuxArtifice",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/js/feux-artifice/feux-artifice.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSFeux",
       "tags": ["pluginCelebration"],
       "responses": {
         "200": {

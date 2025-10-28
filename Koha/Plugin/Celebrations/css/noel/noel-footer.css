@@ -1,4 +1,6 @@
 /*
+    lumière de noel
+*/
 .lightcontainer {
    position: absolute;
    bottom: 80%;
@@ -152,8 +154,8 @@
   }
 }
 #celebration-footer{
-  height: 80px;
+  height: 40px;
    position: relative !important;
     z-index: 1000 !important;
 }
- */
+

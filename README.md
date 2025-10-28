@@ -50,7 +50,7 @@ Les options de configuration permettent de modifier certains paramètres des él
 
 ##  Architecture Data-Driven
 
-L'architecture du plugin est **Data-Driven (pilotée par les données)**. Cela signifie que la structure des thèmes et de leurs options est définie entièrement par le fichier de configuration **`theme_config.schema.json`** et par le fichier de langue **`inc`**.
+L'architecture du plugin est **Data-Driven (pilotée par les données)**. Cela signifie que la structure des thèmes et de leurs options est définie entièrement par le fichier de configuration **`theme-config.json`** et par le fichier de langue **`inc`**.
 
 Le plugin lit ce fichier JSON et génère automatiquement :
 1.  Les options de configuration dans l'interface d'administration (toggles, sliders, selects).
@@ -77,7 +77,7 @@ Pour chaque élément visuel personnalisable (ex. : `couleurs`, `flocons`, `fant
 > * `css/mon-nouveau-theme/noel_flocon.css`
 > * `js/mon-nouveau-theme/noel_flocon.js`
 
-### 2. Configuration dans `theme_config.schema.json`
+### 2. Configuration dans `theme-config.json`
 
 Ajoutez une nouvelle entrée (ou modifiez une existante) dans le fichier JSON en suivant cette structure :
 
@@ -103,7 +103,7 @@ Les options additionnelles peuvent être de trois types :
 | **`select`** | Crée une liste déroulante (select) dont les options sont définies dans le fichier de langue. | **`option_type`** (clé du fichier de langue) |
 
 ```json
-// Exemple d'un élément dans theme_config.schema.json
+// Exemple d'un élément dans theme-config.json
 "mon-nouveau-theme": {
     "font_url": "URL_DE_VOTRE_POLICE",
     "elements": {

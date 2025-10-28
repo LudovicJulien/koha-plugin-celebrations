@@ -152,7 +152,7 @@
       }
     }
   },
-   "/css/noel/noel_color.css": {
+   "/css/noel/noel-color.css": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetCSSNoelColor",
@@ -203,7 +203,7 @@
       }
     }
   },
-  "/css/noel/noel_flcon.css": {
+  "/css/noel/noel-flocon.css": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetCSSNoelFlocon",

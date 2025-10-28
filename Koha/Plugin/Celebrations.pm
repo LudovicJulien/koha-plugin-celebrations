@@ -133,6 +133,8 @@ sub opac_js {
                 push @js_tags, qq{
                     <script src="/api/v1/contrib/$api_ns/static/js/$theme/$element_file.js"></script>
                 };
+            } else {
+                warn "[Celebrations] Fichier JS manquant pour l’element '$element' : $element_js_file";
             }
         }
         if (%js_options) {

@@ -28,6 +28,7 @@
     #
     noel = {
         couleur_noel = "Activer les couleurs de Noël 🔴 🟢 ⚪",
+         footer_noel = "Activer les éléments du pied de page ✨",
         activation_flocons = "Activer l’effet de neige ❄️",
         vitesse_flocons = "Vitesse des flocons :",
         taille_flocons = "Taille des flocons :",
@@ -50,6 +51,7 @@
     #
     halloween = {
         couleur_halloween = "Activer les couleurs d’Halloween 🟠 ⚫",
+        footer_halloween = "Activer les éléments du pied de page 🎃",
         activation_spiders = "Activer l’effet d’araignées 🕷️",
         quantite_spiders = "Nombre d’araignées :",
         activation_ghost = "Activer le curseur fantôme 👻",
@@ -59,6 +61,7 @@
     #
     paque = {
         couleur_paque = "Activer les couleurs de Pâques 🟡 🟢 🟣",
+        footer_paque = "Activer les éléments du pied de page 🧺🥚",
         activation_eggs = "Activer le curseur d’œufs 🥚",
     },
     #
@@ -66,7 +69,7 @@
     #
     "feux-artifice" = {
         couleur_feux = "Activer les couleurs des feux d’artifice 🟣 ⚫ 🟢",
-        activation_feux = "Activer l’animation de feux d’artifice 🎆",
+        animation_feux = "Activer l’animation de feux d’artifice 🎆",
     },
     #
     # === configuration des option de vitesse ===
