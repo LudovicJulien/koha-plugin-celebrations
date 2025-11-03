@@ -5,6 +5,7 @@
     # === text générale ===
     #
     extension = "This extension was created by",
+    lang = "en",
     site_web1 = "Visit our",
     site_web2 = "Website",
     site_web3 = " for more Koha extensions",
@@ -83,7 +84,7 @@
         vitesse_lent = "Slow",
         vitesse_normale = "Normal",
         vitesse_rapide = "Fast",
-    }
+    },
     #
     # === configuration des option de taille ===
     #

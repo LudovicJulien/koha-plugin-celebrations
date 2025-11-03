@@ -21,7 +21,7 @@
     <div id="content" class="theme-plugin-wrapper">
         <div id="inlibro-header">
             <p>[% T.extension | html %]</p>
-            <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_en.svg' alt="InLibro" id="imgInlibro" />
+            <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_[% T.lang | html %].svg' alt="InLibro" id="imgInlibro" />
             <p class="website">[% T.site_web1 | html %] <a href="https://inlibro.com">[% T.site_web2 | html %]</a> [% T.site_web3 | html %]</p>
         </div>
             <div class="plugin-card">
