@@ -70,13 +70,10 @@ sub opac_head {
     my $plugin_pm_path = abs_path(__FILE__);
     my $plugin_dir = dirname($plugin_pm_path);
     my $config_path = "$plugin_dir/Celebrations/config/theme-config.json";
-    my $base_css = "$plugin_dir/Celebrations/css/$theme/$theme.css";
-    return '' unless -e $base_css;
     my $json_text = read_file($config_path, binmode => ':utf8');
     my $theme_config = decode_json($json_text);
     return '' unless exists $theme_config->{$theme};
     my $conf = $theme_config->{$theme};
-    my $css_content = read_file($base_css, binmode => ':utf8');
     my $extra_css = '';
     my $font_link = $conf->{font_url} // '';
     if (exists $conf->{elements}) {
@@ -92,7 +89,6 @@ sub opac_head {
     return qq{
         <link href="$font_link" rel="stylesheet">
         <style id="theme-inline-css">
-        $css_content
         $extra_css
         </style>
     };
@@ -146,17 +142,8 @@ sub opac_js {
             };
         }
     }
-    my $js_file = "$plugin_dir/Celebrations/js/$theme/$theme.js";
-    if (-e $js_file) {
-        my $api_ns = $self->api_namespace;
-        push @js_tags, qq{
-            <script id="theme-js" src="/api/v1/contrib/$api_ns/static/js/$theme/$theme.js"></script>
-        };
-    }
-
     return "$script_options\n" . join("\n", @js_tags);
 }
-
 #
 #
 #   Enregistre les sélections de theme dans la BD
