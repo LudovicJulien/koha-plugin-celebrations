@@ -61,7 +61,7 @@ Cette approche garantit une grande **modularité**, une **maintenance simplifié
 
 ---
 
-## 🛠️ Ajout ou Modification d'un Thème
+## Ajout ou Modification d'un Thème
 
 Pour ajouter ou modifier un thème, suivez les étapes ci-dessous :
 
@@ -126,3 +126,86 @@ Les options additionnelles peuvent être de trois types :
         }
     }
 }
+```
+
+Parfait 👌 Voici la **section additionnelle** que tu peux ajouter à la **fin de ton README**, juste après la partie sur `theme-config.json` — elle complète parfaitement ta documentation technique :
+
+---
+
+##  Ajout des textes multilingues (`/lang`)
+
+Pour permettre l’affichage de textes personnalisés selon la langue de l’utilisateur,
+il faut également ajouter les fichiers de langue correspondants dans le dossier **`/lang`** du plugin.
+
+Chaque langue (ex. : `fr-FR`, `en`, `es`, etc.) doit avoir son propre fichier contenant les textes qui seront utilisés par les options de configuration (toggles, sélecteurs, etc.).
+
+### Structure du dossier `lang`
+
+```
+lang/
+├── fr-CA.inc
+│
+└── default.inc
+```
+
+###  Contenu des fichier `inc`
+
+Chaque fichier `inc` contient les textes associés aux options du plugin pour cette langue.
+Les **clés** doivent correspondre exactement aux **valeurs du champ `"setting"`** dans le fichier `theme-config.json`.
+
+> Exemple : si dans `theme-config.json` vous avez :
+
+```json
+"halloween": {
+    "font_url": [],
+    "elements": {
+      "couleurs": {
+      "setting": "couleur_halloween",
+      "file": "halloween-color",
+      "toggle_id": "toggle_halloween_color"
+      }
+  }
+}
+```
+
+Alors dans le fichier `lang/fr-FR/inc`, vous devez avoir :
+
+```perl
+'couleur_halloween' => 'Activer les couleurs d’Halloween',
+```
+
+Et dans `lang/en/inc` :
+
+```perl
+'couleur_halloween' => 'Enable Halloween Color',
+```
+
+---
+
+###  Bonnes pratiques
+
+*  **La clé doit toujours correspondre à la valeur du champ `"setting"`** du fichier `theme-config.json`.
+  Cela garantit la correspondance automatique entre la configuration et les textes.
+
+* **Chaque langue doit avoir sa propre version** du texte pour un affichage cohérent dans l’interface admin.
+
+* 🔄 Vous pouvez aussi ajouter des clés supplémentaires pour les extrats options `select` (menus déroulants),
+  en suivant le même principe, par exemple :
+
+  ```perl
+  option_vitesse = {
+        vitesse_lent = "Lent",
+        vitesse_normale = "Normal",
+        vitesse_rapide = "Rapide",
+    },
+  ```
+
+---
+
+###  En résumé
+
+* Le dossier `/lang` permet de gérer la traduction des textes affichés dans le panneau d’administration.
+* Chaque clé dans les fichiers de langue doit correspondre à la valeur du champ `"setting"` dans `theme-config.json`.
+* Cela rend le plugin **multilingue, extensible et entièrement data-driven** sans avoir à modifier le code source.
+
+

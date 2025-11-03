@@ -69,7 +69,7 @@ sub opac_head {
     my $theme = $self->retrieve_data("selected_theme");
     my $plugin_pm_path = abs_path(__FILE__);
     my $plugin_dir = dirname($plugin_pm_path);
-    my $config_path = "$plugin_dir/Celebrations/config/theme_config.json";
+    my $config_path = "$plugin_dir/Celebrations/config/theme-config.json";
     my $base_css = "$plugin_dir/Celebrations/css/$theme/$theme.css";
     return '' unless -e $base_css;
     my $json_text = read_file($config_path, binmode => ':utf8');
@@ -108,7 +108,7 @@ sub opac_js {
     return '' if $theme eq 'null';
     my $plugin_pm_path = abs_path(__FILE__);
     my $plugin_dir     = dirname($plugin_pm_path);
-    my $config_path    = "$plugin_dir/Celebrations/config/theme_config.json";
+    my $config_path    = "$plugin_dir/Celebrations/config/theme-config.json";
     my $json_text = read_file($config_path, binmode => ':utf8');
     my $theme_config = decode_json($json_text);
     return '' unless exists $theme_config->{$theme};
@@ -168,7 +168,7 @@ sub apply_theme {
     my %data = ( selected_theme => $theme );
     my $plugin_pm_path = abs_path(__FILE__);
     my $plugin_dir     = dirname($plugin_pm_path);
-    my $config_path    = "$plugin_dir/Celebrations/config/theme_config.json";
+    my $config_path    = "$plugin_dir/Celebrations/config/theme-config.json";
     my $json_text = read_file($config_path, binmode => ':utf8');
     my $theme_config = decode_json($json_text);
     if (exists $theme_config->{$theme} && exists $theme_config->{$theme}{elements}) {
@@ -203,7 +203,7 @@ sub tool {
     my $plugin_name  = $metadata->{name} // $plugin_class;
     my $plugin_pm_path = abs_path(__FILE__);
     my $plugin_dir     = dirname($plugin_pm_path);
-    my $config_path    = "$plugin_dir/Celebrations/config/theme_config.json";
+    my $config_path    = "$plugin_dir/Celebrations/config/theme-config.json";
     my $json_text      = read_file($config_path, binmode => ':utf8');
     my $theme_config   = decode_json($json_text);
     my $theme_config_json = encode_json($theme_config);

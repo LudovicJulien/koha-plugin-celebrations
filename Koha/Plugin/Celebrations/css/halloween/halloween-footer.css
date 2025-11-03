@@ -177,7 +177,7 @@
   content: "";
   width: 50%;
   height: 50%;
-  background: white;
+ background: var(--stem-inner-color, white);
   position: absolute;
   top: 25%;
   left: 25%;
@@ -275,12 +275,17 @@
   left: 79%;
   transform: rotate(-19deg) skew(-1deg, 0deg);
 }
+html, body {
+    min-height: 100vh !important;
+    height: auto !important;
+}
 #celebration-footer{
   height: 40px;
    position: relative !important;
   z-index: 1000 !important;
 }
-html, body {
-    min-height: 100vh !important;
-    height: auto !important;
+@media (min-width: 800px) {
+    #celebration-footer {
+        height: 100px;
+    }
 }

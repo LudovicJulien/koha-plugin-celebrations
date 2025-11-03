@@ -117,12 +117,12 @@
     "elements": {
       "couleurs": {
         "setting": "couleur_valentin",
-        "file": "valentin_color",
+        "file": "valentin-color",
         "toggle_id": "toggle_valentin_Color"
       },
       "coeur": {
         "setting": "activation_coeurs",
-        "file": "valentin_coeur",
+        "file": "valentin-coeur",
         "toggle_id": "toggle_stValentin",
         "extra_options": {
           "vitesse_coeurs": {

@@ -4,6 +4,14 @@
 [% INCLUDE 'doc-head-close.inc' %]
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
+    [%
+        # Chargement du bon fichier de traduction selon la langue utilisateur
+        TRY;
+        PROCESS "$PLUGIN_DIR/Celebrations/lang/${LANG}.inc";
+        CATCH;
+        PROCESS "$PLUGIN_DIR/Celebrations/lang/default.inc";
+        END;
+    %]
 <div id="breadcrumbs">
     <a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo;
     <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo;
@@ -12,18 +20,10 @@
 <div id="doc3">
     <div id="content" class="theme-plugin-wrapper">
         <div id="inlibro-header">
-            <p>This extension was created by</p>
-            <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_en.svg' alt="inLibro" id="imgInlibro" />
-            <p class="website">Visit our <a href="https://inlibro.com">website</a> for more Koha extensions</p>
+            <p>[% T.extension | html %]</p>
+            <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_en.svg' alt="InLibro" id="imgInlibro" />
+            <p class="website">[% T.site_web1 | html %] <a href="https://inlibro.com">[% T.site_web2 | html %]</a> [% T.site_web3 | html %]</p>
         </div>
-            [%
-              # Chargement du bon fichier de traduction selon la langue utilisateur
-              TRY;
-                PROCESS "$PLUGIN_DIR/Celebrations/lang/${LANG}.inc";
-              CATCH;
-                PROCESS "$PLUGIN_DIR/Celebrations/lang/default.inc";
-              END;
-            %]
             <div class="plugin-card">
                 <h1>[% T.title | html %]</h1>
             <p>
