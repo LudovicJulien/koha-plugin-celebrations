@@ -458,7 +458,7 @@
       }
     }
   },
-  "/js/saint-valentin/valentin_coeur.js": {
+  "/js/saint-valentin/valentin-coeur.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSSaintValentinCoeur",
@@ -764,7 +764,7 @@
       }
     }
   },
-    "/config/config.json": {
+    "/config/theme-config.json": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetConfigJSON",

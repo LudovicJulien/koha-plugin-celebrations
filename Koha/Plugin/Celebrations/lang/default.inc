@@ -4,6 +4,10 @@
     #
     # === text générale ===
     #
+    extension = "This extension was created by",
+    site_web1 = "Visit our",
+    site_web2 = "Website",
+    site_web3 = " for more Koha extensions",
     title = "Celebrations Plugin",
     titreD = "Welcome to the Celebration plugin!",
     description1 = "This plugin allows you to add seasonal themes to Koha's OPAC, such as Christmas, Halloween, or Valentine's Day.",

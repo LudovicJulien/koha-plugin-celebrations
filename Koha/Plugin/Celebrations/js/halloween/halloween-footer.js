@@ -151,6 +151,16 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
     document.body.appendChild(newFooter);
   }
+  //
+  // Appliquer la couleur du body à la tige de la citrouille
+  //
+  const bodyBgColor = getComputedStyle(document.body).backgroundColor;
+  const stems = document.querySelectorAll('.stem');
+  stems.forEach(stem => {
+    // Met à jour la variable CSS utilisée dans ::after
+    stem.style.setProperty('--stem-inner-color', bodyBgColor);
+  });
+  //
   // Lancer l’animation
   setupBubbleAnimations();
 });
