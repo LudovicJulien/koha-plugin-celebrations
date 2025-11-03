@@ -17,10 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     event.preventDefault();
     const selectedTheme = themeSelect.value;
     const themeData = rawThemes[selectedTheme];
-    if (!themeData || !themeData.elements) {
-      console.error(`Données manquantes pour le thème "${selectedTheme}"`);
-      return;
-    }
     const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -32,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('method', 'apply_theme');
     formData.append('action', 'apply_theme');
     formData.append('theme', selectedTheme);
+    if(themeData && themeData.elements) {
     Object.values(themeData.elements).forEach(element => {
       const input = $(element.setting);
       if (input) {
@@ -54,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     });
+  }
     // Envoi au serveur
     try {
       const response = await fetch(
