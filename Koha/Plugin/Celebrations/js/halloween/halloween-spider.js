@@ -1,3 +1,9 @@
+/*
+    Section : Spider
+    Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Rachel Best - https://codepen.io/rachel_web/pen/MjxzOb
+*/
 document.addEventListener('DOMContentLoaded', function() {
   const options = window.halloweenThemeOptions || {};
   const quantite = parseInt(options.quantite_spiders) || 2;

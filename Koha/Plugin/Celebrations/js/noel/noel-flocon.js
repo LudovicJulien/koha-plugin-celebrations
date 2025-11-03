@@ -1,3 +1,9 @@
+/*
+    Section : flocons de neige
+	Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Matt Blenkinsop - https://codepen.io/mblenk/pen/rNKbVab
+*/
 document.addEventListener('DOMContentLoaded', function() {
     var options = window["noelThemeOptions"] || {};
     if (!options || Object.keys(options).length === 0) {

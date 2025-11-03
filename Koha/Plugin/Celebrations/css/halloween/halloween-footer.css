@@ -1,5 +1,8 @@
 /*
-    SECTION : Witches Brew
+    Section : potion sorcière
+    Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Brandon Frye - https://codepen.io/brandonkfrye/pen/YJEoGM
 */
 #witch-brew {
   position: absolute;
@@ -90,7 +93,10 @@
   animation-delay: 3s;
 }
 /*
-    SECTION : Pumpkin
+    Section : citrouille
+    Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Luis Guillermo Moreno - https://codepen.io/lu32/pen/QWYWpjr
 */
 :root {
   --slice-width: 40%;

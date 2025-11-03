@@ -1,3 +1,9 @@
+/*
+    Section : panier d'oeufs
+	Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Jack Rugile - https://codepen.io/jackrugile/pen/nExVvo
+*/
 document.addEventListener('DOMContentLoaded', function() {
   var Fireworks = function() {
     var self = this;

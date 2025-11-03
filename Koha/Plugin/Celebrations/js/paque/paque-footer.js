@@ -1,7 +1,10 @@
+/*
+    Section : panier d'oeufs
+	Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Natalia Davydova - https://codepen.io/nat-davydova/pen/dyorEMm
+*/
 document.addEventListener('DOMContentLoaded', function () {
-  //
-  // HTML : pannier de paque d'oeuf
-  //
     const basket_iconHTML = `
     <div class="icon-block">
         <div class="icon basket-icon">
