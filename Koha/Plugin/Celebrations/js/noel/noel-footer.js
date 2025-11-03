@@ -1,3 +1,9 @@
+/*
+  Section : lumière de noel
+	Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Matt Blenkinsop - https://codepen.io/mblenk/pen/qBKwNmp
+*/
 document.addEventListener('DOMContentLoaded', function() {
         const christmasLight = `
              <div id="lightcontainer" class="lightcontainer">

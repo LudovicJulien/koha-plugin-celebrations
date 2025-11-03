@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-  //
-  // HTML : potion sorcière
-  //
+/*
+    Section : potion sorcière
+    Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Brandon Frye - https://codepen.io/brandonkfrye/pen/YJEoGM
+*/
   const witchBrewHTML = `
     <div id="witch-brew">
         <svg viewBox="0 0 308 383" style="enable-background:new 0 0 308 383;">
@@ -102,9 +105,12 @@ document.addEventListener('DOMContentLoaded', function() {
     dripRed?.classList.add('drip', 'drip--red');
     dripGreen?.classList.add('drip', 'drip--green');
   }
-  //
-  // HTML : citrouillew
-  //
+/*
+    Section : citrouille
+    Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Luis Guillermo Moreno - https://codepen.io/lu32/pen/QWYWpjr
+*/
   function getPumpkinHTML(id) {
     return `
       <div class="container" id="${id}">

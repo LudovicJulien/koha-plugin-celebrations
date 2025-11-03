@@ -1,5 +1,8 @@
 /*
     Section : Ghost cursor
+    Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Fabio Ottaviani - https://codepen.io/supah/pen/OBbzvp
 */
 svg#ghost-filter,
 svg#ghost-filter * {
@@ -92,7 +95,6 @@ svg#ghost-filter * {
     top: 12px;
   }
 }
-
 .ghost--outline {
   filter: none !important;
   background: none;
@@ -101,6 +103,5 @@ svg#ghost-filter * {
   z-index: 0;
 }
 .ghost__tail::before {
-  /* background: #fff; */
   box-shadow: 0 0 0 2px #0000009c;
 }
