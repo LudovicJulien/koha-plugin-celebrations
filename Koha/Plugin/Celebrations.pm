@@ -27,12 +27,27 @@ our $metadata = {
 #
 #
 #
-#   Constructeur du plugin (initialise avec les métadonnées)
+#   Constructeur du plugin (initialise avec les métadonnées) et lechement du fichier de configuration
 #
 sub new {
     my ($class, $args) = @_;
     $args->{metadata} = $metadata;
-    return $class->SUPER::new($args);
+    my $self = $class->SUPER::new($args);
+    my $plugin_pm_path = abs_path(__FILE__);
+    my $plugin_dir     = dirname($plugin_pm_path);
+    my $config_path    = "$plugin_dir/Celebrations/config/theme-config.json";
+    if (-e $config_path) {
+        my $json_text = read_file($config_path, binmode => ':utf8');
+        my $theme_config = decode_json($json_text);
+        $self->{json_config} = $json_text;
+        $self->{themes_config} = $theme_config;
+        $self->{plugin_dir} = $plugin_dir;
+    } else {
+        warn "[Celebrations] Config file not found: $config_path";
+        $self->{themes_config} = {};
+        $self->{plugin_dir} = $plugin_dir;
+    }
+    return $self;
 }
 #
 #
@@ -62,24 +77,32 @@ sub static_routes {
 #
 #
 #
+# Méthode interne pour générer un chemin vers un fichier CSS ou JS, Nettoie le nom du thème et du fichier pour éviter toute injection de chemin
+#
+sub _get_asset_path {
+    my ($self, $type, $theme, $file) = @_;
+    return '' unless $theme && $file && $self->{plugin_dir};
+    $theme =~ s/[^A-Za-z0-9_-]//g;
+    $file  =~ s/[^A-Za-z0-9_-]//g;
+    return "$self->{plugin_dir}/Celebrations/$type/$theme/$file.$type";
+}
+#
+#
+#
 #   envoie le CSS à l'OPAC (en inline pour éviter le temps de chargement long)
 #
 sub opac_head {
     my ($self) = @_;
     my $theme = $self->retrieve_data("selected_theme");
-    my $plugin_pm_path = abs_path(__FILE__);
-    my $plugin_dir = dirname($plugin_pm_path);
-    my $config_path = "$plugin_dir/Celebrations/config/theme-config.json";
-    my $json_text = read_file($config_path, binmode => ':utf8');
-    my $theme_config = decode_json($json_text);
-    return '' unless exists $theme_config->{$theme};
-    my $conf = $theme_config->{$theme};
+    return '' unless exists $self->{themes_config}{$theme} && exists $self->{plugin_dir};
+    my $plugin_dir     = $self->{plugin_dir};
+    my $conf       = $self->{themes_config}{$theme};
     my $extra_css = '';
     my $font_link = $conf->{font_url} // '';
     if (exists $conf->{elements}) {
         foreach my $element (keys %{ $conf->{elements} }) {
             my $setting = $conf->{elements}{$element}{setting};
-            my $css_file = "$plugin_dir/Celebrations/css/$theme/$conf->{elements}{$element}{file}.css";
+            my $css_file = $self->_get_asset_path('css', $theme, $conf->{elements}{$element}{file});
             my $status = $self->retrieve_data($setting) // 'off';
             if ($status eq 'on' && -e $css_file) {
                 $extra_css .= read_file($css_file, binmode => ':utf8');
@@ -101,14 +124,9 @@ sub opac_head {
 sub opac_js {
     my ($self) = @_;
     my $theme = $self->retrieve_data("selected_theme") // 'null';
-    return '' if $theme eq 'null';
-    my $plugin_pm_path = abs_path(__FILE__);
-    my $plugin_dir     = dirname($plugin_pm_path);
-    my $config_path    = "$plugin_dir/Celebrations/config/theme-config.json";
-    my $json_text = read_file($config_path, binmode => ':utf8');
-    my $theme_config = decode_json($json_text);
-    return '' unless exists $theme_config->{$theme};
-    my $conf = $theme_config->{$theme};
+    return '' unless exists $self->{themes_config}{$theme} && exists $self->{plugin_dir};
+    my $plugin_dir     = $self->{plugin_dir};
+    my $conf       = $self->{themes_config}{$theme};
     my $script_options = '';
     my @js_tags;
     if (exists $conf->{elements}) {
@@ -123,7 +141,7 @@ sub opac_js {
                 }
             }
             my $element_file = $conf->{elements}{$element}{file};
-            my $element_js_file = "$plugin_dir/Celebrations/js/$theme/$element_file.js";
+            my $element_js_file = $self->_get_asset_path('js', $theme, $element_file);
             if (-e $element_js_file) {
                 my $api_ns = $self->api_namespace;
                 push @js_tags, qq{
@@ -153,13 +171,8 @@ sub apply_theme {
     my $cgi = $self->{cgi};
     my $theme = $cgi->param('theme');
     my %data = ( selected_theme => $theme );
-    my $plugin_pm_path = abs_path(__FILE__);
-    my $plugin_dir     = dirname($plugin_pm_path);
-    my $config_path    = "$plugin_dir/Celebrations/config/theme-config.json";
-    my $json_text = read_file($config_path, binmode => ':utf8');
-    my $theme_config = decode_json($json_text);
-    if (exists $theme_config->{$theme} && exists $theme_config->{$theme}{elements}) {
-        my $conf = $theme_config->{$theme}{elements};
+    if (exists $self->{themes_config}{$theme} && exists $self->{themes_config}{$theme}{elements}) {
+        my $conf = $self->{themes_config}{$theme}{elements};
         foreach my $element (keys %$conf) {
             my $setting = $conf->{$element}{setting};
             $data{$setting} = $cgi->param($setting) // 'off';
@@ -188,13 +201,9 @@ sub tool {
     my $template;
     my $plugin_class = ref $self;
     my $plugin_name  = $metadata->{name} // $plugin_class;
-    my $plugin_pm_path = abs_path(__FILE__);
-    my $plugin_dir     = dirname($plugin_pm_path);
-    my $config_path    = "$plugin_dir/Celebrations/config/theme-config.json";
-    my $json_text      = read_file($config_path, binmode => ':utf8');
-    my $theme_config   = decode_json($json_text);
+    my $plugin_dir       = $self->{plugin_dir};
+    my $theme_config     = $self->{themes_config};
     my $theme_config_json = encode_json($theme_config);
-    my $theme_config_hash = decode_json($json_text);
     my $selected_theme = $self->retrieve_data("selected_theme") // 'null';
     my $preferredLanguage = C4::Languages::getlanguage();
     if ($self->is_enabled) {
@@ -217,7 +226,7 @@ sub tool {
             koha_session    => $koha_session,
             selected_theme  => $selected_theme,
             theme_config_json => $theme_config_json,
-            theme_config => $theme_config_hash,
+            theme_config => $theme_config,
             PLUGIN_DIR => $plugin_dir,
             LANG       => $preferredLanguage,
             %theme_data,

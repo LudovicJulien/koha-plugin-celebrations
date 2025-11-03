@@ -5,6 +5,7 @@
     # === text générale ===
     #
     extension = "Cette extension a été créée par ",
+    lang = "fr",
     site_web1 = "Visitez notre",
     site_web2 = "site web",
     site_web3 = " pour plus d'extensions Koha",
