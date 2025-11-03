@@ -50,57 +50,6 @@
       }
     }
   },
-   "/css/template/disabled.css": {
-    "get": {
-      "x-mojo-to": "Static#get",
-      "operationId": "KohaPluginCelebration_staticGetCSSDisabled",
-      "tags": ["pluginCelebration"],
-      "responses": {
-        "200": {
-          "description": "CSS OK",
-          "schema": {
-            "type": "file"
-          }
-        },
-        "400": {
-          "description": "Bad request",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "404": {
-          "description": "File not found",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        },
-        "500": {
-          "description": "Internal server error",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Error message",
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
   "/css/noel/noel.css": {
     "get": {
       "x-mojo-to": "Static#get",

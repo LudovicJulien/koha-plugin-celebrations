@@ -7,24 +7,20 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #333;
 }
-
 #inlibro-header {
     text-align: center;
     font-size: 14px;
     color: #696969;
     margin-bottom: 2em;
 }
-
 #inlibro-header img {
     max-width: 100%;
     height: auto;
 }
-
 #inlibro-header .right {
     text-align: right;
     font-size: 13px;
 }
-
 .plugin-card {
     background: #f9f9f9;
     padding: 2em;
@@ -32,29 +28,24 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     width: 100%;
 }
-
 .plugin-card h1 {
     margin-top: 0;
     font-size: 1.8em;
     color: #2a6ebb;
 }
-
 .plugin-card p {
     font-size: 1em;
     margin-bottom: 1.5em;
     line-height: 1.6em;
 }
-
 .form-group {
     margin-bottom: 1.5em;
 }
-
 label {
     display: block;
     margin-bottom: 0.5em;
     font-weight: 600;
 }
-
 select {
     width: 50%;
     padding: 0.5em;
@@ -62,7 +53,6 @@ select {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
-
 #imgInlibro{
     margin-bottom:10px;
 }
@@ -78,12 +68,10 @@ select {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     display: inline-block;
 }
-
 .modern-button:hover {
     background-color: #1e5293;
     transform: translateY(-2px);
 }
-
 .modern-button:active {
     background-color: #174272;
     transform: translateY(0);
@@ -91,9 +79,6 @@ select {
 .website{
     text-align: center;
 }
-
-
-
 .toggle-container {
     display: flex;
     align-items: center;
@@ -102,23 +87,17 @@ select {
     font-weight: 600;
     font-size: 1em;
 }
-
-/* The switch - the box around the slider */
 .switch {
     position: relative;
     display: inline-block;
     width: 50px;
     height: 26px;
 }
-
-/* Hide default HTML checkbox */
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
-
-/* The slider */
 .slider {
     position: absolute;
     cursor: pointer;
@@ -130,8 +109,6 @@ select {
     transition: .4s;
     border-radius: 34px;
 }
-
-/* Slider knob */
 .slider:before {
     position: absolute;
     content: "";
@@ -143,49 +120,37 @@ select {
     transition: .4s;
     border-radius: 50%;
 }
-
-/* Checked styles */
 .switch input:checked + .slider {
     background-color: #2a6ebb;
 }
-
 .switch input:checked + .slider:before {
     transform: translateX(24px);
 }
-
-/* Label next to switch */
 .toggle-label {
     user-select: none;
 }
-
 input[type="range"] {
     -webkit-appearance: none;
     width: 50%;
     height: 8px;
-    background: transparent; /* On utilise les styles personnalisés */
+    background: transparent;
     margin: 10px 0;
 }
-
-/* Barre de fond */
 input[type="range"]::-webkit-slider-runnable-track {
-    background: #2a6ebb;  /* 💙 BLEU */
+    background: #2a6ebb;
     height: 8px;
     border-radius: 5px;
 }
-
 input[type="range"]::-moz-range-track {
     background: #2a6ebb;
     height: 8px;
     border-radius: 5px;
 }
-
 input[type="range"]::-ms-track {
     background: transparent;
     border-color: transparent;
     color: transparent;
 }
-
-/* Curseur (bouton) */
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -194,11 +159,10 @@ input[type="range"]::-webkit-slider-thumb {
     background: white;
     border: 2px solid #2a6ebb;
     border-radius: 50%;
-    margin-top: -6px; /* Ajustement vertical */
+    margin-top: -6px;
     cursor: pointer;
     transition: background 0.3s;
 }
-
 input[type="range"]::-moz-range-thumb {
     height: 20px;
     width: 20px;
@@ -208,7 +172,6 @@ input[type="range"]::-moz-range-thumb {
     cursor: pointer;
     transition: background 0.3s;
 }
-
 input[type="range"]::-ms-thumb {
     height: 20px;
     width: 20px;
@@ -217,11 +180,9 @@ input[type="range"]::-ms-thumb {
     border-radius: 50%;
     cursor: pointer;
 }
-
 .labelRange{
     margin-top: 10px;
 }
-
 .range-wrapper{
     width: 50%;
 }
