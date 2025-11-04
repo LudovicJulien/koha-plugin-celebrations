@@ -40,6 +40,7 @@
         taille_flocons = "Flake size:",
         vent_flocons = "Wind:",
         quantite_flocons = "Quantity:",
+        countdown_noel = "CountDown 🕛",
     },
     #
     # === configuration du theme saint-valentin ===
@@ -92,7 +93,7 @@
         taille_petit = "Small",
         taille_normale = "Normal",
         taille_grand = "Big",
-    }
+    },
     #
     # === configuration des option de vent ===
     #

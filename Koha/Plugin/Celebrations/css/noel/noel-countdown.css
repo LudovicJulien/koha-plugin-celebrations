@@ -1,0 +1,15 @@
+.container_countdown {
+    width: 100%;
+    background-color: #F24236;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+}
+#days {
+  font-size: 20px;
+  color: #FFF;
+  text-align: center;
+  letter-spacing: 3px;
+  margin: 0 !important;
+}
