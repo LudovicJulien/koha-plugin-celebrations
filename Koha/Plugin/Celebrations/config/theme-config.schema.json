@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Configuration des Thèmes pour le Plugin Koha Celebrations",
+  "description": "Schéma de validation pour le fichier theme-config.json, qui définit les thèmes saisonniers et leurs éléments personnalisables pour le plugin Koha.",
+  "type": "object",
+  "patternProperties": {
+    "^[a-z0-9-]+$": {
+      "description": "Configuration pour un thème spécifique (ex: 'noel', 'halloween'). La clé doit être le nom du dossier du thème.",
+      "type": "object",
+      "required": ["elements"],
+      "properties": {
+        "font_url": {
+          "description": "URL d'une police Google Fonts à utiliser avec ce thème, ou un tableau vide si aucune police spécifique n'est requise.",
+          "oneOf": [
+            { "type": "string", "format": "uri" },
+            { "type": "array", "items": { "type": "string", "format": "uri" } }
+          ]
+        },
+        "elements": {
+          "description": "Contient la liste de tous les éléments visuels personnalisables pour ce thème.",
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9-]+$": {
+              "description": "Configuration pour un élément visuel spécifique au sein du thème (ex: 'couleurs', 'snow').",
+              "type": "object",
+              "required": ["setting", "file", "toggle_id"],
+              "properties": {
+                "setting": {
+                  "type": "string",
+                  "description": "ID unique pour cette option de configuration, utilisé pour le stockage en base de données et la recherche dans les fichiers de langue."
+                },
+                "file": {
+                  "type": "string",
+                  "description": "Nom de base des fichiers CSS/JS pour cet élément (ex: 'noel-color')."
+                },
+                "toggle_id": {
+                  "type": "string",
+                  "description": "ID unique pour l'interrupteur (toggle) dans l'interface d'administration qui active/désactive cet élément."
+                },
+                "extra_options": {
+                  "type": "object",
+                  "description": "(Optionnel) Contient des options avancées qui seront envoyées au fichier JavaScript.",
+                  "patternProperties": {
+                    "^[a-z0-9-]+$": {
+                      "description": "Configuration pour une option supplémentaire spécifique.",
+                      "type": "object",
+                      "required": ["type"],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": ["ignore", "range", "select"],
+                          "description": "Le type d'option supplémentaire."
+                        }
+                      },
+                      "oneOf": [
+                        {
+                          "properties": {
+                            "type": { "const": "ignore" }
+                          },
+                          "description": "Utilisé pour envoyer des données brutes au JS (ex: api_namespace)."
+                        },
+                        {
+                          "properties": {
+                            "type": { "const": "range" },
+                            "min": { "type": "integer", "description": "Valeur minimale pour le curseur (slider)." },
+                            "max": { "type": "integer", "description": "Valeur maximale pour le curseur (slider)." },
+                            "default": { "type": "integer", "description": "Valeur par défaut pour le curseur (slider)." }
+                          },
+                          "required": ["min", "max", "default"],
+                          "description": "Crée un curseur (slider) dans l'interface d'administration."
+                        },
+                        {
+                          "properties": {
+                            "type": { "const": "select" },
+                            "option_type": { "type": "string", "description": "Clé dans le fichier de langue définissant les options pour la liste déroulante." }
+                          },
+                          "required": ["option_type"],
+                          "description": "Crée une liste déroulante dans l'interface d'administration."
+                        }
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
