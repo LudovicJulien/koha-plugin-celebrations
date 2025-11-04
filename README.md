@@ -39,7 +39,7 @@ Les options de configuration permettent de modifier certains paramètres des él
 
 ## Configuration
 
-Après l'installation, cliquez sur `Actions > Configurer`. La page de configuration vous permet de :
+Après l'installation, cliquez sur `Actions > Exécuter l'outil`. La page de configuration vous permet de :
 
 1.  **Sélectionner un thème** dans le menu déroulant.
 2.  **Activer ou désactiver** les différents effets visuels (couleurs, animations, etc.) grâce aux interrupteurs.
