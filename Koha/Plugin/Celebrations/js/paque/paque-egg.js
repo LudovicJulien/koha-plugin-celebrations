@@ -1,14 +1,13 @@
 /*
-    Section : panier d'oeufs
+  Section : panier d'oeufs
 	Attribution :
       Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
       Copyright (c) Nate Wiley - https://codepen.io/natewiley/pen/wGeejw
 */
 document.addEventListener('DOMContentLoaded', function () {
   const options = window.paqueThemeOptions || {};
-  const eggsEnabled = options.activation_eggs || "on";
   const apiNamespace = options.api_namespace
-  if (eggsEnabled === 'on' && window.innerWidth > 768) {
+  if (window.innerWidth > 768) {
     // Trouve l'élément de référence
     const navbarCollapse = document.querySelector('nav.breadcrumbs');
     if (!navbarCollapse) return;
