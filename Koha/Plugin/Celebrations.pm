@@ -212,8 +212,18 @@ sub tool {
         my %theme_data;
         if ($selected_theme ne 'null' && exists $theme_config->{$selected_theme}{elements}) {
             foreach my $element (keys %{ $theme_config->{$selected_theme}{elements} }) {
-                my $setting = $theme_config->{$selected_theme}{elements}{$element}{setting};
+                my $el_conf = $theme_config->{$selected_theme}{elements}{$element};
+
+                # setting principal
+                my $setting = $el_conf->{setting};
                 $theme_data{$setting} = $self->retrieve_data($setting) // 'off';
+
+                # extra options
+                if (exists $el_conf->{extra_options}) {
+                    foreach my $opt_key (keys %{ $el_conf->{extra_options} }) {
+                        $theme_data{$opt_key} = $self->retrieve_data($opt_key) // $el_conf->{extra_options}{$opt_key}{default} // 'off';
+                    }
+                }
             }
         }
         $template->param(
@@ -229,7 +239,7 @@ sub tool {
             theme_config => $theme_config,
             PLUGIN_DIR => $plugin_dir,
             LANG       => $preferredLanguage,
-            %theme_data,
+            current_settings => \%theme_data
         );
     }
     else {
@@ -248,6 +258,31 @@ sub tool {
     }
     print $cgi->header(-type => 'text/html', -charset => 'utf-8');
     print $template->output();
+}
+#
+#
+#
+# permet de charger un aperçu de la page main de l'opac
+#
+sub opac_preview {
+    my ($self, $args) = @_;
+    my $cgi = $self->{cgi};
+    use C4::Auth qw(get_template_and_user);
+    use C4::Output qw(output_html_with_http_headers);
+    my ( $template, $borrowernumber, $cookie ) = get_template_and_user(
+        {
+            template_name   => "opac-main.tt",
+            type            => "opac",
+            query           => $cgi,
+            authnotrequired => 1,
+        }
+    );
+    $template->param(
+        plugin_name => 'Celebrations',
+        message     => "Aperçu OPAC généré depuis le plugin Celebrations ✨",
+        is_preview  => 1,
+    );
+    output_html_with_http_headers( $cgi, $cookie, $template->output );
 }
 #
 #

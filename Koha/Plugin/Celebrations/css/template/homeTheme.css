@@ -186,3 +186,141 @@ input[type="range"]::-ms-thumb {
 .range-wrapper{
     width: 50%;
 }
+#preVis{
+    font-size: 1.8em;
+    margin-top: 40px !important;
+    color: #2a6ebb;
+}
+/*
+    Section : Écrant d'ordinateur
+	Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Serge  - https://codepen.io/sergep/pen/VwQbqw
+*/
+.monitor-preview {
+  margin-top: 2em;
+}
+/* Dimensions et transition du conteneur */
+.container {
+  width: 80vw;
+  height: 60vw;
+  max-height: 600px;
+  max-width: 970px;
+  margin: 0 auto;
+}
+/* Fond noir du moniteur */
+.monitor {
+  padding: 4%;
+  position: relative;
+  background: #000000;
+  border-radius: 10px;
+  height: 100%;
+}
+/* Caméra du moniteur */
+.monitor:before {
+  content: "";
+  display: block;
+  background: #E6E9ED;
+  position: absolute;
+  padding: 0.8%;
+  border-radius: 50%;
+  right: 50%;
+  top: 1.8%;
+}
+/* Bouton power */
+.monitor:after {
+  content: "";
+  display: block;
+  background: #AAB2BD;
+  position: absolute;
+  padding: 1%;
+  border-radius: 10%;
+  right: 4%;
+  bottom: 1.5%;
+}
+/* Écran principal */
+.screen {
+  height: 100%;
+  position: relative;
+}
+/* Contenu de l’écran */
+.content {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 5px;
+}
+/* L’iframe s’adapte à tout l’écran */
+.content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 5px;
+}
+/* Barre latérale grise sur la droite du moniteur */
+.screen:after {
+  content: '';
+  display: block;
+  height: 88%;
+  position: absolute;
+  right: 0;
+  top: 6%;
+  width: 4%;
+}
+/* Pied du moniteur */
+.monitor-stand {
+  position: relative;
+  margin: 0 auto;
+  height: 10%;
+  width: 20%;
+  background: #6f6f75;
+  border-top: 24px solid #6f6f75;
+}
+/* Pied inférieur */
+.monitor-stand:after {
+  content: '';
+  position: absolute;
+  background: #6f6f75;
+  height: 20%;
+  width: 200%;
+  margin-left: -50%;
+  margin-top: 18%;
+  border-radius: 5px;
+}
+@media (min-width: 690px) and (max-width: 875px) {
+    .monitor-stand::after {
+        height: 25% !important;
+        margin-top: 14% !important;
+    }
+}
+@media (min-width: 590px) and (max-width: 690px) {
+    .monitor-stand::after {
+        height: 35% !important;
+        margin-top: 10% !important;
+    }
+}
+@media (min-width: 490px) and (max-width: 590px) {
+    .monitor-stand::after {
+        height: 50% !important;
+        margin-top: 6% !important;
+    }
+}
+/* Ombre sous le pied */
+/* .monitor-stand:before {
+  content: '';
+  position: absolute;
+  width: 250%;
+  height: 50%;
+  margin-left: -75%;
+  margin-top: 50%;
+  opacity: 0.3;
+  background: #000;
+  border-radius: 50%;
+} */
+.content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 5px;
+  transform-origin: top left;
+  transition: transform 0.3s ease;
+}

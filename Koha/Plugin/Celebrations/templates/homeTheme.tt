@@ -124,6 +124,23 @@
                 </p>
             </form>
         </div>
+        <h2 id="preVis">Prévisualisation du thème</h2>
+        <div class="container monitor-preview">
+            <div class="monitor">
+                <div class="screen">
+                <div class="content">
+                    <iframe
+                    src="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=opac_preview"
+                    id="theme-preview"
+                    title="Aperçu du thème OPAC"
+                    frameborder="0"
+                    allowfullscreen
+                    ></iframe>
+                </div>
+                </div>
+            </div>
+            <div class="monitor-stand"></div>
+        </div>
     </div>
 </div>
 <script>
