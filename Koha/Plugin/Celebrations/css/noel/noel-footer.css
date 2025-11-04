@@ -94,7 +94,6 @@
 .lightrope li:first-child {
   margin-left: -40px;
 }
-
 @-webkit-keyframes flash-1 {
   0%, 100% {
     background: #00f7a5;
@@ -157,8 +156,8 @@
   }
 }
 #celebration-footer{
-  height: 40px;
-   position: relative !important;
-    z-index: 1000 !important;
+  height: 60px;
+  position: relative !important;
+  z-index: 1000 !important;
 }
 
