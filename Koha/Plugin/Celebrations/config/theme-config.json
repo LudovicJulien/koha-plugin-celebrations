@@ -84,6 +84,11 @@
               "default": 100
           }
         }
+      },
+      "countdown": {
+      "setting": "countdown_noel",
+      "file": "noel-countdown",
+      "toggle_id": "toggle_noel_countdown"
       }
     }
   },

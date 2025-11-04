@@ -39,6 +39,7 @@
         taille_flocons = "Taille des flocons :",
         vent_flocons = "Vent :",
         quantite_flocons = "Quantité :",
+        countdown_noel = "compte à rebours 🕛",
     },
     #
     # === configuration du theme saint-valentin ===
