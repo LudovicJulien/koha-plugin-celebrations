@@ -60,6 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
       );
       const msg = response.ok ? successMessage : erreurMessage;
       msg.style.display = 'block';
+      const iframe = document.getElementById('theme-preview');
+      if (iframe) {
+        iframe.contentWindow.location.reload(true);
+      }
       setTimeout(() => {
         msg.style.display = 'none';
         if (submitBtn) {
@@ -152,3 +156,36 @@ function decodeHtml(html) {
   txt.innerHTML = html;
   return txt.value;
 }
+// --- Empêcher les clics et soumissions dans l’iframe ---
+const iframe = document.getElementById('theme-preview');
+iframe.addEventListener('load', () => {
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  const script = iframeDoc.createElement('script');
+  script.textContent = `
+    document.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+    document.addEventListener('submit', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+    document.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', (e) => e.preventDefault());
+    });
+  `;
+  iframeDoc.body.appendChild(script);
+});
+function adjustIframeZoom() {
+  const iframe = document.getElementById('theme-preview');
+  const container = document.querySelector('.container');
+  if (!iframe || !container) return;
+  const baseWidth = 1300;
+  const currentWidth = container.clientWidth;
+  const scale = currentWidth / baseWidth;
+  iframe.style.transform = `scale(${scale})`;
+  iframe.style.width = `${100 / scale}%`;
+  iframe.style.height = `${100 / scale}%`;
+}
+window.addEventListener('resize', adjustIframeZoom);
+window.addEventListener('DOMContentLoaded', adjustIframeZoom);
