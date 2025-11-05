@@ -5,8 +5,7 @@
       Copyright (c) Natalia Davydova - https://codepen.io/nat-davydova/pen/dyorEMm
 */
 .icon-block {
-    position: absolute;
-  bottom: 0;
+  position: absolute;
   left: 50%;
   transform: translateX(-50%);
   width: 50px;
@@ -32,7 +31,8 @@
   transform: scale(1.05);
 }
 #celebration-footer{
-  height: 40px;
-   position: relative !important;
-    z-index: 1000 !important;
+  position: relative !important;
+  z-index: 1000 !important;
+  margin-bottom: 50px !important;
+
 }
