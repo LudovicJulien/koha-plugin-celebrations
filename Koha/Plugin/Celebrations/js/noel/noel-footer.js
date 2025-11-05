@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
     document.body.appendChild(newFooter);
   }
+  // newFooter.style.height = '60px';
 });
 window.addEventListener('resize', () => {
   const rope = document.getElementById('lightrope');

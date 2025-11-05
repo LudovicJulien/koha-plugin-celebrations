@@ -156,8 +156,8 @@
   }
 }
 #celebration-footer{
-  height: 60px;
   position: relative !important;
   z-index: 1000 !important;
+  margin-bottom: 50px !important;
 }
 

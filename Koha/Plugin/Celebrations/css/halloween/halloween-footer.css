@@ -6,7 +6,7 @@
 */
 #witch-brew {
   position: absolute;
-  bottom: -5px;
+  top: 15px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -112,7 +112,7 @@
 }
 #pumpkin-left {
   position: absolute;
-  bottom: 0;
+  top: 55px;
   left: 46%;
   transform: translateX(-50%) translateX(-40px);
   z-index: 1000;
@@ -123,7 +123,7 @@
 }
 #pumpkin-right{
   position: absolute;
-  bottom: 0;
+  top: 55px;
    left: 54%;
   transform: translateX(-50%) translateX(40px);
   z-index: 1000;
@@ -286,12 +286,14 @@ html, body {
     height: auto !important;
 }
 #celebration-footer{
-  height: 40px;
+  /* height: 40px; */
+  margin-bottom: 50px !important;
    position: relative !important;
   z-index: 1000 !important;
 }
 @media (min-width: 800px) {
     #celebration-footer {
-        height: 100px;
+        /* height: 100px; */
+        margin-bottom: 100px !important;
     }
 }

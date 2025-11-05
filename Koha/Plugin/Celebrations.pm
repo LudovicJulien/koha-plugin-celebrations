@@ -14,14 +14,13 @@ use Cwd 'abs_path';
 #
 #   Informations de base sur le plugin (métadonnées utilisées par Koha)
 #
-our $VERSION = '0.9.4';
 our $metadata = {
     name   => 'Celebrations',
     author => 'Ludovic Julien',
     description => 'Un OPAC pour chaque saison.',
     date_authored => '2025-09-09',
-    date_updated    => '2025-11-04',
-    version => $VERSION,
+    date_updated    => '2025-11-05',
+    version => '0.9.4',
     minimum_version => '24.05',
 };
 #
