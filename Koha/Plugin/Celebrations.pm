@@ -19,7 +19,7 @@ our $metadata = {
     author => 'Ludovic Julien',
     description => 'Un OPAC pour chaque saison.',
     date_authored => '2025-09-09',
-    date_updated    => '2025-11-05',
+    date_updated    => '2025-11-07',
     version => '0.9.4',
     minimum_version => '24.05',
 };
@@ -212,11 +212,9 @@ sub tool {
         if ($selected_theme ne 'null' && exists $theme_config->{$selected_theme}{elements}) {
             foreach my $element (keys %{ $theme_config->{$selected_theme}{elements} }) {
                 my $el_conf = $theme_config->{$selected_theme}{elements}{$element};
-
                 # setting principal
                 my $setting = $el_conf->{setting};
                 $theme_data{$setting} = $self->retrieve_data($setting) // 'off';
-
                 # extra options
                 if (exists $el_conf->{extra_options}) {
                     foreach my $opt_key (keys %{ $el_conf->{extra_options} }) {
