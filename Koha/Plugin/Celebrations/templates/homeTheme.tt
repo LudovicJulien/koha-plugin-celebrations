@@ -111,9 +111,14 @@
                     [% END %]
                 [% END %]
                 <br><br>
-               <button type="submit" class="modern-button">[% T.apply_button | html %]</button>
-               <p id="success-message" style="display: none; color: green; font-weight: bold; margin-top: 1em;">
+                <div class="buttons-row">
+                    <button type="reset" id="reset-button" class="modern-button reset">[% T.reset_button | html %]</button>
+                    <button type="submit" class="modern-button">[% T.apply_button | html %]</button>
+                </div>
+                <p id="success-message" style="display: none; color: green; font-weight: bold; margin-top: 1em;">
                   [% T.apply_success | html %]
+                </p><p id="reset-message" style="display: none; color: green; font-weight: bold; margin-top: 1em;">
+                  [% T.reset_success | html %]
                 </p>
                 <p id="erreur-message" style="display: none; color: red; font-weight: bold; margin-top: 1em;">
                     [% T.apply_error | html %]
@@ -191,6 +196,7 @@
 <script>
   window.apiNamespace = "[% api_namespace | html %]";
   const THEMES_CONFIG_STR = '[% theme_config_json | html %]';
+  const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
 </script>
 <script src="/api/v1/contrib/[% api_namespace | uri %]/static/js/template/homeTheme.js" defer></script>
 [% INCLUDE 'intranet-bottom.inc' %]

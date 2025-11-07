@@ -279,6 +279,37 @@ input[type="range"]::-ms-thumb {
   align-items: center;
   justify-content: center;
 }
+
+iframe {
+  will-change: transform;
+  transform: translateZ(0);
+}
+* {
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+  transform: translateZ(0);
+}
+
+.buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.buttons-row button {
+  flex: 1;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.buttons-row button:hover {
+  transform: translateY(-1px);
+}
+
+button.reset {
+  background-color: #e0e0e0 !important;
+  color: #333 !important;
+}
 /*
     Section : Écran d'ordinateur
 	Attribution :
@@ -519,14 +550,4 @@ input[type="range"]::-ms-thumb {
 }
 .radio-inputs .radio input:checked + .name::after {
   --direction: 10px;
-}
-
-iframe {
-  will-change: transform;
-  transform: translateZ(0);
-}
-* {
-  image-rendering: pixelated;
-  shape-rendering: crispEdges;
-  transform: translateZ(0);
 }
