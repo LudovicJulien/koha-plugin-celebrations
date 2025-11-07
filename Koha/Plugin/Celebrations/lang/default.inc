@@ -9,14 +9,20 @@
     site_web1 = "Visit our",
     site_web2 = "Website",
     site_web3 = " for more Koha extensions",
+    documentation1 = "For setup and usage instructions, please visit our",
+    documentation2 = "plugin documentation",
     title = "Celebrations Plugin",
     titreD = "Welcome to the Celebration plugin!",
     description1 = "This plugin allows you to add seasonal themes to Koha's OPAC, such as Christmas, Halloween, or Valentine's Day.",
     description2 = "You can also customize some visual effects for each active theme.",
-    select_theme = "Select an OPAC Theme",
+    select_theme = "Theme configuration",
     apply_button = "Apply Theme",
     apply_success = "✅ Theme applied successfully!",
     apply_error = "❌ An error occurred while applying the theme. :(",
+    previs = "Theme preview",
+    ordi = "Computer",
+    tablet = "Tablet",
+    tel = "Phone",
     #
     # === Nom des themes disponible ===
     #
@@ -61,7 +67,7 @@
         footer_halloween = "Enable Footer elements 🎃",
         activation_spiders = "Enable spider effect 🕷️",
         quantite_spiders = "Number of spiders:",
-        activation_ghost = "Enable ghost cursor 👻",
+        activation_ghost = "Enable ghost cursor 👻 (visible only on desktop)",
     },
     #
     # === configuration du theme paque ===
@@ -69,7 +75,7 @@
     paque = {
         couleur_paque = "Enable Easter Color 🟡 🟢 🟣",
         footer_paque = "Enable Footer elements 🧺🥚",
-        activation_eggs = "Enable eggs cursor 🥚",
+        activation_eggs = "Enable eggs cursor 🥚 (visible only on desktop)",
     },
     #
     # === configuration du theme feux-artifice ===

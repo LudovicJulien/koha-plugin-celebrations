@@ -5,6 +5,7 @@
       Copyright (c) Rachel Best - https://codepen.io/rachel_web/pen/MjxzOb
 */
 document.addEventListener('DOMContentLoaded', function() {
+  const isInIframe = window.self !== window.top;
   const options = window.halloweenThemeOptions || {};
   const quantite = parseInt(options.quantite_spiders) || 2;
   const navbar = document.querySelector('nav.breadcrumbs');
@@ -56,5 +57,21 @@ document.addEventListener('DOMContentLoaded', function() {
   createSpiders();
   window.addEventListener('resize', () => {
     createSpiders();
+    adjustLine();
   });
+  adjustLine();
 });
+// gestion du cas où le chargement se fait dnas un Iframe
+function adjustLine() {
+  const isInIframe = window.self !== window.top;
+  const spiders = document.querySelectorAll('.spider');
+  if (!spiders.length) return;
+  spiders.forEach(spider => {
+    spider.classList.remove('thick-line', 'bigthickline');
+    if (isInIframe) {
+      spider.classList.add('bigthickline');
+    }
+  });
+
+}
+

@@ -1,17 +1,36 @@
+h1 {
+    font-size: 2.5em !important;
+    color: #2a6ebb !important;
+}
+#doc3{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 75px;
+}
 .theme-plugin-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 3em auto;
-    max-width: 700px;
+    margin: 10px 1vw;
+    max-width: 100vw;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #333;
+    color: #333 !important;
+    width: 100%;
+}
+.separator {
+    border: none;
+    height: 1px;
+    background-color: #ccc;
+    margin: 2em 0;
+    width: 100%;
 }
 #inlibro-header {
     text-align: center;
     font-size: 14px;
     color: #696969;
-    margin-bottom: 2em;
+    margin-bottom: 10px;
+    margin-top: 50px;
 }
 #inlibro-header img {
     max-width: 100%;
@@ -21,14 +40,62 @@
     text-align: right;
     font-size: 13px;
 }
+#plugin-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center !important;
+    align-items: flex-start;
+    width: 100% !important;
+    margin-top: 40px !important;
+    /* margin: 3em auto; */
+}
+@media (max-width: 1300px) {
+  #plugin-content {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .plugin-card {
+    position: static !important; /* enlève le positionnement fixe */
+    width: 90% !important;       /* occupe presque toute la largeur */
+    max-width: 450px;
+    margin-bottom: 30px !important; /* espace sous la carte */
+  }
+
+  #previewDiv {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+
+#ConfTitre{
+  text-align: center;
+    margin-top: 0;
+    font-size: 1.8em;
+    color: #2a6ebb;
+}
+#previewDiv{
+   flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
 .plugin-card {
+    flex: 1;
+    max-width: 400px;
     background: #f9f9f9;
-    padding: 2em;
+    padding: 2em 1em;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     width: 100%;
+    /* height: 600px; */
+    /* margin-top: 120px; */
 }
-.plugin-card h1 {
+.plugin-card h2 {
     margin-top: 0;
     font-size: 1.8em;
     color: #2a6ebb;
@@ -80,7 +147,9 @@ select {
     text-align: center;
 }
 .toggle-container {
-    display: flex;
+    /* display: flex; */
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
     gap: 10px;
     margin-bottom: 1em;
@@ -128,6 +197,7 @@ select {
 }
 .toggle-label {
     user-select: none;
+    width: 250px;
 }
 input[type="range"] {
     -webkit-appearance: none;
@@ -188,11 +258,29 @@ input[type="range"]::-ms-thumb {
 }
 #preVis{
     font-size: 1.8em;
-    margin-top: 40px !important;
+    margin-bottom: 15px;
     color: #2a6ebb;
 }
+.option-row{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.option-row label{
+ text-align: center;
+ color: #333 !important;
+}
+#theme-form{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 /*
-    Section : Écrant d'ordinateur
+    Section : Écran d'ordinateur
 	Attribution :
       Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
       Copyright (c) Serge  - https://codepen.io/sergep/pen/VwQbqw
@@ -204,8 +292,8 @@ input[type="range"]::-ms-thumb {
 .container {
   width: 80vw;
   height: 60vw;
-  max-height: 600px;
-  max-width: 970px;
+  max-height: 550px;
+  max-width: 920px;
   margin: 0 auto;
 }
 /* Fond noir du moniteur */
@@ -239,7 +327,7 @@ input[type="range"]::-ms-thumb {
   bottom: 1.5%;
 }
 /* Écran principal */
-.screen {
+.screenOrdi {
   height: 100%;
   position: relative;
 }
@@ -257,7 +345,7 @@ input[type="range"]::-ms-thumb {
   border-radius: 5px;
 }
 /* Barre latérale grise sur la droite du moniteur */
-.screen:after {
+.screenOrdi:after {
   content: '';
   display: block;
   height: 88%;
@@ -304,18 +392,6 @@ input[type="range"]::-ms-thumb {
         margin-top: 6% !important;
     }
 }
-/* Ombre sous le pied */
-/* .monitor-stand:before {
-  content: '';
-  position: absolute;
-  width: 250%;
-  height: 50%;
-  margin-left: -75%;
-  margin-top: 50%;
-  opacity: 0.3;
-  background: #000;
-  border-radius: 50%;
-} */
 .content iframe {
   width: 100%;
   height: 100%;
@@ -323,4 +399,134 @@ input[type="range"]::-ms-thumb {
   border-radius: 5px;
   transform-origin: top left;
   transition: transform 0.3s ease;
+}
+/*
+    Section : Écrant Iphone et Ipad
+	Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Serge  - https://codepen.io/sergep/pen/VwQbqw
+*/
+.device {display:inline-block; margin:0 20px; text-align:center; margin-top: 2em;}
+.case {border:1px solid #000; margin:auto;background:#000;}
+.iphone .case {height:70vw; width:35vw; max-width: 300px; max-height: 550px; min-width: 227px; min-height: 455px; border-radius:20px; overflow-x: hidden; overflow-y: hidden;}
+.iphone .screenMobile {width:calc(35vw - 25px);; height:calc(70vw - 50px); max-width: 275px; max-height: 501px; min-width: 202px; min-height: 405px;}
+.earsection {margin-top:8px; display: flex; justify-content: center; align-items: center; gap: 4px;   height:8px;}
+.camera { width:8px; height:8px; border:1px solid #111; border-radius:4px; background:#222;}
+.speaker { width:27px; height:3px; margin-left:8px; border:1px solid #111; background:#222; border-radius:3px;}
+.screenMobile {clear:both; width:125px; height:187px; margin:auto; margin-top:5px; border:1px solid #000; background:#222;}
+.device .button {height:18px; width:18px; border:1px solid #333; border-radius:9px; margin:auto; margin-top:4px;}
+.buttonsquare {height:6px; width:6px; border:1px solid #333; border-radius:2px; margin:auto; margin-top:5px; }
+.ipad .case {height:70vw; width:53vw; max-width: 480px; max-height: 550px; min-width: 350px; min-height: 455px; border-radius:20px; overflow-x: hidden; overflow-y: hidden;}
+.ipad .camera {float:none;margin:0 auto;position:relative;}
+.ipad .screenMobile {width:calc(53vw - 50px); height:calc(70vw - 52px); max-width: 430px; max-height: 499px; min-width: 302px; min-height: 405px; margin-top:8px; }
+/*
+    Section : Écrant radio Button
+	Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du composant original sur Uiverse.io.
+      Copyright (c) 00Kubi  - https://uiverse.io/00Kubi/smooth-termite-31
+*/
+.radio-inputs {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 0.5rem;
+  background-color: #eee;
+  box-sizing: border-box;
+  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+  padding: 0.25rem;
+  width: 300px;
+  font-size: 14px;
+}
+.radio-inputs .radio {
+  flex: 1 1 auto;
+  text-align: center;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.radio-inputs .radio input {
+  display: none;
+}
+.radio-inputs .radio .name {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: 0.5rem 0;
+  color: rgba(51, 65, 85, 1);
+  transition: all 0.15s ease-in-out;
+}
+.radio-inputs .radio input:checked + .name {
+  background-color: #fff;
+  font-weight: 600;
+}
+.radio-inputs .radio:hover .name {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.radio-inputs .radio input:checked + .name {
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: select 0.3s ease;
+}
+@keyframes select {
+  0% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.radio-inputs .radio input:checked + .name::before,
+.radio-inputs .radio input:checked + .name::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #3b82f6;
+  opacity: 0;
+  animation: particles 0.5s ease forwards;
+}
+.radio-inputs .radio input:checked + .name::before {
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.radio-inputs .radio input:checked + .name::after {
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+@keyframes particles {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(var(--direction));
+  }
+}
+.radio-inputs .radio input:checked + .name::before {
+  --direction: -10px;
+}
+.radio-inputs .radio input:checked + .name::after {
+  --direction: 10px;
+}
+
+iframe {
+  will-change: transform;
+  transform: translateZ(0);
+}
+* {
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+  transform: translateZ(0);
 }
