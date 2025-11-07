@@ -5,6 +5,7 @@
       Copyright (c) Matt Blenkinsop - https://codepen.io/mblenk/pen/rNKbVab
 */
 document.addEventListener('DOMContentLoaded', function() {
+    const isInIframe = window.self !== window.top;
     var options = window["saint-valentinThemeOptions"] || {};
     if (!options || Object.keys(options).length === 0) {
         console.error("Les options de thème saint-valentin n'ont pas été trouvées ou sont vides. Les valeurs par défaut seront utilisées. (vitesse:normale, taille:normale, vent:off, quantite:10)");
@@ -117,5 +118,12 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         return Coeur;
     }());
-         Coeur.init(document.body);
+    // gestion du cas où le chargement se fait dnas un Iframe
+    if (isInIframe) {
+       setTimeout(() => {
+        Coeur.init(document.body);
+    }, 1000);
+    } else {
+       Coeur.init(document.body);
+    }
 });

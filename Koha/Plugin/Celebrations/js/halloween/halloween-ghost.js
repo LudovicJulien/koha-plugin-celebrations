@@ -5,10 +5,7 @@
       Copyright (c) Fabio Ottaviani - https://codepen.io/supah/pen/OBbzvp
 */
 document.addEventListener('DOMContentLoaded', function() {
-    var options = window.HalloweenThemeOptions || {};
-    var ghostEnabled = options.activation_ghost || "on";
-    const footer = document.querySelector('footer#changelanguage');
-    if (ghostEnabled === 'on' && window.innerWidth > 768) {
+    if (window.innerWidth > 810) {
        const ghostHtml = `
         <div id="ghost" class="ghost">
             <div class="ghost__head">

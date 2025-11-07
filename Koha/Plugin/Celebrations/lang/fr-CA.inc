@@ -9,13 +9,19 @@
     site_web1 = "Visitez notre",
     site_web2 = "site web",
     site_web3 = " pour plus d'extensions Koha",
+    documentation1 = "Pour les instructions d'installation et d'utilisation, veuillez consulter notre",
+    documentation2 = "documentation de L'extension"
     title = "Plugin Célébrations",
     description1 = "Ce plugin vous permet d’ajouter des thèmes saisonniers à l’OPAC de Koha, comme Noël, Halloween ou la Saint-Valentin.",
     description2 = "Vous pouvez également personnaliser certains effets visuels pour chaque thème actif.",
-    select_theme = "Sélectionnez un thème OPAC",
+    select_theme = "Configuration du thème",
     apply_button = "Appliquer le thème",
     apply_success = "✅ Thème appliqué avec succès !",
     apply_error = "❌ Une erreur est survenue lors de l’application du thème. :(",
+    previs = "Prévisualisation du thème",
+    ordi = "Ordinateur",
+    tablet = "Tablette",
+    tel = "Téléphone",
     #
     # === Nom des themes disponible ===
     #
@@ -60,7 +66,7 @@
         footer_halloween = "Activer les éléments du pied de page 🎃",
         activation_spiders = "Activer l’effet d’araignées 🕷️",
         quantite_spiders = "Nombre d’araignées :",
-        activation_ghost = "Activer le curseur fantôme 👻",
+        activation_ghost = "Activer le curseur fantôme 👻 (visible uniquement sur ordinateur)",
     },
     #
     # === configuration du theme paque ===
@@ -68,7 +74,7 @@
     paque = {
         couleur_paque = "Activer les couleurs de Pâques 🟡 🟢 🟣",
         footer_paque = "Activer les éléments du pied de page 🧺🥚",
-        activation_eggs = "Activer le curseur d’œufs 🥚",
+        activation_eggs = "Activer le curseur d’œufs 🥚 (visible uniquement sur ordinateur)",
     },
     #
     # === configuration du theme feux-artifice ===

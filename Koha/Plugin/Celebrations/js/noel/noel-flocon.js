@@ -5,6 +5,7 @@
       Copyright (c) Matt Blenkinsop - https://codepen.io/mblenk/pen/rNKbVab
 */
 document.addEventListener('DOMContentLoaded', function() {
+    const isInIframe = window.self !== window.top;
     var options = window["noelThemeOptions"] || {};
     if (!options || Object.keys(options).length === 0) {
         console.error("Les options de thème Noël n'ont pas été trouvées ou sont vides. Les valeurs par défaut seront utilisées. (vitesse:normale, taille:normale, vent:off, quantite:10)");
@@ -13,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var vitesse = options.vitesse_flocons || 'vitesse_normal';
     var taille = options.taille_flocons || 'taille_normal';
     var vent = options.vent_flocons || 'vent_null';
-    var activation = options.activation_flocons || "on";
     var quantite = parseInt(options.quantite_flocons) || 10;
     var vitesseCoeff = 0.1;
     switch(vitesse) {
@@ -116,7 +116,12 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         return quantite_flocons;
     }());
-    if(activation === "on"){
-         quantite_flocons.init(document.body);
+    // gestion du cas où le chargement se fait dnas un Iframe
+    if (isInIframe) {
+       setTimeout(() => {
+        quantite_flocons.init(document.body);
+    }, 1000);
+    } else {
+       quantite_flocons.init(document.body);
     }
 });

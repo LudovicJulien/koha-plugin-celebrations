@@ -15,6 +15,9 @@
   margin-top: 0;
   z-index: 900;
 }
+.spider.bigthickline::before {
+  width: 3px;
+}
 .spider::before {
   position: absolute;
   content: "";

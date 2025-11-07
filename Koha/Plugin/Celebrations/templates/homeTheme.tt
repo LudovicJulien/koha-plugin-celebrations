@@ -15,24 +15,20 @@
 <div id="breadcrumbs">
     <a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo;
     <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo;
-    Carousel
+    Celebrations
 </div>
 <div id="doc3">
     <div id="content" class="theme-plugin-wrapper">
-        <div id="inlibro-header">
-            <p>[% T.extension | html %]</p>
-            <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_[% T.lang | html %].svg' alt="InLibro" id="imgInlibro" />
-            <p class="website">[% T.site_web1 | html %] <a href="https://inlibro.com">[% T.site_web2 | html %]</a> [% T.site_web3 | html %]</p>
-        </div>
-            <div class="plugin-card">
-                <h1>[% T.title | html %]</h1>
-            <p>
+            <h1>[% T.title | html %]</h1>
+            <p style="text-align: center">
                [% T.description1 | html %]
                 <br>
                [% T.description2 | html %]
             </p>
-            <hr>
-            <h2>[% T.select_theme | html %]</h2>
+            <hr class="separator">
+            <div id="plugin-content">
+            <div class="plugin-card">
+            <h2 id="ConfTitre">[% T.select_theme | html %]</h2>
            <form id="theme-form" method="post" action="javascript:void(0)">
                  <input type="hidden" name="koha_session" value="[% koha.sessionID | html %]">
                 <input type="hidden" name="plugin_name" value="OpacTheme">
@@ -61,12 +57,12 @@
                                 toggle_id = element.toggle_id;
                                 %]
                                 <div class="toggle-container" id="[% toggle_id | html %]" style="display: none;">
+                                    <span class="toggle-label">[% theme_translation.${setting_id} | html %]</span>
                                     <label class="switch">
                                         <input type="checkbox" id="[% setting_id | html %]" name="[% setting_id | html %]"
                                             [% IF current_settings.${setting_id} %]checked[% END %]>
                                         <span class="slider round"></span>
                                     </label>
-                                    <span class="toggle-label">[% theme_translation.${setting_id} | html %]</span>
                                 </div>
                                 [% IF element.extra_options %]
                                     [% element_config_id = element_key _ '-config'; %]
@@ -124,25 +120,74 @@
                 </p>
             </form>
         </div>
-        <h2 id="preVis">Prévisualisation du thème</h2>
-        <div class="container monitor-preview">
+        <div id="previewDiv">
+        <h2 id="preVis">[% T.previs | html %]</h2>
+        <div class="radio-inputs">
+            <label class="radio">
+                <input type="radio" name="radio" value="ordi" checked="" />
+                <span class="name">[% T.ordi | html %]</span>
+            </label>
+            <label class="radio">
+                <input type="radio" name="radio" value="tel" />
+                <span class="name">[% T.tel | html %]</span>
+            </label>
+            <label class="radio">
+                <input type="radio" name="radio" value="tablette" />
+                <span class="name">[% T.tablet | html %]</span>
+            </label>
+        </div>
+
+        <div class="container monitor-preview" style="display: block;">
             <div class="monitor">
-                <div class="screen">
-                <div class="content">
-                    <iframe
-                    src="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=opac_preview"
-                    id="theme-preview"
-                    title="Aperçu du thème OPAC"
-                    frameborder="0"
-                    allowfullscreen
-                    ></iframe>
-                </div>
+                <div class="screenOrdi">
+                    <div class="content">
+
+                    </div>
                 </div>
             </div>
             <div class="monitor-stand"></div>
         </div>
+
+        <div class="ipad device" style="display: none;">
+            <div class="case">
+                <div class="earsection">
+                    <div class="camera"></div>
+                </div>
+                <div class="screenMobile">
+
+                </div>
+                <div class="button">
+                    <div class="buttonsquare"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="iphone device" style="display: none;">
+            <div class="case">
+                <div class="earsection">
+                    <div class="camera"></div>
+                    <div class="speaker"></div>
+                </div>
+                <div class="screenMobile">
+
+                </div>
+                <div class="button">
+                    <div class="buttonsquare"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
     </div>
 </div>
+<hr class="separator">
+  <div id="inlibro-header">
+            <p>[% T.extension | html %]</p>
+            <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_[% T.lang | html %].svg' alt="InLibro" id="imgInlibro" />
+            <p class="website">[% T.site_web1 | html %] <a href="https://inlibro.com/koha-plugins/">[% T.site_web2 | html %]</a> [% T.site_web3 | html %]</p>
+           <p>[% T.documentation1 | html %] <a href="https://inlibro.com/extension-koha-celebrations/" target="_blank">[% T.documentation2 | html %]</a>.</p>
+        </div>
 <script>
   window.apiNamespace = "[% api_namespace | html %]";
   const THEMES_CONFIG_STR = '[% theme_config_json | html %]';
