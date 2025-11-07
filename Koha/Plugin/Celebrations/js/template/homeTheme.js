@@ -3,29 +3,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeSelect = $('theme-select');
   const form = $('theme-form');
   const successMessage = $('success-message');
+  const resetMessage = $('reset-message');
   const erreurMessage = $('erreur-message');
-  // --- Lecture sécurisée du JSON ---
-  let rawThemes = {};
-  try {
-    const decodedJsonStr = decodeHtml(THEMES_CONFIG_STR);
-    rawThemes = JSON.parse(decodedJsonStr);
-  } catch (e) {
-    console.error("THEMES_CONFIG_STR non défini ou JSON invalide :", e);
+  const rawThemes = safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR");
+  const currentSettings = safeParseJSON(CURRENT_SETTINGS_STR, "CURRENT_SETTINGS_STR");
+  /**
+   * Décode une chaîne HTML et parse du JSON en toute sécurité.
+   * Retourne un objet vide si la donnée est invalide.
+   */
+  function safeParseJSON(encodedStr, label = "JSON inconnu") {
+    try {
+      if (!encodedStr) throw new Error(`${label} vide ou non défini`);
+      const decoded = decodeHtml(encodedStr);
+      return JSON.parse(decoded);
+    } catch (e) {
+      console.warn(`Erreur de parsing ${label} :`, e);
+      return {};
+    }
   }
   // --- Soumission du formulaire ---
   form.addEventListener('submit', async event => {
     event.preventDefault();
+    const actionType = form.dataset.actionType || "apply";
+    delete form.dataset.actionType;
     const selectedTheme = themeSelect.value;
     const themeData = rawThemes[selectedTheme];
     const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.style.cursor = 'not-allowed';
-    }
+    const resetBtn = form.querySelector('button[type="reset"], input[type="reset"]');
+    const toggleButtons = (disabled) => {
+      [submitBtn, resetBtn].forEach(btn => {
+        if (btn) {
+          btn.disabled = disabled;
+          btn.style.cursor = disabled ? 'not-allowed' : 'pointer';
+        }
+      });
+    };
+    toggleButtons(true);
+    // --- Préparation des données ---
     const formData = new FormData();
     formData.append('plugin_name', 'Celebrations');
     formData.append('class', 'Koha::Plugin::Celebrations');
     formData.append('method', 'apply_theme');
+    formData.append('action', actionType);
     formData.append('action', 'apply_theme');
     formData.append('theme', selectedTheme);
     if(themeData && themeData.elements) {
@@ -52,35 +71,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
-    // Envoi au serveur
+    // --- Envoi au serveur ---
     try {
       const response = await fetch(
         '/cgi-bin/koha/plugins/run.pl?Koha::Plugin::Celebrations&method=apply_theme',
         { method: 'POST', body: formData, credentials: 'same-origin' }
       );
-      const msg = response.ok ? successMessage : erreurMessage;
-      msg.style.display = 'block';
-
-      const iframe = document.getElementById('theme-preview');
-      if (iframe) {
-        iframe.contentWindow.location.reload(true);
-      }
-      setTimeout(() => {
-        msg.style.display = 'none';
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.style.cursor = 'pointer';
+      if (response.ok) {
+        if (actionType === "reset") {
+          resetMessage.style.display = "block";
+        }else{
+          successMessage.style.display = "block";
         }
+      } else {
+        erreurMessage.style.display = "block";
+      }
+      const iframe = document.getElementById('theme-preview');
+      if (iframe) iframe.contentWindow.location.reload(true);
+      setTimeout(() => {
+        resetMessage.style.display = 'none';
+        successMessage.style.display = 'none';
+        toggleButtons(false);
       }, 3000);
     } catch (error) {
       console.error(error);
       erreurMessage.style.display = 'block';
       setTimeout(() => {
         erreurMessage.style.display = 'none';
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.style.cursor = 'pointer';
-        }
+        toggleButtons(false);
       }, 3000);
     }
   });
@@ -128,8 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
-    // IMPORTANT : Repositionner l'iframe après changement des options
-    // Utiliser setTimeout pour attendre que le DOM soit mis à jour
+    // Repositionner l'iframe après changement des options
     setTimeout(() => {
       if (window.positionIframeGlobal) {
         window.positionIframeGlobal();
@@ -162,6 +179,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (input && label)
       input.addEventListener('input', () => (label.textContent = input.value));
   });
+  const resetBtn = $('reset-button');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', resetConfiguration);
+  }
+  // --- Réinitialisation de la configuration ---
+function resetConfiguration() {
+  if (currentSettings.theme) {
+    themeSelect.value = currentSettings.theme;
+  }
+  Object.entries(currentSettings).forEach(([key, value]) => {
+    const input = $(key);
+    if (!input) return;
+    if (input.type === 'checkbox') {
+      input.checked = value === 'on';
+    } else {
+      input.value = value;
+      const valLabel = $(`val_${key}`);
+      if (valLabel) valLabel.textContent = value;
+    }
+  });
+  updateThemeOptions();
+  form.dataset.actionType = "reset";
+  form.dispatchEvent(new Event('submit'));
+}
 });
 // --- Décode les entités HTML encodées (TT/Perl) ---
 function decodeHtml(html) {

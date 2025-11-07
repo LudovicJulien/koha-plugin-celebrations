@@ -9,6 +9,7 @@ use C4::Languages;
 use File::Slurp;
 use File::Basename;
 use Cwd 'abs_path';
+use JSON;
 #
 #
 #
@@ -223,6 +224,8 @@ sub tool {
                 }
             }
         }
+        $theme_data{theme} = $selected_theme;
+        my $current_settings_json = encode_json(\%theme_data);
         $template->param(
             enabled         => 1,
             CLASS           => $plugin_class,
@@ -236,7 +239,8 @@ sub tool {
             theme_config => $theme_config,
             PLUGIN_DIR => $plugin_dir,
             LANG       => $preferredLanguage,
-            current_settings => \%theme_data
+            current_settings => \%theme_data,
+            current_settings_json => $current_settings_json,
         );
     }
     else {
