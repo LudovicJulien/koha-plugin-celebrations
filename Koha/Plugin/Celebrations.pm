@@ -10,6 +10,7 @@ use File::Slurp;
 use File::Basename;
 use Cwd 'abs_path';
 use JSON;
+use DateTime::Format::Strptime;
 #
 #
 #
@@ -85,6 +86,43 @@ sub _get_asset_path {
     $theme =~ s/[^A-Za-z0-9_-]//g;
     $file  =~ s/[^A-Za-z0-9_-]//g;
     return "$self->{plugin_dir}/Celebrations/$type/$theme/$file.$type";
+}
+#
+#
+#
+# Récupère le thème actif en fonction de la date actuelle
+#
+sub _get_active_theme {
+    my ($self) = @_;
+    my $themes_data = $self->retrieve_data('themes_data');
+    return undef unless $themes_data;
+    my $themes = decode_json($themes_data);
+    my $now = DateTime->now();
+    foreach my $theme_name (keys %$themes) {
+        my $theme = $themes->{$theme_name};
+        next unless $theme->{active};
+        if ($theme->{start_date} && $theme->{end_date}) {
+            my $start = DateTime->from_epoch(epoch => $theme->{start_date});
+            my $end = DateTime->from_epoch(epoch => $theme->{end_date});
+            if ($now >= $start && $now <= $end) {
+                return $theme_name;
+            }
+        }
+    }
+    return undef;
+}
+#
+#
+#
+# Récupère la configuration complète d'un thème
+#
+sub _get_theme_config {
+    my ($self, $theme_name) = @_;
+    return undef unless $theme_name;
+    my $themes_data = $self->retrieve_data('themes_data');
+    return undef unless $themes_data;
+    my $themes = decode_json($themes_data);
+    return $themes->{$theme_name} // undef;
 }
 #
 #
@@ -169,26 +207,166 @@ sub opac_js {
 sub apply_theme {
     my ($self) = @_;
     my $cgi = $self->{cgi};
-    my $theme = $cgi->param('theme');
-    my %data = ( selected_theme => $theme );
-    if (exists $self->{themes_config}{$theme} && exists $self->{themes_config}{$theme}{elements}) {
-        my $conf = $self->{themes_config}{$theme}{elements};
-        foreach my $element (keys %$conf) {
-            my $setting = $conf->{$element}{setting};
-            $data{$setting} = $cgi->param($setting) // 'off';
-            if (exists $conf->{$element}{extra_options}) {
-                foreach my $opt_key (keys %{ $conf->{$element}{extra_options} }) {
+    print $cgi->header(-type => 'application/json', -charset => 'UTF-8');
+    my $theme_name = $cgi->param('theme');
+    my $start_date = $cgi->param('start_date');
+    my $end_date = $cgi->param('end_date');
+    unless ($start_date && $start_date ne 'null' && $end_date && $end_date ne 'null') {
+       print to_json({
+            success => JSON::false,
+            message   => 'Les dates de début et de fin sont obligatoires'
+        });
+        return;
+    }
+    my $strp = DateTime::Format::Strptime->new(
+        pattern   => '%Y-%m-%d',
+        time_zone => 'local',
+    );
+    my $start_dt = $strp->parse_datetime($start_date);
+    my $end_dt   = $strp->parse_datetime($end_date);
+    unless ($start_dt && $end_dt) {
+        print to_json({
+            success => JSON::false,
+            message => 'Format de date invalide'
+        });
+        return;
+    }
+    if ($start_dt >= $end_dt) {
+        print to_json({
+            success => JSON::false,
+            message => 'La date de début doit être avant la date de fin'
+        });
+        return;
+    }
+    my $themes_data = $self->retrieve_data('themes_data');
+    my $themes = $themes_data ? decode_json($themes_data) : {};
+    foreach my $existing_theme_name (keys %$themes) {
+        next if $existing_theme_name eq $theme_name;
+        my $existing_theme = $themes->{$existing_theme_name};
+        next unless $existing_theme->{active};
+        if ($existing_theme->{start_date} && $existing_theme->{end_date}) {
+            my $exist_start = DateTime->from_epoch(epoch => $existing_theme->{start_date});
+            my $exist_end = DateTime->from_epoch(epoch => $existing_theme->{end_date});
+            if (($start_dt <= $exist_end) && ($end_dt >= $exist_start)) {
+                print to_json({
+                    success => JSON::false,
+                    message => "Conflit de dates avec le thème '$existing_theme_name'"
+                });
+                return;
+            }
+        }
+    }
+    my %theme_data = (
+        theme_name => $theme_name,
+        active => 1,
+        start_date => $start_dt->epoch,
+        end_date => $end_dt->epoch,
+        created_at => time(),
+        elements => {}
+    );
+    if (exists $self->{themes_config}{$theme_name} &&
+        exists $self->{themes_config}{$theme_name}{elements}) {
+        my $base_elements = $self->{themes_config}{$theme_name}{elements};
+        foreach my $element (keys %$base_elements) {
+            my $setting = $base_elements->{$element}{setting};
+            my $enabled = $cgi->param($setting) // 'off';
+            $theme_data{elements}{$element} = {
+                enabled => $enabled,
+                options => {}
+            };
+            if (exists $base_elements->{$element}{extra_options}) {
+                foreach my $opt_key (keys %{ $base_elements->{$element}{extra_options} }) {
                     my $opt_val = $cgi->param($opt_key);
                     $opt_val = $self->api_namespace if $opt_key eq 'api_namespace';
-                    $opt_val //= 'off';
-                    $data{$opt_key} = $opt_val;
+                    $opt_val //= $base_elements->{$element}{extra_options}{$opt_key}{default} // 'off';
+                    $theme_data{elements}{$element}{options}{$opt_key} = $opt_val;
                 }
             }
         }
     }
-    $self->store_data(\%data, { flatten => 0 });
+    $themes->{$theme_name} = \%theme_data;
+    $self->store_data({ themes_data => encode_json($themes) });
+    print to_json({
+        success => JSON::true,
+        theme => $theme_name,
+        message => "Thème '$theme_name' activé du " . $start_date . " au " . $end_date
+    });
+}
+#
+#
+#
+# Supprime un thème de la base de données
+#
+sub delete_theme {
+    my ($self) = @_;
+    my $cgi = CGI->new;
+    my $theme_name = $cgi->param('theme_name');
+    binmode STDOUT, ':encoding(UTF-8)';
+    print $cgi->header(-type => 'application/json', -charset => 'UTF-8');
+    eval {
+        my $themes_data = $self->retrieve_data('themes_data');
+        if (!$themes_data) {
+            print encode_json({ success => JSON::false, error => 'Aucune donnée de thème trouvée' });
+            return;
+        }
+        my $themes = decode_json($themes_data);
+        if (exists $themes->{$theme_name}) {
+            delete $themes->{$theme_name};
+            $self->store_data({ themes_data => encode_json($themes) });
+            print encode_json({
+                success => JSON::true,
+                theme   => $theme_name,
+                message => "Thème supprimé avec succès"
+            });
+        } else {
+            print encode_json({
+                success => JSON::false,
+                error   => "Thème '$theme_name' non trouvé"
+            });
+        }
+    };
+    if ($@) {
+        print encode_json({
+            success => JSON::false,
+            error   => "Erreur serveur: $@"
+        });
+    }
+}
+#
+#
+#
+# Liste tous les thèmes avec leur statut
+#
+sub list_themes {
+    my ($self) = @_;
+    my $cgi = $self->{cgi};
+    my $themes_data = $self->retrieve_data('themes_data');
+    my $themes = $themes_data ? decode_json($themes_data) : {};
+    my $now = DateTime->now();
+    my @theme_list;
+    foreach my $theme_name (keys %$themes) {
+        my $theme = $themes->{$theme_name};
+        my $is_current = 0;
+        if ($theme->{active} && $theme->{start_date} && $theme->{end_date}) {
+            my $start = DateTime->from_epoch(epoch => $theme->{start_date});
+            my $end = DateTime->from_epoch(epoch => $theme->{end_date});
+            $is_current = ($now >= $start && $now <= $end) ? 1 : 0;
+        }
+        push @theme_list, {
+            name => $theme_name,
+            active => $theme->{active},
+            is_current => $is_current,
+            start_date => $theme->{start_date},
+            end_date => $theme->{end_date},
+            created_at => $theme->{created_at}
+        };
+    }
     print $cgi->header('application/json');
-    print to_json({ success => JSON::true, theme => $theme });
+    print to_json({
+        success => JSON::true,
+        themes => \@theme_list,
+        current_theme => $self->_get_active_theme()
+    });
 }
 #
 #
@@ -204,28 +382,59 @@ sub tool {
     my $plugin_dir       = $self->{plugin_dir};
     my $theme_config     = $self->{themes_config};
     my $theme_config_json = encode_json($theme_config);
-    my $selected_theme = $self->retrieve_data("selected_theme") // 'null';
     my $preferredLanguage = C4::Languages::getlanguage();
     if ($self->is_enabled) {
         my $koha_session = $cgi->cookie('KohaSession') // $cgi->param('koha_session');
         $template = $self->get_template({ file =>  'templates/homeTheme.tt' });
-        my %theme_data;
-        if ($selected_theme ne 'null' && exists $theme_config->{$selected_theme}{elements}) {
-            foreach my $element (keys %{ $theme_config->{$selected_theme}{elements} }) {
-                my $el_conf = $theme_config->{$selected_theme}{elements}{$element};
-                # setting principal
-                my $setting = $el_conf->{setting};
-                $theme_data{$setting} = $self->retrieve_data($setting) // 'off';
-                # extra options
-                if (exists $el_conf->{extra_options}) {
-                    foreach my $opt_key (keys %{ $el_conf->{extra_options} }) {
-                        $theme_data{$opt_key} = $self->retrieve_data($opt_key) // $el_conf->{extra_options}{$opt_key}{default} // 'off';
-                    }
-                }
+        # Récupère le thème actuellement actif
+        my $active_theme = $self->_get_active_theme();
+        # Récupère tous les thèmes programmés
+        my $themes_data = $self->retrieve_data('themes_data');
+        my $all_themes = $themes_data ? decode_json($themes_data) : {};
+        # Prépare les données des thèmes pour l'affichage
+        my @themes_list;
+        my $now = DateTime->now();
+        foreach my $theme_name (keys %$all_themes) {
+            my $theme = $all_themes->{$theme_name};
+            my $is_current = 0;
+            if ($theme->{active} && $theme->{start_date} && $theme->{end_date}) {
+                my $start = DateTime->from_epoch(epoch => $theme->{start_date});
+                my $end = DateTime->from_epoch(epoch => $theme->{end_date});
+                $is_current = ($now >= $start && $now <= $end) ? 1 : 0;
             }
+            # Formater les dates pour l'affichage
+            my $start_formatted = '';
+            my $end_formatted = '';
+            if ($theme->{start_date}) {
+                my $start_dt = DateTime->from_epoch(epoch => $theme->{start_date});
+                $start_formatted = $start_dt->strftime('%Y-%m-%dT%H:%M');
+            }
+            if ($theme->{end_date}) {
+                my $end_dt = DateTime->from_epoch(epoch => $theme->{end_date});
+                $end_formatted = $end_dt->strftime('%Y-%m-%dT%H:%M');
+            }
+            push @themes_list, {
+                theme_name => $theme_name,
+                active => $theme->{active},
+                is_current => $is_current,
+                start_date => $theme->{start_date},
+                end_date => $theme->{end_date},
+                start_date_formatted => $start_formatted,
+                end_date_formatted => $end_formatted,
+                created_at => $theme->{created_at},
+                elements_count => scalar keys %{$theme->{elements} // {}}
+            };
         }
-        $theme_data{theme} = $selected_theme;
-        my $current_settings_json = encode_json(\%theme_data);
+        use Data::Dumper;
+        warn Dumper(@themes_list);
+        # Trier les thèmes : actif en premier, puis par date
+        @themes_list = sort {
+            return -1 if $a->{is_current} && !$b->{is_current};
+            return 1 if !$a->{is_current} && $b->{is_current};
+            return $b->{start_date} <=> $a->{start_date};
+        } @themes_list;
+        my $themes_list_json = encode_json(\@themes_list);
+        # Prépare les paramètres du template
         $template->param(
             enabled         => 1,
             CLASS           => $plugin_class,
@@ -234,13 +443,13 @@ sub tool {
             plugin_class    => $plugin_class,
             api_namespace   => $self->api_namespace,
             koha_session    => $koha_session,
-            selected_theme  => $selected_theme,
+            active_theme    => $active_theme,
+            all_themes      => \@themes_list,
+            themes_list_json => $themes_list_json,
             theme_config_json => $theme_config_json,
             theme_config => $theme_config,
             PLUGIN_DIR => $plugin_dir,
             LANG       => $preferredLanguage,
-            current_settings => \%theme_data,
-            current_settings_json => $current_settings_json,
         );
     }
     else {
@@ -283,7 +492,44 @@ sub opac_preview {
         message     => "Aperçu OPAC généré depuis le plugin Celebrations ✨",
         is_preview  => 1,
     );
-    output_html_with_http_headers( $cgi, $cookie, $template->output );
+    my $html = $template->output;
+    # Supprime les <script> pointant vers Celebrations-api
+    $html =~ s{<script[^>]+Celebrations-api[^>]*></script>}{}gis;
+    # Supprime les <link> CSS du plugin Celebrations
+    $html =~ s{<link[^>]+Celebrations-api[^>]*>}{}gis;
+    # Supprime la balise <style id="theme-inline-css"> ... </style>
+    $html =~ s{<style[^>]+id=["']theme-inline-css["'][^>]*>.*?</style>}{}gis;
+    # Optionnel : nettoyage des commentaires HTML générés par le plugin
+    $html =~ s{<!--.*?Celebrations.*?-->}{}gis;
+    # Retourne le HTML nettoyé
+    output_html_with_http_headers($cgi, $cookie, $html);
+}
+sub serve_asset {
+    my ($self) = @_;
+    my $cgi = CGI->new;
+    my $type = $cgi->param('type'); # css ou js
+    my $theme = $cgi->param('theme');
+    my $file = $cgi->param('file');
+    # Validation basique (évite l'injection)
+    return $self->output_html("Invalid params")
+      unless $type =~ /^(css|js)$/ && $theme =~ /^[A-Za-z0-9_-]+$/ && $file =~ /^[A-Za-z0-9_-]+$/;
+    my $path = $self->{plugin_dir} . "/Celebrations/$type/$theme/$file.$type";
+    if (-e $path) {
+        open my $fh, '<:raw', $path or return $self->output_html("Can't open file");
+        local $/;
+        my $content = <$fh>;
+        close $fh;
+        print $cgi->header(
+            -type => $type eq 'css' ? 'text/css' : 'application/javascript',
+            -charset => 'utf-8'
+        );
+        print $content;
+        exit;
+    } else {
+        print $cgi->header(-status => 404, -type => 'text/plain');
+        print "File not found";
+        exit;
+    }
 }
 #
 #

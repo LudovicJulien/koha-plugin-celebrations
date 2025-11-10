@@ -26,6 +26,14 @@
                [% T.description2 | html %]
             </p>
             <hr class="separator">
+            <div id="themes-list-section" class="themes-list-wrapper">
+                <h2 class="section-title">Thèmes programmés</h2>
+                <div id="themes-grid" class="themes-grid">
+                    <!-- Les thèmes seront injectés ici par JavaScript -->
+                </div>
+            </div>
+            <br><br>
+            <hr class="separator">
             <div id="plugin-content">
             <div class="plugin-card">
             <h2 id="ConfTitre">[% T.select_theme | html %]</h2>
@@ -68,7 +76,7 @@
                                     [% element_config_id = element_key _ '-config'; %]
                                     <div id="[% element_config_id | html %]"
                                          class="extra-options-container"
-                                         style="margin-left: 20px; display: none;">
+                                         style="display: none;">
                                         [% FOREACH option_key IN element.extra_options.keys %]
                                             [% option_data = element.extra_options.${option_key};
                                                NEXT IF option_data.type == "ignore";
@@ -110,11 +118,20 @@
                         </div>
                     [% END %]
                 [% END %]
+                <div class="date-row">
+                    <label for="start_date">Date de début :</label>
+                    <input type="date" id="start_date" name="start_date">
+
+                    <label for="end_date">Date de fin :</label>
+                    <input type="date" id="end_date" name="end_date">
+                </div>
                 <br><br>
+
                 <div class="buttons-row">
                     <button type="reset" id="reset-button" class="modern-button reset">[% T.reset_button | html %]</button>
-                    <button type="submit" class="modern-button">[% T.apply_button | html %]</button>
+                    <button type="preview" id="preview-button" class="modern-button">[% T.preview_button | html %]</button>
                 </div>
+                <button type="submit" class="modern-button">[% T.apply_button | html %]</button>
                 <p id="success-message" style="display: none; color: green; font-weight: bold; margin-top: 1em;">
                   [% T.apply_success | html %]
                 </p><p id="reset-message" style="display: none; color: green; font-weight: bold; margin-top: 1em;">
@@ -197,6 +214,7 @@
   window.apiNamespace = "[% api_namespace | html %]";
   const THEMES_CONFIG_STR = '[% theme_config_json | html %]';
   const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
+  const ALL_THEMES = '[% themes_list_json | html %]';
 </script>
 <script src="/api/v1/contrib/[% api_namespace | uri %]/static/js/template/homeTheme.js" defer></script>
 [% INCLUDE 'intranet-bottom.inc' %]

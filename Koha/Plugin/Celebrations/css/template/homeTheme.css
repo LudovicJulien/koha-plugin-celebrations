@@ -95,10 +95,11 @@ h1 {
     /* height: 600px; */
     /* margin-top: 120px; */
 }
-.plugin-card h2 {
+h2 {
+    text-align: center;
     margin-top: 0;
-    font-size: 1.8em;
-    color: #2a6ebb;
+    font-size: 1.8em !important;
+    color: #2a6ebb !important;
 }
 .plugin-card p {
     font-size: 1em;
@@ -310,6 +311,15 @@ button.reset {
   background-color: #e0e0e0 !important;
   color: #333 !important;
 }
+.date-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.date-row label {
+  font-weight: bold;
+}
 /*
     Section : Écran d'ordinateur
 	Attribution :
@@ -451,7 +461,7 @@ button.reset {
 .ipad .camera {float:none;margin:0 auto;position:relative;}
 .ipad .screenMobile {width:calc(53vw - 50px); height:calc(70vw - 52px); max-width: 430px; max-height: 499px; min-width: 302px; min-height: 405px; margin-top:8px; }
 /*
-    Section : Écrant radio Button
+    Section :  radio Button
 	Attribution :
       Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du composant original sur Uiverse.io.
       Copyright (c) 00Kubi  - https://uiverse.io/00Kubi/smooth-termite-31
@@ -550,4 +560,205 @@ button.reset {
 }
 .radio-inputs .radio input:checked + .name::after {
   --direction: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* === Thèmes Cards Section === */
+.themes-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* === Carte principale === */
+.theme-card-wrapper {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  perspective: 1000px;
+}
+
+.theme-card-wrapper:hover {
+  transform: translateY(-6px) scale(1.03);
+}
+
+.theme-card {
+  background: linear-gradient(160deg, #141824, #1e253a);
+  border-radius: 20px;
+  overflow: hidden;
+  width: 250px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4), 0 0 25px rgba(0,255,255,0.05);
+  transition: box-shadow 0.4s, transform 0.4s;
+  position: relative;
+}
+
+/* === Accent supérieur === */
+.theme-card-top {
+  height: 50px;
+  background: linear-gradient(120deg, #00e1ff, #0077ff);
+  position: relative;
+}
+
+.theme-card-accent {
+  position: absolute;
+  bottom: -15px;
+  left: 30px;
+  width: 60%;
+  height: 20px;
+  background: #141824;
+  transform: skew(-40deg);
+  box-shadow: -10px -10px 0 0 #141824;
+}
+
+/* === En-tête === */
+.theme-card-header {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.theme-icon {
+  font-size: 1.5em;
+}
+
+/* === Corps === */
+.theme-card-body {
+  padding: 15px;
+  color: #d9e6f7;
+}
+
+.date-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+  margin: 4px 0;
+}
+
+.labelCard{
+  color: white;
+  opacity: 0.8;
+}
+
+.value {
+  color: #00e1ff;
+}
+
+/* === Barre de progression === */
+.theme-progress {
+  margin-top: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: inset 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  color: #aeefff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.progress-bar-container {
+  position: relative;
+  height: 10px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.4);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #00d4ff, #00ffaa, #00d4ff);
+  background-size: 200% 100%;
+  animation: neonFlow 3s linear infinite;
+  transition: width 0.5s ease-out;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+@keyframes neonFlow {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* === Pied === */
+.theme-card-footer {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px;
+  background: rgba(255,255,255,0.03);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-action {
+  background: transparent;
+  border: 1px solid #00e1ff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: #00e1ff;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+  background: #00e1ff;
+  color: #0d1320;
+  transform: scale(1.05);
+}
+
+/* === Carte active (thème actuel) === */
+.theme-card-wrapper.active .theme-card {
+  /* box-shadow: 0 0 25px #00e1ff, 0 0 40px rgba(0,255,255,0.3); */
+  border: 1px solid rgba(0,255,255,0.4);
+}
+
+.inactive-text {
+  color: #ff7b7b;
+  font-style: italic;
+  opacity: 0.8;
 }

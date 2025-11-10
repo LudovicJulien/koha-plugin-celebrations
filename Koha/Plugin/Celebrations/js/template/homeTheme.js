@@ -1,12 +1,248 @@
 document.addEventListener('DOMContentLoaded', () => {
+const THEME_EMOJIS = {
+    halloween: '🎃',
+    noel: '🎄',
+    valentin: '💝',
+    paque: '🐰',
+    default: '🎨'
+};
   const $ = id => document.getElementById(id);
   const themeSelect = $('theme-select');
   const form = $('theme-form');
   const successMessage = $('success-message');
   const resetMessage = $('reset-message');
   const erreurMessage = $('erreur-message');
+  const previewButton = $('preview-button');
+  const themesGrid = $('themes-grid');
   const rawThemes = safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR");
-  const currentSettings = safeParseJSON(CURRENT_SETTINGS_STR, "CURRENT_SETTINGS_STR");
+  let currentSettings = safeParseJSON(CURRENT_SETTINGS_STR, "CURRENT_SETTINGS_STR");
+  let allThemes = safeParseJSON(ALL_THEMES, "ALL_THEMES");
+    console.log(allThemes);
+  const sortedThemes = Object.values(allThemes).sort((a, b) => {
+    if (a.active && !b.active) return -1;
+    if (!a.active && b.active) return 1;
+    return b.start_date - a.start_date;
+  });
+  themesGrid.innerHTML = sortedThemes
+    .map(theme => createThemeCard(theme, currentSettings.theme_name))
+    .join('');
+  attachThemeCardEvents();
+/**
+ * Rafraîchit la grille des thèmes depuis l'API, met à jour l'état global `allThemes`
+ */
+async function refreshThemesGridFromAPI() {
+    try {
+        const response = await fetch(
+            '/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=list_themes',
+            { method: 'GET', credentials: 'same-origin' }
+        );
+        const data = await response.json();
+        if (data.success) {
+            allThemes = {};
+            data.themes.forEach(theme => {
+                allThemes[theme.name] = { ...theme, theme_name: theme.name };
+            });
+            currentSettings.theme_name = data.current_theme;
+            const updatedSortedThemes = Object.values(allThemes).sort((a, b) => {
+                if (a.active && !b.active) return -1;
+                if (!a.active && b.active) return 1;
+                return b.start_date - a.start_date;
+            });
+            themesGrid.innerHTML = updatedSortedThemes
+              .map(theme => createThemeCard(theme, currentSettings.theme_name))
+              .join('');
+            attachThemeCardEvents();
+            console.log("Liste des thèmes rafraîchie avec succès.");
+        } else {
+            console.error('Erreur lors du rafraîchissement de la liste des thèmes:', data.error);
+        }
+    } catch (error) {
+        console.error('Erreur de connexion lors du rafraîchissement de la liste:', error);
+    }
+}
+/**
+ * Crée une carte d'un thème programmés
+ */
+function createThemeCard(theme, currentTheme) {
+  const status = getThemeStatus(theme);
+  const emoji = THEME_EMOJIS[theme.theme_name] || THEME_EMOJIS.default;
+  const displayName =  theme.theme_name;
+  const progress = calculateProgress(theme.start_date, theme.end_date);
+  const isCurrent = theme.theme_name === currentTheme;
+   return `
+  <div class="theme-card-wrapper ${isCurrent ? 'active' : ''}">
+    <div class="theme-card">
+      <div class="theme-card-top">
+        <div class="theme-card-header">
+          <div class="theme-icon">${emoji}</div>
+          <div class="theme-name">${displayName}</div>
+        </div>
+      </div>
+      <div class="theme-card-body">
+        <div class="theme-dates">
+          <div class="date-row">
+            <span class="labelCard">Début</span>
+            <span class="value">${formatDate(theme.start_date)}</span>
+          </div>
+          <div class="date-row">
+            <span class="labelCard">Fin</span>
+            <span class="value">${formatDate(theme.end_date)}</span>
+          </div>
+        </div>
+        <div class="theme-progress">
+          <div class="progress-label">
+            ${
+              status.type === 'current'
+                ? `<span>Progression</span><span class="progress-percent">${progress}% actif</span>`
+                : `<span>Progression</span><span class="progress-percent inactive-text">Thème non actif</span>`
+            }
+          </div>
+          <div class="progress-bar" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-fill" data-progress="${progress}"
+                 style="width: ${status.type === 'current' ? progress : 0}%;
+                        opacity: ${status.type === 'current' ? 1 : 0.3};"></div>
+          </div>
+        </div>
+      </div>
+      <div class="theme-card-footer">
+        <button class="btn-action edit" data-theme="${theme.theme_name}">Modifier</button>
+        <button class="btn-action action-btn-delete" data-theme="${theme.theme_name}">Supprimer</button>
+      </div>
+    </div>
+  </div>`;
+}
+/**
+ * Formate une date timestamp en format lisible
+ */
+function formatDate(timestamp) {
+    const date = new Date(timestamp * 1000);
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    return date.toLocaleDateString('fr-FR', options);
+}
+/**
+ * Calcule le pourcentage de progression d'un thème
+ */
+function calculateProgress(startDate, endDate) {
+    const now = Date.now() / 1000;
+    const total = endDate - startDate;
+    const elapsed = now - startDate;
+    if (elapsed < 0) return 0;
+    if (elapsed > total) return 100;
+    return Math.round((elapsed / total) * 100);
+}
+/**
+ * Calcule le statut d'un thème
+ */
+function getThemeStatus(theme) {
+    const now = Date.now() / 1000;
+    if (theme.is_current) {
+        return { type: 'current', label: 'En cours' };
+    }
+    if (!theme.active) {
+        return { type: 'expired', label: 'Inactif' };
+    }
+    if (theme.start_date > now) {
+        return { type: 'scheduled', label: 'Programmé' };
+    }
+    if (theme.end_date < now) {
+        return { type: 'expired', label: 'Expiré' };
+    }
+    return { type: 'active', label: 'Actif' };
+}
+/**
+ * Attache les événements aux boutons des cartes
+ */
+function attachThemeCardEvents() {
+    // Boutons de modification
+    document.querySelectorAll('.action-btn-edit').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const themeName = e.currentTarget.dataset.theme;
+            editTheme(themeName);
+        });
+    });
+    document.querySelectorAll('.action-btn-delete').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const themeName = e.currentTarget.dataset.theme;
+            deleteTheme(themeName);
+        });
+    });
+}
+/**
+ * Supprimer un thème
+ */
+async function deleteTheme(themeName) {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer le thème "${themeName}" ?\n\nCette action est irréversible.`)) {
+        return;
+    }
+    try {
+        const formData = new FormData();
+        formData.append('class', 'Koha::Plugin::Celebrations');
+        formData.append('method', 'delete_theme');
+        formData.append('theme_name', themeName);
+        const response = await fetch(
+            '/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=delete_theme',
+            {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            }
+        );
+        const data = await response.json();
+        if (data.success) {
+            const card = document.querySelector(`.theme-card[data-theme="${themeName}"]`);
+            if (card) {
+                card.style.transform = 'scale(0.8)';
+                card.style.opacity = '0';
+                setTimeout(() => {
+                    card.remove();
+                    const remainingCards = document.querySelectorAll('.theme-card');
+                    if (remainingCards.length === 0) {
+                        const themesGrid = document.getElementById('themes-grid');
+                        displayEmptyState(themesGrid);
+                    }
+                }, 300);
+            }
+            refreshThemesGridFromAPI();
+            showNotification('Thème supprimé avec succès', 'success');
+        } else {
+            throw new Error(data.error || 'Erreur lors de la suppression');
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+        showNotification(`Erreur: ${error.message}`, 'error');
+    }
+}
+/**
+ * Affiche une notification temporaire
+ */
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        background: ${type === 'success' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'};
+        color: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        font-weight: 600;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
   /**
    * Décode une chaîne HTML et parse du JSON en toute sécurité.
    * Retourne un objet vide si la donnée est invalide.
@@ -30,6 +266,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeData = rawThemes[selectedTheme];
     const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
     const resetBtn = form.querySelector('button[type="reset"], input[type="reset"]');
+    const start_date = form.querySelector('input[name="start_date"]').value;
+    const end_date = form.querySelector('input[name="end_date"]').value;
     const toggleButtons = (disabled) => {
       [submitBtn, resetBtn].forEach(btn => {
         if (btn) {
@@ -71,36 +309,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
+    formData.append('start_date', start_date || null);
+    formData.append('end_date', end_date || null);
     // --- Envoi au serveur ---
-    try {
-      const response = await fetch(
-        '/cgi-bin/koha/plugins/run.pl?Koha::Plugin::Celebrations&method=apply_theme',
-        { method: 'POST', body: formData, credentials: 'same-origin' }
-      );
-      if (response.ok) {
-        if (actionType === "reset") {
-          resetMessage.style.display = "block";
-        }else{
-          successMessage.style.display = "block";
-        }
-      } else {
-        erreurMessage.style.display = "block";
-      }
-      const iframe = document.getElementById('theme-preview');
-      if (iframe) iframe.contentWindow.location.reload(true);
-      setTimeout(() => {
-        resetMessage.style.display = 'none';
-        successMessage.style.display = 'none';
-        toggleButtons(false);
-      }, 3000);
-    } catch (error) {
-      console.error(error);
-      erreurMessage.style.display = 'block';
-      setTimeout(() => {
-        erreurMessage.style.display = 'none';
-        toggleButtons(false);
-      }, 3000);
-    }
+try {
+  const response = await fetch(
+    '/cgi-bin/koha/plugins/run.pl?Koha::Plugin::Celebrations&method=apply_theme',
+    { method: 'POST', body: formData, credentials: 'same-origin' }
+  );
+  const data = await response.json();
+  if (data.success) {
+    successMessage.textContent = data.message || "Thème appliqué avec succès.";
+    successMessage.style.display = "block";
+  } else {
+    erreurMessage.textContent = data.message || "Une erreur est survenue.";
+    erreurMessage.style.display = "block";
+  }
+  const iframe = document.getElementById('theme-preview');
+  if (iframe) iframe.contentWindow.location.reload(true);
+  setTimeout(() => {
+    resetMessage.style.display = 'none';
+    successMessage.style.display = 'none';
+    erreurMessage.style.display = 'none';
+    toggleButtons(false);
+  }, 5000);
+  refreshThemesGridFromAPI();
+} catch (error) {
+  console.error("Erreur réseau:", error);
+  erreurMessage.textContent = "Erreur de connexion au serveur.";
+  erreurMessage.style.display = 'block';
+  setTimeout(() => {
+    erreurMessage.style.display = 'none';
+    toggleButtons(false);
+  }, 5000);
+}
   });
   // --- Gestion des affichages de toggles selon le thème ---
   function updateThemeOptions() {
@@ -203,6 +445,79 @@ function resetConfiguration() {
   form.dataset.actionType = "reset";
   form.dispatchEvent(new Event('submit'));
 }
+async function updatePreview() {
+  const iframe = document.getElementById('theme-preview');
+  if (!iframe) return;
+  const themeSelect = document.getElementById('theme-select');
+  const selectedTheme = themeSelect.value;
+  const themeData = rawThemes[selectedTheme];
+  if (!themeData) return;
+  // Attendre que l'iframe ait fini de charger
+  await new Promise(resolve => {
+    iframe.onload = () => resolve();
+    iframe.src = iframe.src; // recharge l'iframe
+  });
+  // Maintenant on peut manipuler le document de l'iframe
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  if (!doc) return;
+  const body = doc.body;
+  // Supprime les anciens fichiers de thème
+  doc.querySelectorAll('link[data-theme], script[data-theme]').forEach(el => el.remove());
+  // Construit les nouveaux fichiers à injecter
+  const cssFiles = [];
+  const jsFiles = [];
+  const baseUrl = "/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=serve_asset";
+  Object.values(themeData.elements || {}).forEach(element => {
+    const input = document.getElementById(element.setting);
+    const isActive = input?.type === 'checkbox' ? input.checked : true;
+    if (isActive && element.file) {
+      cssFiles.push(`${baseUrl}&type=css&theme=${selectedTheme}&file=${element.file}`);
+      jsFiles.push(`${baseUrl}&type=js&theme=${selectedTheme}&file=${element.file}`);
+      if (element.extra_options) {
+        Object.entries(element.extra_options).forEach(([optKey, optValue]) => {
+          const extraInput = document.getElementById(optKey);
+          const extraActive = extraInput?.type === 'checkbox' ? extraInput.checked : !!extraInput?.value;
+          if (extraActive) {
+            if (optValue.css) cssFiles.push(optValue.css);
+            if (optValue.js) jsFiles.push(optValue.js);
+          }
+        });
+      }
+    }
+  });
+  console.log('cssFiles', cssFiles);
+  // Injecte CSS
+  const head = doc.head;
+  cssFiles.forEach(href => {
+    const link = doc.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    link.dataset.theme = selectedTheme;
+    head.appendChild(link);
+  });
+  // Injecte JS
+  const uniqueJsFiles = [...new Set(jsFiles)];
+  uniqueJsFiles.forEach(src => {
+    const inlineScript = doc.createElement('script');
+    inlineScript.type = 'text/javascript';
+    inlineScript.dataset.theme = selectedTheme;
+    fetch(src)
+      .then(res => res.text())
+      .then(code => {
+        inlineScript.textContent = code;
+        body.appendChild(inlineScript);
+        if (doc.readyState === 'complete' || doc.readyState === 'interactive') {
+          const event = new Event('DOMContentLoaded', { bubbles: true, cancelable: true });
+           doc.dispatchEvent(event); }
+      })
+      .catch(err => console.error('Erreur chargement JS inline:', err));
+  });
+}
+    if (previewButton) {
+    previewButton.addEventListener('click', (e) => {
+      updatePreview();
+    });
+  }
 });
 // --- Décode les entités HTML encodées (TT/Perl) ---
 function decodeHtml(html) {

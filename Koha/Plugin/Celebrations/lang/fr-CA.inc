@@ -15,8 +15,9 @@
     description1 = "Ce plugin vous permet d’ajouter des thèmes saisonniers à l’OPAC de Koha, comme Noël, Halloween ou la Saint-Valentin.",
     description2 = "Vous pouvez également personnaliser certains effets visuels pour chaque thème actif.",
     select_theme = "Configuration du thème",
-    apply_button = "Appliquer le thème",
+    apply_button = "Sauvegarder",
     reset_button = "Réinitialiser",
+    preview_button = "prévisualiser"
     apply_success = "✅ Thème appliqué avec succès !",
     reset_success = "Thème restauré avec succès !",
     apply_error = "❌ Une erreur est survenue lors de l’application du thème. :(",

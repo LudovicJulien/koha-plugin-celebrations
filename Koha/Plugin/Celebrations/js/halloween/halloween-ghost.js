@@ -6,6 +6,7 @@
 */
 document.addEventListener('DOMContentLoaded', function() {
     if (window.innerWidth > 810) {
+        if (document.getElementById('ghost')) return;
        const ghostHtml = `
         <div id="ghost" class="ghost">
             <div class="ghost__head">

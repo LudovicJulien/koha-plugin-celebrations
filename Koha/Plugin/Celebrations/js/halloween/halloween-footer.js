@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
   //
   // Création du footer Halloween
   //
+  if (document.getElementById('celebration-footer')) return;
   const newFooter = document.createElement('footer');
     newFooter.id = 'celebration-footer';
     document.body.appendChild(newFooter);
