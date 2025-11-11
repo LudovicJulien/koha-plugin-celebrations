@@ -5,6 +5,7 @@
       Copyright (c) Matt Blenkinsop - https://codepen.io/mblenk/pen/rNKbVab
 */
 document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('eggCanvas')) return;
     const isInIframe = window.self !== window.top;
     var options = window["saint-valentinThemeOptions"] || {};
     if (!options || Object.keys(options).length === 0) {

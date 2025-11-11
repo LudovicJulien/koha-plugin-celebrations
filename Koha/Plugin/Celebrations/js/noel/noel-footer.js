@@ -5,6 +5,7 @@
       Copyright (c) Matt Blenkinsop - https://codepen.io/mblenk/pen/qBKwNmp
 */
 document.addEventListener('DOMContentLoaded', function() {
+   if (document.getElementById('lightcontainer')) return;
   const lightContainer = document.createElement('div');
   lightContainer.id = 'lightcontainer';
   lightContainer.className = 'lightcontainer';
