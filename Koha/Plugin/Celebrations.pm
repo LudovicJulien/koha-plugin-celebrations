@@ -154,7 +154,7 @@ sub opac_head {
     my $theme_conf = $self->_get_theme_config($active_theme);
     return '' unless $theme_conf && $theme_conf->{elements};
     my $conf       = $self->{themes_config}{$active_theme};
-    my $extra_css = $self->_collect_theme_css($active_theme, $conf);
+    my $extra_css = $self->_collect_theme_css($active_theme, $conf, $theme_conf);
     my $font_link = $conf->{font_url} // '';
     return qq{
         <link href="$font_link" rel="stylesheet">
@@ -169,10 +169,12 @@ sub opac_head {
 #   Collecte tous les fichiers CSS d'un thème
 #
 sub _collect_theme_css {
-    my ($self, $theme_name, $conf) = @_;
+    my ($self, $theme_name, $conf, $theme_conf) = @_;
     my $extra_css = '';
     return $extra_css unless exists $conf->{elements};
     foreach my $element (keys %{ $conf->{elements} }) {
+        my $enabled = $theme_conf->{elements}{$element}{enabled} // '';
+        next unless $enabled eq 'on';
         my $css_file = $self->_get_asset_path('css', $theme_name, $conf->{elements}{$element}{file});
         if (-e $css_file) {
             $extra_css .= read_file($css_file, binmode => ':utf8');
@@ -211,6 +213,9 @@ sub _collect_theme_js {
     return (\@js_tags, \%js_options) unless exists $conf->{elements};
     my $api_ns = $self->api_namespace;
     foreach my $element (keys %{ $conf->{elements} }) {
+        my $enabled = $theme_conf->{elements}{$element}{enabled} // '';
+        warn "[Celebrations] Element $element disabled" unless $enabled eq 'on';
+        next unless $enabled eq 'on';
         my $file_name = $conf->{elements}{$element}{file};
         my $js_file = $self->_get_asset_path('js', $theme_name, $file_name);
         if (my $opts = $theme_conf->{elements}{$element}{options}) {
