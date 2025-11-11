@@ -5,6 +5,7 @@
       Copyright (c) Nate Wiley - https://codepen.io/natewiley/pen/wGeejw
 */
 document.addEventListener('DOMContentLoaded', function () {
+  if (document.getElementById('eggCanvas')) return;
   const options = window.paqueThemeOptions || {};
   const apiNamespace = options.api_namespace
   if (window.innerWidth > 768) {

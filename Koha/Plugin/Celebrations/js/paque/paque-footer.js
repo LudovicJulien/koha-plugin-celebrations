@@ -5,6 +5,7 @@
       Copyright (c) Natalia Davydova - https://codepen.io/nat-davydova/pen/dyorEMm
 */
 document.addEventListener('DOMContentLoaded', function () {
+    if (document.getElementById('celebration-footer')) return;
     const basket_iconHTML = `
     <div class="icon-block">
         <div class="icon basket-icon">

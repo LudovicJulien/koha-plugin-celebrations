@@ -5,6 +5,7 @@
       Copyright (c) Matt Blenkinsop - https://codepen.io/mblenk/pen/vYrMOpJ
 */
 window.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('days')) return;
   const htmlLang = document.documentElement.lang || "en";
   const langue = htmlLang.slice(0, 2).toLowerCase();
   const isFr = langue === "fr";
