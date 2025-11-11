@@ -119,17 +119,20 @@
                     [% END %]
                 [% END %]
                 <div class="date-row">
-                    <label for="start_date">Date de début :</label>
-                    <input type="date" id="start_date" name="start_date">
-
-                    <label for="end_date">Date de fin :</label>
-                    <input type="date" id="end_date" name="end_date">
+                    <div class="date-group">
+                        <label for="start_date">Date de début :</label>
+                        <input type="date" id="start_date" name="start_date">
+                    </div>
+                    <div class="date-group">
+                        <label for="end_date">Date de fin :</label>
+                        <input type="date" id="end_date" name="end_date">
+                    </div>
                 </div>
                 <br><br>
 
                 <div class="buttons-row">
                     <button type="reset" id="reset-button" class="modern-button reset">[% T.reset_button | html %]</button>
-                    <button type="preview" id="preview-button" class="modern-button">[% T.preview_button | html %]</button>
+                    <button type="button" id="preview-button" class="modern-button">[% T.preview_button | html %]</button>
                 </div>
                 <button type="submit" class="modern-button">[% T.apply_button | html %]</button>
                 <p id="success-message" style="display: none; color: green; font-weight: bold; margin-top: 1em;">
