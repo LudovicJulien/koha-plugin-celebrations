@@ -1,4 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
 const THEME_EMOJIS = {
     halloween: '🎃',
     noel: '🎄',
@@ -6,6 +5,25 @@ const THEME_EMOJIS = {
     paque: '🐰',
     default: '🎨'
 };
+// CONFIG: tailles de base pour chaque device
+  const DEVICE_CONFIG = {
+    ordi: {
+      baseWidth: 1300,
+      container: '.monitor-preview',
+      screen: '.screenOrdi .content'
+    },
+    tel: {
+      baseWidth: 500,
+      container: '.iphone',
+      screen: '.iphone .screenMobile'
+    },
+    tablet: {
+      baseWidth: 800,
+      container: '.ipad',
+      screen: '.ipad .screenMobile'
+    }
+  };
+document.addEventListener('DOMContentLoaded', () => {
   const $ = id => document.getElementById(id);
   const themeSelect = $('theme-select');
   const form = $('theme-form');
@@ -528,24 +546,6 @@ function decodeHtml(html) {
 // SYSTÈME DE PRÉVISUALISATION
 (function initDevicePreviewSwitcher() {
   'use strict';
-  // CONFIG: tailles de base pour chaque device
-  const DEVICE_CONFIG = {
-    ordi: {
-      baseWidth: 1300,
-      container: '.monitor-preview',
-      screen: '.screenOrdi .content'
-    },
-    tel: {
-      baseWidth: 500,
-      container: '.iphone',
-      screen: '.iphone .screenMobile'
-    },
-    tablet: {
-      baseWidth: 800,
-      container: '.ipad',
-      screen: '.ipad .screenMobile'
-    }
-  };
   let iframe = null;
   let iframeContainer = null;
   let currentDevice = 'ordi';

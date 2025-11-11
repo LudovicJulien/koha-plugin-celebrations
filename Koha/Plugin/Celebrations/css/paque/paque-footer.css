@@ -31,8 +31,7 @@
   transform: scale(1.05);
 }
 #celebration-footer{
+  height: 100px !important;
   position: relative !important;
   z-index: 1000 !important;
-  margin-bottom: 50px !important;
-
 }
