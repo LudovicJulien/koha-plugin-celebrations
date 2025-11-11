@@ -466,7 +466,7 @@ async function updatePreview() {
   // Construit les nouveaux fichiers à injecter
   const cssFiles = [];
   const jsFiles = [];
-  const baseUrl = "/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=serve_asset";
+  const baseUrl = "/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=preview_theme_asset";
   Object.values(themeData.elements || {}).forEach(element => {
     const input = document.getElementById(element.setting);
     const isActive = input?.type === 'checkbox' ? input.checked : true;

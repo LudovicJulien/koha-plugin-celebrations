@@ -296,6 +296,7 @@ iframe {
   justify-content: center;
   gap: 12px;
   margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .buttons-row button {
@@ -667,12 +668,39 @@ button.reset {
   color: #d9e6f7;
 }
 
+.date-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
 .date-row {
   display: flex;
-  justify-content: space-between;
-  font-size: 0.9em;
-  margin: 4px 0;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  margin: 20px 0;
+  flex-wrap: wrap;
 }
+
+input[type="date"] {
+  background-color: #2a6ebb !important;
+  color: #000 !important;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+
+
+.date-row label {
+  text-align: center;
+  width: 100%;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
 
 .labelCard{
   color: white;
