@@ -224,5 +224,6 @@
   const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
   const ALL_THEMES = '[% themes_list_json | html %]';
 </script>
-<script type="module" src="/api/v1/contrib/[% api_namespace | uri %]/static/js/template/main.js" defer></script>
+
+<script src="/api/v1/contrib/[% api_namespace | uri %]/static/js/celebrations-bundle.js" defer></script>
 [% INCLUDE 'intranet-bottom.inc' %]

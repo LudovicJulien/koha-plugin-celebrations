@@ -3,7 +3,7 @@
  *  Gestion du menu de configuration des options de thème
  * =======================================================
  */
-import { $ } from './utils.js';
+import { getById } from './utils.js';
 /**
  *
  * Met à jour dynamiquement l'affichage des options du thème sélectionné.
@@ -15,14 +15,14 @@ export function updateThemeOptions(rawThemes, themeSelect) {
   Object.values(rawThemes).forEach(theme => {
     Object.values(theme.elements || {}).forEach(element => {
       if (element.toggle_id) {
-        const el = $(element.toggle_id);
+        const el = getById(element.toggle_id);
         if (el) el.style.display = 'none';
       }
       if (element.extra_options) {
         const elementKey = Object.keys(theme.elements).find(key => theme.elements[key] === element);
         if (elementKey) {
           const configDivId = `${elementKey}-config`;
-          const configDiv = $(configDivId);
+          const configDiv = getById(configDivId);
           if (configDiv) configDiv.style.display = 'none';
         }
       }
@@ -33,7 +33,7 @@ export function updateThemeOptions(rawThemes, themeSelect) {
   if (themeData && themeData.elements) {
     Object.entries(themeData.elements).forEach(([name, element]) => {
       if (element.toggle_id) {
-        const el = $(element.toggle_id);
+        const el = getById(element.toggle_id);
         if (el) {
           el.style.display = 'flex';
         }
@@ -41,15 +41,15 @@ export function updateThemeOptions(rawThemes, themeSelect) {
     });
   }
   Object.values(themeData?.elements || {}).forEach(element => {
-    const mainToggle = $(element.setting);
+    const mainToggle = getById(element.setting);
     if (mainToggle) mainToggle.dispatchEvent(new Event('change'));
   });
   if (themeData && themeData.elements) {
     Object.entries(themeData.elements).forEach(([elementKey, element]) => {
       if (element.extra_options) {
-        const mainToggle = $(element.setting);
+        const mainToggle = getById(element.setting);
         const configDivId = `${elementKey}-config`;
-        const configDiv = $(configDivId);
+        const configDiv = getById(configDivId);
         toggleConfig(mainToggle, configDiv, selectedTheme, themeSelect);
       }
     });
@@ -62,7 +62,7 @@ export function updateThemeOptions(rawThemes, themeSelect) {
   document.querySelectorAll('.form-group').forEach(div => {
     div.style.display = 'none';
   });
-  const themeDiv = document.getElementById(`${selectedTheme}-options`);
+  const themeDiv = getById(`${selectedTheme}-options`);
   if (themeDiv) {
     themeDiv.style.display = 'block';
   }
@@ -124,27 +124,14 @@ export function showThemeEditor(themeName, themeData, rawThemes, elements) {
   const labelSel = document.getElementById('label-select');
   const form_group = document.getElementById(themeName + '-options');
   const themeSelect = elements.themeSelect;
-  labelSel.style.display = 'none';
-  // 1️⃣ Changer le titre et cacher le select
   confTitre.textContent = `Configuration du thème : ${themeName}`;
+  labelSel.style.display = 'none';
   themeSelect.style.display = 'none';
-  // 2️⃣ Forcer le select sur ce thème et afficher ses options
   form_group.style.display = 'block';
-//   themeSelect.value = themeName;
-//   updateThemeOptions(rawThemes, themeSelect);
-  // 3️⃣ Remplir les champs selon les paramètres enregistrés
-//   if (themeData && themeData.settings) {
-//     Object.entries(themeData.settings).forEach(([key, value]) => {
-//       const input = document.getElementById(key);
-//       if (!input) return;
-//       if (input.type === 'checkbox') {
-//         input.checked = value === 'on' || value === true;
-//       } else {
-//         input.value = value;
-//       }
-//     });
-//   }
-  // 4️⃣ Bouton Annuler
+  const toggles = form_group.querySelectorAll('.toggle-container');
+  toggles.forEach(toggle => {
+    toggle.style.display = 'block';
+  });
   if (!document.getElementById('cancel-edit-btn')) {
     const cancelBtn = document.createElement('button');
     cancelBtn.id = 'cancel-edit-btn';
@@ -155,7 +142,6 @@ export function showThemeEditor(themeName, themeData, rawThemes, elements) {
     if (buttonRow) buttonRow.appendChild(cancelBtn);
     cancelBtn.addEventListener('click', () => exitThemeEditor(rawThemes, elements));
   }
-  // 5️⃣ Mettre à jour la prévisualisation
   if (elements.previewButton) {
     elements.previewButton.disabled = false;
   }

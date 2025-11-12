@@ -16,15 +16,15 @@ import { initDevicePreviewSwitcher } from './devicePreview.js';
  */
 document.addEventListener('DOMContentLoaded', () => {
   const elements = {
-    themeSelect: $('theme-select'),
-    form: $('theme-form'),
-    successMessage: $('success-message'),
-    resetMessage: $('reset-message'),
-    erreurMessage: $('erreur-message'),
-    previewButton: $('preview-button'),
-    noThemeMessage: $('no-themes-message'),
-    themesGrid: $('themes-grid'),
-    resetBtn: $('reset-button')
+    themeSelect: getById('theme-select'),
+    form: getById('theme-form'),
+    successMessage: getById('success-message'),
+    resetMessage: getById('reset-message'),
+    erreurMessage: getById('erreur-message'),
+    previewButton: getById('preview-button'),
+    noThemeMessage: getById('no-themes-message'),
+    themesGrid: getById('themes-grid'),
+    resetBtn: getById('reset-button')
   };
   const rawThemes = safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR");
   const state = {
@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   updateThemeOptions(rawThemes, elements.themeSelect);
   ['flocons', 'coeurs', 'spiders'].forEach(type => {
-    const input = $(`quantite_${type}`);
-    const label = $(`val_quantite_${type}`);
+    const input = getById(`quantite_${type}`);
+    const label = getById(`val_quantite_${type}`);
     if (input && label)
       input.addEventListener('input', () => (label.textContent = input.value));
   });
