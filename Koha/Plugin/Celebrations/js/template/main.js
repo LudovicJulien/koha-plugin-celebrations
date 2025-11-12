@@ -6,7 +6,7 @@
 import { $, safeParseJSON } from './utils.js';
 import { updateThemesGrid, refreshThemesGridFromAPI, attachThemeCardEvents } from './themeGrid.js';
 import { submitThemeForm, resetConfiguration } from './formHandler.js';
-import { updateThemeOptions } from './themeOptions.js';
+import { updateThemeOptions, refreshThemeSelect } from './themeOptions.js';
 import { updatePreview } from './preview.js';
 import { initDevicePreviewSwitcher } from './devicePreview.js';
 /**
@@ -29,18 +29,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const rawThemes = safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR");
   const state = {
     currentSettings: safeParseJSON(CURRENT_SETTINGS_STR, "CURRENT_SETTINGS_STR"),
-    allThemes: safeParseJSON(ALL_THEMES, "ALL_THEMES")
+    allThemes: safeParseJSON(ALL_THEMES, "ALL_THEMES"),
+    themesConfigStr: safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR")
   };
   console.log(state.allThemes);
   updateThemesGrid(state.allThemes, state.currentSettings.theme_name, elements.noThemeMessage, elements.themesGrid);
   attachThemeCardEvents(
     themeName => console.log('Edit:', themeName),
-    () => refreshThemesGridFromAPI(state, elements)
+    async () => {
+        await refreshThemesGridFromAPI(state, elements);
+        refreshThemeSelect(state.allThemes, state.themesConfigStr, elements.themeSelect);
+    }
   );
   elements.form.addEventListener('submit', async event => {
     event.preventDefault();
-    await submitThemeForm(elements.form, rawThemes, elements, () => {
-      refreshThemesGridFromAPI(state, elements);
+    await submitThemeForm(elements.form, rawThemes, elements, async () => {
+      await refreshThemesGridFromAPI(state, elements);
+      refreshThemeSelect(state.allThemes, state.themesConfigStr, elements.themeSelect);
     });
   });
   elements.themeSelect.addEventListener('change', () => {

@@ -11,10 +11,10 @@
     site_web3 = " pour plus d'extensions Koha",
     documentation1 = "Pour les instructions d'installation et d'utilisation, veuillez consulter notre",
     documentation2 = "documentation de L'extension"
-    title = "Plugin Célébrations",
-    description1 = "Ce plugin vous permet d’ajouter des thèmes saisonniers à l’OPAC de Koha, comme Noël, Halloween ou la Saint-Valentin.",
+    title = "Extension Célébrations",
+    description1 = "Cette extension vous permet d’ajouter des thèmes saisonniers à l’OPAC de Koha, comme Noël, Halloween ou la Saint-Valentin.",
     description2 = "Vous pouvez également personnaliser certains effets visuels pour chaque thème actif.",
-    select_theme = "Configuration du thème",
+    select_theme = "Configuration d'un thème",
     apply_button = "Sauvegarder",
     reset_button = "Réinitialiser",
     preview_button = "prévisualiser"

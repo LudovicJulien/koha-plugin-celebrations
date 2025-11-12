@@ -28,6 +28,10 @@
             <hr class="separator">
             <div id="themes-list-section" class="themes-list-wrapper">
                 <h2 class="section-title">Thèmes programmés</h2>
+                <div id="no-themes-message" class="no-themes" style="display:none;">
+                    Aucun thème programmé pour le moment.<br>
+                    Programmez votre premier thème ci-dessous !
+                </div>
                 <div id="themes-grid" class="themes-grid">
                     <!-- Les thèmes seront injectés ici par JavaScript -->
                 </div>
@@ -45,9 +49,10 @@
                 <input type="hidden" name="action" value="apply_theme">
                 <label for="theme-select"><strong>[% T.form.theme_label | html %]</strong></label>
                     <select id="theme-select" name="theme">
-                        <option value="null" [% IF selected_theme == 'null' %]selected[% END %]>[% T.form.no_theme | html %]</option>
                         [% FOREACH theme_id IN theme_config.keys.sort %]
-                            <option value="[% theme_id | html %]" [% IF selected_theme == theme_id %]selected[% END %]>[% T.form.${theme_id} | html %]</option>
+                            [% UNLESS all_themes.${theme_id}.defined %]
+                                <option value="[% theme_id | html %]" [% IF selected_theme == theme_id %]selected[% END %]>[% T.form.${theme_id} | html %]</option>
+                            [% END %]
                         [% END %]
                     </select>
                 <br><br><br>
@@ -219,5 +224,5 @@
   const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
   const ALL_THEMES = '[% themes_list_json | html %]';
 </script>
-<script src="/api/v1/contrib/[% api_namespace | uri %]/static/js/template/homeTheme.js" defer></script>
+<script type="module" src="/api/v1/contrib/[% api_namespace | uri %]/static/js/template/main.js" defer></script>
 [% INCLUDE 'intranet-bottom.inc' %]
