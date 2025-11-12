@@ -33,7 +33,7 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
   formData.append('theme', selectedTheme);
   if (themeData && themeData.elements) {
     Object.values(themeData.elements).forEach(element => {
-      const input = $(element.setting);
+      const input = getById(element.setting);
       if (input) {
         formData.append(
           input.id,
@@ -42,7 +42,7 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
       }
       if (element.extra_options) {
         Object.keys(element.extra_options).forEach(optKey => {
-          const extraInput = $(optKey);
+          const extraInput = getById(optKey);
           if (extraInput) {
             formData.append(
               extraInput.id,
@@ -99,7 +99,7 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
  */
 export function resetConfiguration(form, currentSettings) {
   if (currentSettings.theme) {
-    const themeSelect = $('theme-select');
+    const themeSelect = getById('theme-select');
     if (themeSelect) themeSelect.value = currentSettings.theme;
   }
   Object.entries(currentSettings).forEach(([key, value]) => {
@@ -109,7 +109,7 @@ export function resetConfiguration(form, currentSettings) {
       input.checked = value === 'on';
     } else {
       input.value = value;
-      const valLabel = $(`val_${key}`);
+      const valLabel = getById(`val_${key}`);
       if (valLabel) valLabel.textContent = value;
     }
   });

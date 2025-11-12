@@ -198,6 +198,7 @@ export function initDevicePreviewSwitcher() {
       attributeFilter: ['style', 'class']
     });
   }
+
   const themeSelect = document.getElementById('theme-select');
   if (themeSelect) {
     themeSelect.addEventListener('change', () => {

@@ -4,7 +4,7 @@
  *  @param {string} id - Identifiant de l'élément DOM.
  *  @returns {HTMLElement|null} Élément DOM trouvé ou null.
  */
-export const $ = id => document.getElementById(id);
+export const getById = id => document.getElementById(id);
 /**
  *
  *  Décode les entités HTML
