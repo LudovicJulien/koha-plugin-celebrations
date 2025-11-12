@@ -5,6 +5,7 @@
  */
 import { THEME_EMOJIS, API_ENDPOINTS } from './config.js';
 import { formatDate, calculateProgress, getThemeStatus, showNotification } from './utils.js';
+import { refreshThemeSelect } from './themeOptions.js';
 /**
  *
  * Trie les thèmes par statut et par date de début.
@@ -65,7 +66,7 @@ export function createThemeCard(theme, currentTheme) {
         </div>
       </div>
       <div class="theme-card-footer">
-        <button class="btn-action edit" data-theme="${theme.theme_name}">Modifier</button>
+        <button class="btn-action action-btn-edit" data-theme="${theme.theme_name}">Modifier</button>
         <button class="btn-action action-btn-delete" data-theme="${theme.theme_name}">Supprimer</button>
       </div>
     </div>
@@ -115,6 +116,13 @@ export async function refreshThemesGridFromAPI(state, elements) {
       });
       state.currentSettings.theme_name = data.current_theme;
       updateThemesGrid(state.allThemes, state.currentSettings.theme_name, elements.noThemeMessage, elements.themesGrid);
+      attachThemeCardEvents(
+        themeName => console.log('Edit:', themeName),
+        async () => {
+          await refreshThemesGridFromAPI(state, elements);
+          refreshThemeSelect(state.allThemes, state.themesConfigStr, elements.themeSelect);
+        }
+      );
       console.log("Liste des thèmes rafraîchie avec succès.");
     } else {
       console.error('Erreur lors du rafraîchissement:', data.error);

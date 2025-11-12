@@ -9,9 +9,10 @@ use File::Basename;
 use Cwd 'abs_path';
 use C4::Languages;
 use C4::Context;
-use DateTime::Format::Strptime;
 use C4::Auth qw(get_template_and_user);
 use C4::Output qw(output_html_with_http_headers);
+use DateTime::Format::Strptime;
+use Encode qw(encode);
 use Data::Dumper;
 #
 #
@@ -106,7 +107,7 @@ sub _get_active_theme {
     my ($self) = @_;
     my $themes_data = $self->retrieve_data('themes_data');
     return undef unless $themes_data;
-    my $themes = decode_json($themes_data);
+    my $themes = decode_json(encode('UTF-8', $themes_data));
     my $now = DateTime->now();
     # permet de simuler une date pour tester !
     #  my $now = DateTime->new(
@@ -139,7 +140,7 @@ sub _get_theme_config {
     return undef unless $theme_name;
     my $themes_data = $self->retrieve_data('themes_data');
     return undef unless $themes_data;
-    my $themes = decode_json($themes_data);
+    my $themes = decode_json(encode('UTF-8', $themes_data));
     return $themes->{$theme_name} // undef;
 }
 #
@@ -387,7 +388,7 @@ sub _save_theme {
     my $themes_data = $self->retrieve_data('themes_data');
     my $themes = $themes_data ? decode_json($themes_data) : {};
     $themes->{$theme_name} = $theme_data;
-    $self->store_data({ themes_data => encode_json($themes) });
+    $self->store_data({ themes_data => encode('UTF-8', encode_json($themes)) });
 }
 #
 #
@@ -406,7 +407,7 @@ sub delete_theme {
             print encode_json({ success => JSON::false, error => 'Aucune donnée de thème trouvée' });
             return;
         }
-        my $themes = decode_json($themes_data);
+        my $themes = decode_json(encode('UTF-8',$themes_data));
         if (exists $themes->{$theme_name}) {
             delete $themes->{$theme_name};
             $self->store_data({ themes_data => encode_json($themes) });
@@ -438,7 +439,7 @@ sub list_themes {
     my ($self) = @_;
     my $cgi = $self->{cgi};
     my $themes_data = $self->retrieve_data('themes_data');
-    my $themes = $themes_data ? decode_json($themes_data) : {};
+    my $themes = $themes_data ? decode_json(encode('UTF-8',$themes_data)) : {};
     my $now = DateTime->now();
     my @theme_list = $self->_build_theme_list($themes, $now);
     print $cgi->header('application/json');
@@ -513,10 +514,9 @@ sub _build_enabled_template {
     my $template = $self->get_template({ file => 'templates/homeTheme.tt' });
     my $active_theme = $self->_get_active_theme();
     my $themes_data = $self->retrieve_data('themes_data');
-    my $all_themes = $themes_data ? decode_json($themes_data) : {};
+    my $all_themes = $themes_data ? decode_json(encode('UTF-8', $themes_data)) : {};
     my @themes_list = $self->_prepare_themes_for_display($all_themes);
     @themes_list = $self->_sort_themes_list(@themes_list);
-    warn Dumper(@themes_list);
     my $themes_list_json = encode_json(\@themes_list);
     my $theme_config_json = encode_json($self->{themes_config});
     $template->param(
@@ -528,7 +528,7 @@ sub _build_enabled_template {
         api_namespace => $self->api_namespace,
         koha_session => $koha_session,
         active_theme => $active_theme,
-        all_themes => \@themes_list,
+        all_themes => $all_themes,
         themes_list_json => $themes_list_json,
         theme_config_json => $theme_config_json,
         theme_config => $self->{themes_config},
