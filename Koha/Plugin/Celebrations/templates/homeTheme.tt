@@ -47,7 +47,7 @@
                 <input type="hidden" name="class" value="Koha::Plugin::OpacTheme">
                 <input type="hidden" name="method" value="apply_theme">
                 <input type="hidden" name="action" value="apply_theme">
-                <label for="theme-select"><strong>[% T.form.theme_label | html %]</strong></label>
+                <label id="label-select" for="theme-select"><strong>[% T.form.theme_label | html %]</strong></label>
                     <select id="theme-select" name="theme">
                         [% FOREACH theme_id IN theme_config.keys.sort %]
                             [% UNLESS all_themes.${theme_id}.defined %]
@@ -63,13 +63,13 @@
                         theme_div_id = theme_id _ '-options';
                         NEXT UNLESS theme_translation;
                         %]
-                        <div id="[% theme_div_id | html %]" class="form-group">
+                        <div id="[% theme_div_id | html %]" class="form-group" style="display: none;">
                             [% FOREACH element_key IN theme_data.elements.keys %]
                                 [% element = theme_data.elements.${element_key};
                                 setting_id = element.setting;
                                 toggle_id = element.toggle_id;
                                 %]
-                                <div class="toggle-container" id="[% toggle_id | html %]" style="display: none;">
+                                <div class="toggle-container" id="[% toggle_id | html %]" >
                                     <span class="toggle-label">[% theme_translation.${setting_id} | html %]</span>
                                     <label class="switch">
                                         <input type="checkbox" id="[% setting_id | html %]" name="[% setting_id | html %]"

@@ -39,6 +39,9 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(steps.myvars.outputs) }}
       run: echo "$GITHUB_CONTEXT"
 
+    - name: Bundle plugin JS
+      run: node scripts/bundle-plugin-js.js
+
     - name: Build Koha Plugin kpz artifact
       id: kpz
       uses: "bywatersolutions/github-action-koha-plugin-create-kpz@master"

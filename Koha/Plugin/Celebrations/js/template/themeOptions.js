@@ -1,7 +1,7 @@
 /**
- * ======================================================
- *  Gestion des options de thème
- * ======================================================
+ * =======================================================
+ *  Gestion du menu de configuration des options de thème
+ * =======================================================
  */
 import { $ } from './utils.js';
 /**
@@ -110,4 +110,69 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
     themeSelect.appendChild(option);
   });
   themeSelect.dispatchEvent(new Event('change'));
+}
+/**
+ *
+ * Passe en mode édition pour le thème sélectionné :
+ * @param {string} themeName - Nom du thème à éditer
+ * @param {Object} themeData - Données du thème (depuis state.allThemes)
+ * @param {Object} rawThemes - Configuration complète (THEMES_CONFIG_STR)
+ * @param {Object} elements - Références aux éléments DOM (titre, select, etc.)
+ */
+export function showThemeEditor(themeName, themeData, rawThemes, elements) {
+  const confTitre = document.getElementById('ConfTitre');
+  const labelSel = document.getElementById('label-select');
+  const form_group = document.getElementById(themeName + '-options');
+  const themeSelect = elements.themeSelect;
+  labelSel.style.display = 'none';
+  // 1️⃣ Changer le titre et cacher le select
+  confTitre.textContent = `Configuration du thème : ${themeName}`;
+  themeSelect.style.display = 'none';
+  // 2️⃣ Forcer le select sur ce thème et afficher ses options
+  form_group.style.display = 'block';
+//   themeSelect.value = themeName;
+//   updateThemeOptions(rawThemes, themeSelect);
+  // 3️⃣ Remplir les champs selon les paramètres enregistrés
+//   if (themeData && themeData.settings) {
+//     Object.entries(themeData.settings).forEach(([key, value]) => {
+//       const input = document.getElementById(key);
+//       if (!input) return;
+//       if (input.type === 'checkbox') {
+//         input.checked = value === 'on' || value === true;
+//       } else {
+//         input.value = value;
+//       }
+//     });
+//   }
+  // 4️⃣ Bouton Annuler
+  if (!document.getElementById('cancel-edit-btn')) {
+    const cancelBtn = document.createElement('button');
+    cancelBtn.id = 'cancel-edit-btn';
+    cancelBtn.className = 'modern-button cancel';
+    cancelBtn.textContent = 'Annuler';
+    cancelBtn.style.marginLeft = '10px';
+    const buttonRow = document.querySelector('.buttons-row');
+    if (buttonRow) buttonRow.appendChild(cancelBtn);
+    cancelBtn.addEventListener('click', () => exitThemeEditor(rawThemes, elements));
+  }
+  // 5️⃣ Mettre à jour la prévisualisation
+  if (elements.previewButton) {
+    elements.previewButton.disabled = false;
+  }
+  if (window.updatePreview) {
+    window.updatePreview(rawThemes, themeSelect);
+  }
+}
+
+/**
+ * Revient au mode normal (sélecteur visible, options masquées)
+ */
+export function exitThemeEditor(rawThemes, elements) {
+  const confTitre = document.getElementById('ConfTitre');
+  const themeSelect = elements.themeSelect;
+  const cancelBtn = document.getElementById('cancel-edit-btn');
+  confTitre.textContent = 'Sélectionnez un thème à configurer';
+  themeSelect.style.display = 'block';
+  updateThemeOptions(rawThemes, themeSelect);
+  if (cancelBtn) cancelBtn.remove();
 }
