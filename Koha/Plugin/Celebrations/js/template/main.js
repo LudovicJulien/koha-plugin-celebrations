@@ -6,7 +6,7 @@
 import { $, safeParseJSON } from './utils.js';
 import { updateThemesGrid, refreshThemesGridFromAPI, attachThemeCardEvents } from './themeGrid.js';
 import { submitThemeForm, resetConfiguration } from './formHandler.js';
-import { updateThemeOptions, refreshThemeSelect } from './themeOptions.js';
+import { updateThemeOptions, refreshThemeSelect, showThemeEditor, exitThemeEditor } from './themeOptions.js';
 import { updatePreview } from './preview.js';
 import { initDevicePreviewSwitcher } from './devicePreview.js';
 /**
@@ -35,7 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log(state.allThemes);
   updateThemesGrid(state.allThemes, state.currentSettings.theme_name, elements.noThemeMessage, elements.themesGrid);
   attachThemeCardEvents(
-    themeName => console.log('Edit:', themeName),
+    themeName => {
+        const themeData = state.allThemes[themeName];
+        showThemeEditor(themeName, themeData, rawThemes, elements);
+    },
     async () => {
         await refreshThemesGridFromAPI(state, elements);
         refreshThemeSelect(state.allThemes, state.themesConfigStr, elements.themeSelect);

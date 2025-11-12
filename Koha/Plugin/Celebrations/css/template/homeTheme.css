@@ -141,6 +141,7 @@ select {
     text-align: center;
 }
 .toggle-container {
+    display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -302,6 +303,10 @@ button.reset {
 
 .form-group {
   margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .themes-grid {
   display: flex;
@@ -462,6 +467,11 @@ input[type="date"] {
   font-style: italic;
   opacity: 0.8;
 }
+.plugin-card.edit-mode {
+  border-color: #2a6ebb;
+  box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
+}
+
 /*
     Section : Écran d'ordinateur
 	Attribution :
