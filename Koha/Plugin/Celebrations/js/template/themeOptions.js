@@ -101,24 +101,13 @@ export function toggleConfig(mainToggle, configDiv, themeName, themeSelect) {
  */
 export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
   if (!themeSelect) return;
-
-  console.log("themesConf", themesConf);
-  console.log("allTheme", allTheme);
-  console.log("themeSelect", themeSelect);
-
   themeSelect.innerHTML = '';
-
   Object.keys(allTheme).forEach(themeKey => {
-    // Si le thème est déjà configuré, on le saute
     if (themesConf[themeKey]) return;
-
     const option = document.createElement('option');
     option.value = themeKey;
     option.textContent = allTheme[themeKey].theme_name || themeKey;
     themeSelect.appendChild(option);
   });
-
-  // Déclenche l'événement 'change' pour mettre à jour les options du thème
   themeSelect.dispatchEvent(new Event('change'));
 }
-
