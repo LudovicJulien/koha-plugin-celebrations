@@ -300,6 +300,7 @@ sub _validate_theme_dates {
     );
     my $start_dt = $strp->parse_datetime($start_date);
     my $end_dt = $strp->parse_datetime($end_date);
+    $end_dt->set(hour => 23, minute => 59, second => 59);
     unless ($start_dt && $end_dt) {
         return {
             valid => 0,
