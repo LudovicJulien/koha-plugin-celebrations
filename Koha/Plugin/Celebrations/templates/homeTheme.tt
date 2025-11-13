@@ -94,7 +94,7 @@
                                         [% FOREACH option_key IN element.extra_options.keys %]
                                             [% option_data = element.extra_options.${option_key};
                                                NEXT IF option_data.type == "ignore";
-                                               option_value = current_settings.${option_key} || option_data.default;
+                                               option_value =  all_themes.${theme_id}.elements.${element_key}.options.${option_key} || option_data.default;
                                             %]
                                             <div class="option-row">
                                             [% # TYPE : RANGE (ex: quantite_spiders) %]
@@ -143,7 +143,6 @@
                     </div>
                 </div>
                 <br><br>
-
                 <div class="buttons-row">
                     <button type="reset" id="reset-button" class="modern-button reset">[% T.reset_button | html %]</button>
                     <button type="button" id="preview-button" class="modern-button">[% T.preview_button | html %]</button>
@@ -175,7 +174,6 @@
                 <span class="name">[% T.tablet | html %]</span>
             </label>
         </div>
-
         <div class="container monitor-preview" style="display: block;">
             <div class="monitor">
                 <div class="screenOrdi">
@@ -186,7 +184,6 @@
             </div>
             <div class="monitor-stand"></div>
         </div>
-
         <div class="ipad device" style="display: none;">
             <div class="case">
                 <div class="earsection">
@@ -200,8 +197,6 @@
                 </div>
             </div>
         </div>
-
-
         <div class="iphone device" style="display: none;">
             <div class="case">
                 <div class="earsection">
@@ -209,7 +204,6 @@
                     <div class="speaker"></div>
                 </div>
                 <div class="screenMobile">
-
                 </div>
                 <div class="button">
                     <div class="buttonsquare"></div>
@@ -228,11 +222,9 @@
            <p>[% T.documentation1 | html %] <a href="https://inlibro.com/extension-koha-celebrations/" target="_blank">[% T.documentation2 | html %]</a>.</p>
         </div>
 <script>
-  window.apiNamespace = "[% api_namespace | html %]";
   const THEMES_CONFIG_STR = '[% theme_config_json | html %]';
   const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
   const ALL_THEMES = '[% themes_list_json | html %]';
 </script>
-
 <script src="/api/v1/contrib/[% api_namespace | uri %]/static/js/celebrations-bundle.js" defer></script>
 [% INCLUDE 'intranet-bottom.inc' %]
