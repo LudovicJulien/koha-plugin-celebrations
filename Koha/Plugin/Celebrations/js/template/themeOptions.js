@@ -46,7 +46,7 @@ export function updateThemeOptions(rawThemes, themeSelect) {
   });
   if (themeData && themeData.elements) {
     Object.entries(themeData.elements).forEach(([elementKey, element]) => {
-      if (element.extra_options) {
+      if (element.extra_options && !Object.values(element.extra_options).some(opt => opt.type === 'ignore')) {
         const mainToggle = getById(element.setting);
         const configDivId = `${elementKey}-config`;
         const configDiv = getById(configDivId);
