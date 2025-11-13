@@ -11,7 +11,7 @@ import { getById } from './utils.js';
  * @param {HTMLSelectElement} themeSelect - Liste déroulante permettant de sélectionner un thème.
  * @returns {void}
  */
-export function updateThemeOptions(rawThemes, themeSelect) {
+export function updateThemeOptions(rawThemes, themeSelect = null, forcedThemeName = null) {
   Object.values(rawThemes).forEach(theme => {
     Object.values(theme.elements || {}).forEach(element => {
       if (element.toggle_id) {
@@ -28,7 +28,8 @@ export function updateThemeOptions(rawThemes, themeSelect) {
       }
     });
   });
-  const selectedTheme = themeSelect.value;
+  const selectedTheme = forcedThemeName || (themeSelect ? themeSelect.value : null);
+  if (!selectedTheme) return;
   const themeData = rawThemes[selectedTheme];
   if (themeData && themeData.elements) {
     Object.entries(themeData.elements).forEach(([name, element]) => {
@@ -81,7 +82,7 @@ export function toggleConfig(mainToggle, configDiv, themeName, themeSelect) {
   const updateDisplay = () => {
     const isChecked = mainToggle.type === 'checkbox' ? mainToggle.checked : true;
     configDiv.style.display =
-      themeSelect.value === themeName && isChecked ? 'block' : 'none';
+      isChecked ? 'block' : 'none';
     setTimeout(() => {
       if (window.positionIframeGlobal) {
         window.positionIframeGlobal();
@@ -115,24 +116,20 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
  *
  * Passe en mode édition pour le thème sélectionné :
  * @param {string} themeName - Nom du thème à éditer
- * @param {Object} themeData - Données du thème (depuis state.allThemes)
  * @param {Object} rawThemes - Configuration complète (THEMES_CONFIG_STR)
  * @param {Object} elements - Références aux éléments DOM (titre, select, etc.)
+ * @returns {void}
  */
-export function showThemeEditor(themeName, themeData, rawThemes, elements) {
-  const confTitre = document.getElementById('ConfTitre');
-  const labelSel = document.getElementById('label-select');
-  const form_group = document.getElementById(themeName + '-options');
+export function showThemeEditor(themeName, rawThemes, elements) {
+  const confTitre = getById('ConfTitre');
+  const labelSel = getById('label-select');
   const themeSelect = elements.themeSelect;
   confTitre.textContent = `Configuration du thème : ${themeName}`;
   labelSel.style.display = 'none';
-  themeSelect.style.display = 'none';
-  form_group.style.display = 'block';
-  const toggles = form_group.querySelectorAll('.toggle-container');
-  toggles.forEach(toggle => {
-    toggle.style.display = 'block';
-  });
-  if (!document.getElementById('cancel-edit-btn')) {
+  if (themeSelect) themeSelect.style.display = 'none';
+  console.log('rawThemes', rawThemes);
+  updateThemeOptions(rawThemes, themeSelect , themeName );
+  if (!getById('cancel-edit-btn')) {
     const cancelBtn = document.createElement('button');
     cancelBtn.id = 'cancel-edit-btn';
     cancelBtn.className = 'modern-button cancel';
@@ -142,16 +139,12 @@ export function showThemeEditor(themeName, themeData, rawThemes, elements) {
     if (buttonRow) buttonRow.appendChild(cancelBtn);
     cancelBtn.addEventListener('click', () => exitThemeEditor(rawThemes, elements));
   }
-  if (elements.previewButton) {
-    elements.previewButton.disabled = false;
-  }
-  if (window.updatePreview) {
-    window.updatePreview(rawThemes, themeSelect);
-  }
+  if (elements.previewButton) elements.previewButton.disabled = false;
+  if (window.updatePreview) window.updatePreview(rawThemes, themeSelect);
 }
-
 /**
  * Revient au mode normal (sélecteur visible, options masquées)
+ * @returns {void}
  */
 export function exitThemeEditor(rawThemes, elements) {
   const confTitre = document.getElementById('ConfTitre');

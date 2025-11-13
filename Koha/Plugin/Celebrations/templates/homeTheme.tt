@@ -72,8 +72,10 @@
                                 <div class="toggle-container" id="[% toggle_id | html %]" >
                                     <span class="toggle-label">[% theme_translation.${setting_id} | html %]</span>
                                     <label class="switch">
+                                        [% theme_name = theme_id; %]
+                                        [% element_state = all_themes.${theme_name}.elements.${element_key}; %]
                                         <input type="checkbox" id="[% setting_id | html %]" name="[% setting_id | html %]"
-                                            [% IF current_settings.${setting_id} == 'on' %]checked[% END %]>
+                                            [% IF element_state.enabled == 'on' %]checked[% END %]>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
