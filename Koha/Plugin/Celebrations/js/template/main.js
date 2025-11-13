@@ -3,10 +3,10 @@
  *  Script principal du module de gestion des thèmes
  * ======================================================
  */
-import { $, safeParseJSON } from './utils.js';
-import { updateThemesGrid, refreshThemesGridFromAPI, attachThemeCardEvents } from './themeGrid.js';
+import { getById, safeParseJSON, renderThemesGrid } from './utils.js';
+import { refreshThemesGridFromAPI } from './themeGrid.js';
 import { submitThemeForm, resetConfiguration } from './formHandler.js';
-import { updateThemeOptions, refreshThemeSelect, showThemeEditor, exitThemeEditor } from './themeOptions.js';
+import { updateThemeOptions, refreshThemeSelect } from './themeOptions.js';
 import { updatePreview } from './preview.js';
 import { initDevicePreviewSwitcher } from './devicePreview.js';
 /**
@@ -32,18 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     allThemes: safeParseJSON(ALL_THEMES, "ALL_THEMES"),
     themesConfigStr: safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR")
   };
-  console.log(state.allThemes);
-  updateThemesGrid(state.allThemes, state.currentSettings.theme_name, elements.noThemeMessage, elements.themesGrid);
-  attachThemeCardEvents(
-    themeName => {
-        const themeData = state.allThemes[themeName];
-        showThemeEditor(themeName, themeData, rawThemes, elements);
-    },
-    async () => {
-        await refreshThemesGridFromAPI(state, elements);
-        refreshThemeSelect(state.allThemes, state.themesConfigStr, elements.themeSelect);
-    }
-  );
+  renderThemesGrid(state, elements, state.rawThemes);
   elements.form.addEventListener('submit', async event => {
     event.preventDefault();
     await submitThemeForm(elements.form, rawThemes, elements, async () => {

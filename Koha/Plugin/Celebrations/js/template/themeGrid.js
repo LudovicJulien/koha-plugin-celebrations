@@ -5,7 +5,7 @@
  */
 import { THEME_EMOJIS, API_ENDPOINTS } from './config.js';
 import { formatDate, calculateProgress, getThemeStatus, showNotification } from './utils.js';
-import { refreshThemeSelect } from './themeOptions.js';
+import { refreshThemeSelect, showThemeEditor } from './themeOptions.js';
 /**
  *
  * Trie les thèmes par statut et par date de début.
@@ -96,13 +96,18 @@ export function updateThemesGrid(themes, currentTheme, noThemeMessage, themesGri
 /**
  *
  * Rafraîchit la grille des thèmes depuis l’API.
- * @param {Object} state - État global de l’application (contient les thèmes et le thème courant).
- * @param {Object} elements - Contient les éléments du DOM nécessaires à la mise à jour.
- * @param {HTMLElement} elements.noThemeMessage - Élément de message “aucun thème”.
- * @param {HTMLElement} elements.themesGrid - Conteneur de la grille.
+ * @async
+ * @param {Object} state - État global de l’application.
+ * @param {Object} state.allThemes - Dictionnaire des thèmes disponibles.
+ * @param {Object} state.currentSettings - Paramètres courants, incluant le thème actif.
+ * @param {Object} elements - Ensemble des éléments du DOM nécessaires à la mise à jour.
+ * @param {HTMLElement} elements.noThemeMessage - Élément affiché lorsqu’aucun thème n’est disponible.
+ * @param {HTMLElement} elements.themesGrid - Conteneur de la grille des thèmes.
+ * @param {HTMLElement} [elements.themeSelect] - Menu déroulant des thèmes (optionnel, pour le rafraîchissement du sélecteur).
+ * @param {Object} rawThemes - Données brutes des thèmes, utilisées pour la configuration ou l’édition.
  * @returns {Promise<void>}
  */
-export async function refreshThemesGridFromAPI(state, elements) {
+export async function refreshThemesGridFromAPI(state, elements, rawThemes) {
   try {
     const response = await fetch(API_ENDPOINTS.listThemes, {
       method: 'GET',
@@ -115,15 +120,7 @@ export async function refreshThemesGridFromAPI(state, elements) {
         state.allThemes[theme.name] = { ...theme, theme_name: theme.name };
       });
       state.currentSettings.theme_name = data.current_theme;
-      updateThemesGrid(state.allThemes, state.currentSettings.theme_name, elements.noThemeMessage, elements.themesGrid);
-      attachThemeCardEvents(
-        themeName => console.log('Edit:', themeName),
-        async () => {
-          await refreshThemesGridFromAPI(state, elements);
-          refreshThemeSelect(state.allThemes, state.themesConfigStr, elements.themeSelect);
-        }
-      );
-      console.log("Liste des thèmes rafraîchie avec succès.");
+      await renderThemesGrid(state, elements, rawThemes);
     } else {
       console.error('Erreur lors du rafraîchissement:', data.error);
     }
@@ -134,6 +131,7 @@ export async function refreshThemesGridFromAPI(state, elements) {
 /**
  *
  * Supprime un thème à partir de son nom.
+ * @async
  * @param {string} themeName - Nom du thème à supprimer.
  * @param {Function} [onSuccess] - Fonction callback appelée après suppression réussie.
  * @returns {Promise<void>}

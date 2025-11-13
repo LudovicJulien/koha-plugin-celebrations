@@ -1,3 +1,5 @@
+import { updateThemesGrid, refreshThemesGridFromAPI, attachThemeCardEvents } from './themeGrid.js';
+import { refreshThemeSelect, showThemeEditor } from './themeOptions.js';
 /**
  *
  *  Utilitaires généraux
@@ -92,6 +94,7 @@ export function getThemeStatus(theme) {
  *  Affiche une notification temporaire
  *  @param {string} message - Message à afficher.
  *  @param {'info'|'success'|'error'} [type='info'] - Type de notification (impacte la couleur).
+ *  @returns {void}
  */
 export function showNotification(message, type = 'info') {
   const notification = document.createElement('div');
@@ -120,6 +123,7 @@ export function showNotification(message, type = 'info') {
  *  Active/désactive les boutons
  *  @param {HTMLButtonElement[]} buttons - Tableau de boutons à modifier.
  *  @param {boolean} disabled - Indique si les boutons doivent être désactivés.
+ *  @returns {void}
  */
 export function toggleButtons(buttons, disabled) {
   buttons.forEach(btn => {
@@ -128,4 +132,30 @@ export function toggleButtons(buttons, disabled) {
       btn.style.cursor = disabled ? 'not-allowed' : 'pointer';
     }
   });
+}
+/**
+ *
+ * Met à jour la grille des thèmes et rattache les événements associés.
+ *
+ * @param {Object} state - État global (allThemes, currentSettings, themesConfigStr)
+ * @param {Object} elements - Références DOM utilisées pour le rendu (themesGrid, noThemeMessage, etc.)
+ * @param {Object} rawThemes - Données brutes de configuration des thèmes
+ * @returns {Promise<void>}
+ */
+export async function renderThemesGrid(state, elements, rawThemes) {
+  updateThemesGrid(
+    state.allThemes,
+    state.currentSettings.theme_name,
+    elements.noThemeMessage,
+    elements.themesGrid
+  );
+  attachThemeCardEvents(
+    themeName => {
+      showThemeEditor(themeName, rawThemes, elements);
+    },
+    async () => {
+      await refreshThemesGridFromAPI(state, elements, rawThemes);
+      refreshThemeSelect(state.allThemes, state.themesConfigStr, elements.themeSelect);
+    }
+  );
 }

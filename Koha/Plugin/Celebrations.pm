@@ -515,7 +515,7 @@ sub _build_enabled_template {
     my $template = $self->get_template({ file => 'templates/homeTheme.tt' });
     my $active_theme = $self->_get_active_theme();
     my $themes_data = $self->retrieve_data('themes_data');
-    my $all_themes = $themes_data ? decode_json(encode('UTF-8', $themes_data)) : {};
+    my $all_themes = $themes_data ? decode_json($themes_data) : {};
     my @themes_list = $self->_prepare_themes_for_display($all_themes);
     @themes_list = $self->_sort_themes_list(@themes_list);
     my $themes_list_json = encode_json(\@themes_list);
@@ -572,6 +572,16 @@ sub _prepare_themes_for_display {
         my $theme = $all_themes->{$theme_name};
         my $is_current = $self->_is_theme_current($theme, $now);
         my ($start_formatted, $end_formatted) = $self->_format_theme_dates($theme);
+        my %elements_display;
+        if (exists $theme->{elements}) {
+            foreach my $element_name (keys %{ $theme->{elements} }) {
+                my $element = $theme->{elements}{$element_name};
+                $elements_display{$element_name} = {
+                    enabled => $element->{enabled} // 'off',
+                    options => $element->{options} // {}
+                };
+            }
+        }
         push @themes_list, {
             theme_name => $theme_name,
             active => $theme->{active},
@@ -581,6 +591,7 @@ sub _prepare_themes_for_display {
             start_date_formatted => $start_formatted,
             end_date_formatted => $end_formatted,
             created_at => $theme->{created_at},
+            elements => \%elements_display,
             elements_count => scalar keys %{$theme->{elements} // {}}
         };
     }
