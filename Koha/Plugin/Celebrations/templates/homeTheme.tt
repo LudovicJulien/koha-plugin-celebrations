@@ -77,7 +77,14 @@
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
-                                [% IF element.extra_options %]
+                                [% SET hasOptions = 0 %]
+                                [% FOREACH option_key IN element.extra_options.keys %]
+                                    [% option_data = element.extra_options.${option_key} %]
+                                    [% IF option_data.type != "ignore" %]
+                                        [% SET hasOptions = 1 %]
+                                    [% END %]
+                                [% END %]
+                                [% IF hasOptions %]
                                     [% element_config_id = element_key _ '-config'; %]
                                     <div id="[% element_config_id | html %]"
                                          class="extra-options-container"
