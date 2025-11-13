@@ -26,24 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
     themesGrid: getById('themes-grid'),
     resetBtn: getById('reset-button')
   };
-  const rawThemes = safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR");
   const state = {
     currentSettings: safeParseJSON(CURRENT_SETTINGS_STR, "CURRENT_SETTINGS_STR"),
     allThemes: safeParseJSON(ALL_THEMES, "ALL_THEMES"),
-    themesConfigStr: safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR")
+    rawThemes: safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR"),
   };
   renderThemesGrid(state, elements, state.rawThemes);
   elements.form.addEventListener('submit', async event => {
     event.preventDefault();
-    await submitThemeForm(elements.form, rawThemes, elements, async () => {
-      await refreshThemesGridFromAPI(state, elements);
-      refreshThemeSelect(state.allThemes, state.themesConfigStr, elements.themeSelect);
+    await submitThemeForm(elements.form, state.rawThemes, elements, async () => {
+      await refreshThemesGridFromAPI(state, elements, state.rawThemes);
+      refreshThemeSelect(state.allThemes, state.rawThemes, elements.themeSelect);
     });
   });
   elements.themeSelect.addEventListener('change', () => {
-    updateThemeOptions(rawThemes, elements.themeSelect);
+    updateThemeOptions(state.rawThemes, elements.themeSelect);
   });
-  updateThemeOptions(rawThemes, elements.themeSelect);
+  updateThemeOptions(state.rawThemes, elements.themeSelect);
   ['flocons', 'coeurs', 'spiders'].forEach(type => {
     const input = getById(`quantite_${type}`);
     const label = getById(`val_quantite_${type}`);
@@ -53,12 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elements.resetBtn) {
     elements.resetBtn.addEventListener('click', () => {
       resetConfiguration(elements.form, state.currentSettings);
-      updateThemeOptions(rawThemes, elements.themeSelect);
+      updateThemeOptions(state.rawThemes, elements.themeSelect);
     });
   }
   if (elements.previewButton) {
     elements.previewButton.addEventListener('click', () => {
-      updatePreview(rawThemes, elements.themeSelect);
+      updatePreview(state.rawThemes, elements.themeSelect);
     });
   }
   if (document.readyState === 'loading') {
