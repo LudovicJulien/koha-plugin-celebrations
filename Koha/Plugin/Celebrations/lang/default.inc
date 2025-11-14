@@ -15,9 +15,12 @@
     titreD = "Welcome to the Celebration plugin!",
     description1 = "This plugin allows you to add seasonal themes to Koha's OPAC, such as Christmas, Halloween, or Valentine's Day.",
     description2 = "You can also customize some visual effects for each active theme.",
-    select_theme = "Theme configuration",
-    apply_button = "Apply Theme",
+    select_theme = "Select a theme to configure",
+    txtConf = "Theme Configuration: ",
+    apply_button = "save Theme",
     reset_button = "Reset",
+    preview_button = "preview",
+    cancel = "cancel",
     apply_success = "✅ Theme applied successfully !",
     reset_success = "Theme reset successfully!",
     apply_error = "❌ An error occurred while applying the theme. :(",
@@ -26,6 +29,19 @@
     tablet = "Tablet",
     tel = "Phone",
     #
+    # === Thèmes programmées ===
+    #
+    prog = {
+        titre = "Scheduled Themes",
+        message1 = "No theme scheduled for the moment.",
+        message2 = "Schedule your first theme below!",
+        debut = "Start",
+        fin = "End",
+        prog = "Progress",
+        btn1 = "Edit",
+        btn2 = "Delete"
+    }
+    #
     # === Nom des themes disponible ===
     #
     form = {
@@ -33,9 +49,27 @@
       no_theme = "None",
       noel = "Christmas",
       halloween = "Halloween",
-      "saint-valentin" = "Valentine's Day",
+      "saint-valentin" = "Valentine\'s Day",
       paque = "Easter",
-      "feux-artifice" = "Fireworks"
+      "feux-artifice" = "Fireworks",
+      debut = "Start Date:",
+      fin = "End Date:"
+    },
+    #
+    # === Grille de thème programmé (envoyé au fichier js) ===
+    #
+    grille = {
+        prog = "Progress",
+        actif = "active",
+        nonActif = "Inactive Theme",
+        modif = "edit",
+        sup = "delete",
+        debut = "Start :",
+        fin = "End :",
+        delete1 = "Are you sure you want to delete the theme",
+        delete2 = "This action is irreversible.",
+        delNotif1 = "Theme successfully deleted",
+        delNotif2 = "Error during deletion"
     },
     #
     # === configuration du theme noel ===

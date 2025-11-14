@@ -127,10 +127,11 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
  * @returns {void}
  */
 export function showThemeEditor(themeName, state, elements) {
+  const TRANSLATION = window.translation;
   const confTitre = getById('ConfTitre');
   const labelSel = getById('label-select');
   const themeSelect = elements.themeSelect;
-  confTitre.textContent = `Configuration du thème : ${themeName}`;
+  confTitre.textContent = `${TRANSLATION['txtConf']} ${TRANSLATION[themeName]}`;
   labelSel.style.display = 'none';
   if (themeSelect) themeSelect.style.display = 'none';
   console.log('rawThemes', state.rawThemes);
@@ -151,7 +152,7 @@ export function showThemeEditor(themeName, state, elements) {
     const cancelBtn = document.createElement('button');
     cancelBtn.id = 'cancel-edit-btn';
     cancelBtn.className = 'modern-button cancel';
-    cancelBtn.textContent = 'Annuler';
+    cancelBtn.textContent = `${TRANSLATION['cancel']}`;
     cancelBtn.style.marginLeft = '10px';
     const buttonRow = document.querySelector('.buttons-row');
     if (buttonRow) buttonRow.appendChild(cancelBtn);
@@ -172,10 +173,11 @@ export function showThemeEditor(themeName, state, elements) {
  * @returns {void}
  */
 export function exitThemeEditor(rawThemes, elements) {
+  const TRANSLATION = window.translation;
   const confTitre = getById('ConfTitre');
   const themeSelect = elements.themeSelect;
   const cancelBtn = getById('cancel-edit-btn');
-  confTitre.textContent = 'Sélectionnez un thème à configurer';
+  confTitre.textContent = `${TRANSLATION['select_theme']}`;
   themeSelect.style.display = 'block';
   updateThemeOptions(rawThemes, themeSelect);
   updatePreview(rawThemes, themeSelect.value);

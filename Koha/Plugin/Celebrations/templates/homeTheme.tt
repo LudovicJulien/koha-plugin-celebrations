@@ -12,6 +12,7 @@
         PROCESS "$PLUGIN_DIR/Celebrations/lang/default.inc";
         END;
     %]
+    [% SET langPrefix = ( LANG == 'en' ) ? '/en' : '' %]
 <div id="breadcrumbs">
     <a href="/cgi-bin/koha/mainpage.pl">Home</a> &rsaquo;
     <a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugins</a> &rsaquo;
@@ -27,10 +28,10 @@
             </p>
             <hr class="separator">
             <div id="themes-list-section" class="themes-list-wrapper">
-                <h2 class="section-title">Thèmes programmés</h2>
+                <h2 class="section-title">[% T.prog.titre | html %]</h2>
                 <div id="no-themes-message" class="no-themes" style="display:none;">
-                    Aucun thème programmé pour le moment.<br>
-                    Programmez votre premier thème ci-dessous !
+                    [% T.prog.message1 | html %]<br>
+                    [% T.prog.message2 | html %]
                 </div>
                 <div id="themes-grid" class="themes-grid">
                     <!-- Les thèmes seront injectés ici par JavaScript -->
@@ -134,11 +135,11 @@
                 [% END %]
                 <div class="date-row">
                     <div class="date-group">
-                        <label for="start_date">Date de début :</label>
-                        <input type="date" id="start_date" name="start_date">
+                        <label for="start_date">[% T.form.debut | html %]</label>
+                        <input type="date" lang="fr" id="start_date" name="start_date">
                     </div>
                     <div class="date-group">
-                        <label for="end_date">Date de fin :</label>
+                        <label for="end_date">[% T.form.fin | html %]</label>
                         <input type="date" id="end_date" name="end_date">
                     </div>
                 </div>
@@ -220,14 +221,38 @@
     <div id="inlibro-header">
         <p>[% T.extension | html %]</p>
         <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_[% T.lang | html %].svg' alt="InLibro" id="imgInlibro" />
-        <p class="website">[% T.site_web1 | html %] <a href="https://inlibro.com/koha-plugins/">[% T.site_web2 | html %]</a> [% T.site_web3 | html %]</p>
-        <p>[% T.documentation1 | html %] <a href="https://inlibro.com/extension-koha-celebrations/" target="_blank">[% T.documentation2 | html %]</a>.</p>
+        <p class="website">[% T.site_web1 | html %] <a href="https://inlibro.com[% langPrefix %]/koha-plugins/" target="_blank">[% T.site_web2 | html %]</a> [% T.site_web3 | html %]</p>
+        <p>[% T.documentation1 | html %] <a href="https://inlibro.com[% langPrefix %]/extension-koha-celebrations/" target="_blank">[% T.documentation2 | html %]</a>.</p>
     </div>
 <script>
-    window.api_namespace = "[% api_namespace | html %]";
+  window.api_namespace = "[% api_namespace | html %]";
   const THEMES_CONFIG_STR = '[% theme_config_json | html %]';
   const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
   const ALL_THEMES = '[% themes_list_json | html %]';
+  window.translation = {
+    debut: "[% T.grille.debut | html %]",
+    fin: "[% T.grille.fin | html %]",
+    theme_label: "[% T.form.theme_label | html %]",
+    no_theme: "[% T.form.no_theme | html %]",
+    noel: "[% T.form.noel | html %]",
+    halloween: "[% T.form.halloween | html %]",
+    "saint-valentin": "[% T.form.item('saint-valentin') | html %]",
+    paque: "[% T.form.paque | html %]",
+    "feux-artifice": "[% T.form.item('feux-artifice') | html %]",
+    prog: "[% T.grille.prog | html %]",
+    actif: "[% T.grille.actif | html %]",
+    nonActif: "[% T.grille.nonActif | html %]",
+    modif: "[% T.grille.modif | html %]",
+    sup: "[% T.grille.sup | html %]",
+    txtConf: "[% T.txtConf | html %]",
+    cancel: "[% T.cancel | html %]",
+    select_theme: "[% T.select_theme | html %]",
+    delete1: "[% T.grille.delete1 | html %]",
+    delete2: "[% T.grille.delete2 | html %]",
+    delNotif1: "[% T.grille.delNotif1 | html %]",
+    delNotif2: "[% T.grille.delNotif2 | html %]",
+
+  };
 </script>
 <script src="/api/v1/contrib/[% api_namespace | uri %]/static/js/celebrations-bundle.js" defer></script>
 [% INCLUDE 'intranet-bottom.inc' %]

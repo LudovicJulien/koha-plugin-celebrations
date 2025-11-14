@@ -5,7 +5,6 @@
  */
 import { THEME_EMOJIS, API_ENDPOINTS } from './config.js';
 import { formatDate, calculateProgress, getThemeStatus, showNotification } from './utils.js';
-import { refreshThemeSelect, showThemeEditor } from './themeOptions.js';
 /**
  *
  * Trie les thèmes par statut et par date de début.
@@ -27,6 +26,7 @@ export function sortThemes(themes) {
  * @returns {string} - Code HTML de la carte du thème.
  */
 export function createThemeCard(theme, currentTheme) {
+  const TRANSLATION = window.translation;
   const status = getThemeStatus(theme);
   const emoji = THEME_EMOJIS[theme.theme_name] || THEME_EMOJIS.default;
   const displayName = theme.theme_name;
@@ -38,25 +38,25 @@ export function createThemeCard(theme, currentTheme) {
       <div class="theme-card-top">
         <div class="theme-card-header">
           <div class="theme-icon">${emoji}</div>
-          <div class="theme-name">${displayName}</div>
+          <div class="theme-name">${TRANSLATION[displayName]}</div>
         </div>
       </div>
       <div class="theme-card-body">
         <div class="theme-dates">
           <div class="date-row">
-            <span class="labelCard">Début</span>
+            <span class="labelCard">${TRANSLATION['debut']}</span>
             <span class="value">${formatDate(theme.start_date)}</span>
           </div>
           <div class="date-row">
-            <span class="labelCard">Fin</span>
+            <span class="labelCard">${TRANSLATION['fin']}</span>
             <span class="value">${formatDate(theme.end_date)}</span>
           </div>
         </div>
         <div class="theme-progress">
           <div class="progress-label">
             ${status.type === 'current'
-              ? `<span>Progression</span><span class="progress-percent">${progress}% actif</span>`
-              : `<span>Progression</span><span class="progress-percent inactive-text">Thème non actif</span>`}
+              ? `<span>${TRANSLATION['prog']}</span><span class="progress-percent">${progress}% ${TRANSLATION['actif']}</span>`
+              : `<span>${TRANSLATION['prog']}</span><span class="progress-percent inactive-text">${TRANSLATION['nonActif']}</span>`}
           </div>
           <div class="progress-bar" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-fill" data-progress="${progress}"
@@ -66,8 +66,8 @@ export function createThemeCard(theme, currentTheme) {
         </div>
       </div>
       <div class="theme-card-footer">
-        <button class="btn-action action-btn-edit" data-theme="${theme.theme_name}">Modifier</button>
-        <button class="btn-action action-btn-delete" data-theme="${theme.theme_name}">Supprimer</button>
+        <button class="btn-action action-btn-edit" data-theme="${theme.theme_name}">${TRANSLATION['modif']}</button>
+        <button class="btn-action action-btn-delete" data-theme="${theme.theme_name}">${TRANSLATION['sup']}</button>
       </div>
     </div>
   </div>`;
@@ -137,7 +137,8 @@ export async function refreshThemesGridFromAPI(state, elements, rawThemes) {
  * @returns {Promise<void>}
  */
 export async function deleteTheme(themeName, onSuccess) {
-  if (!confirm(`Êtes-vous sûr de vouloir supprimer le thème "${themeName}" ?\n\nCette action est irréversible.`)) {
+  const TRANSLATION = window.translation;
+  if (!confirm(`${TRANSLATION['delete1']} ${TRANSLATION[themeName]} ?\n\n${TRANSLATION['delete2']}`)) {
     return;
   }
   try {
@@ -165,14 +166,14 @@ export async function deleteTheme(themeName, onSuccess) {
           }
         }, 300);
       }
-      showNotification('Thème supprimé avec succès', 'success');
+      showNotification(`${TRANSLATION['delNotif1']}`, 'success');
       if (onSuccess) onSuccess();
     } else {
-      throw new Error(data.error || 'Erreur lors de la suppression');
+      throw new Error(`${TRANSLATION['delNotif1']}`);
     }
   } catch (error) {
     console.error('Erreur:', error);
-    showNotification(`Erreur: ${error.message}`, 'error');
+    showNotification(`${TRANSLATION['delNotif1']}`, 'error');
   }
 }
 /**
