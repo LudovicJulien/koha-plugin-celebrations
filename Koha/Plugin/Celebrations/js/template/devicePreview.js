@@ -355,7 +355,7 @@ function showLoadingOverlay() {
 async function hideLoadingOverlay() {
   const overlay = document.getElementById('preview-loading-overlay');
   if (!overlay) return;
-  await new Promise(resolve => setTimeout(resolve, 3000));
+  await new Promise(resolve => setTimeout(resolve, 2500));
   overlay.style.display = 'none';
   overlay.style.pointerEvents = 'none';
 }

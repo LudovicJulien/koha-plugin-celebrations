@@ -13,6 +13,11 @@ import { updatePreview } from './devicePreview.js';
  * @returns {void}
  */
 export function updateThemeOptions(rawThemes, themeSelect = null, forcedThemeName = null) {
+  const startInput = getById("start_date");
+  const endInput   = getById("end_date");
+  if (!startInput || !endInput) return;
+  startInput.value = "";
+  endInput.value = "";
   Object.values(rawThemes).forEach(theme => {
     Object.values(theme.elements || {}).forEach(element => {
       if (element.toggle_id) {
@@ -121,15 +126,27 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
  * @param {Object} elements - Références aux éléments DOM (titre, select, etc.)
  * @returns {void}
  */
-export function showThemeEditor(themeName, rawThemes, elements) {
+export function showThemeEditor(themeName, state, elements) {
   const confTitre = getById('ConfTitre');
   const labelSel = getById('label-select');
   const themeSelect = elements.themeSelect;
   confTitre.textContent = `Configuration du thème : ${themeName}`;
   labelSel.style.display = 'none';
   if (themeSelect) themeSelect.style.display = 'none';
-  console.log('rawThemes', rawThemes);
-  updateThemeOptions(rawThemes, themeSelect , themeName );
+  console.log('rawThemes', state.rawThemes);
+  console.log('state', state);
+  updateThemeOptions(state.rawThemes, themeSelect , themeName );
+  const startInput = getById("start_date");
+  const endInput   = getById("end_date");
+  if (!startInput || !endInput) return;
+  const themeEntry = state.allThemes.find(t => t.theme_name === themeName);
+  if (themeEntry) {
+      startInput.value = themeEntry.start_date_formatted?.slice(0, 10) || "";
+      endInput.value   = themeEntry.end_date_formatted?.slice(0, 10) || "";
+  } else {
+      startInput.value = "";
+      endInput.value = "";
+  }
   if (!getById('cancel-edit-btn')) {
     const cancelBtn = document.createElement('button');
     cancelBtn.id = 'cancel-edit-btn';
@@ -138,9 +155,9 @@ export function showThemeEditor(themeName, rawThemes, elements) {
     cancelBtn.style.marginLeft = '10px';
     const buttonRow = document.querySelector('.buttons-row');
     if (buttonRow) buttonRow.appendChild(cancelBtn);
-    cancelBtn.addEventListener('click', () => exitThemeEditor(rawThemes, elements));
+    cancelBtn.addEventListener('click', () => exitThemeEditor(state.rawThemes, elements));
   }
-  updatePreview(rawThemes, themeName);
+  updatePreview(state.rawThemes, themeName);
 }
 /**
  *
@@ -161,5 +178,6 @@ export function exitThemeEditor(rawThemes, elements) {
   confTitre.textContent = 'Sélectionnez un thème à configurer';
   themeSelect.style.display = 'block';
   updateThemeOptions(rawThemes, themeSelect);
+  updatePreview(rawThemes, themeSelect);
   if (cancelBtn) cancelBtn.remove();
 }
