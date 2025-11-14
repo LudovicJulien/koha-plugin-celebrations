@@ -89,27 +89,27 @@
     #
     # === configuration des option de vitesse ===
     #
-    option_vitesse = {
-        vitesse_lent = "Slow",
-        vitesse_normale = "Normal",
-        vitesse_rapide = "Fast",
-    },
+    option_vitesse = [
+        { key = "vitesse_lent", label = "Slow" },
+        { key = "vitesse_normale", label = "Normal" },
+        { key = "vitesse_rapide", label = "Fast" },
+    ],
     #
     # === configuration des option de taille ===
     #
-    option_taille = {
-        taille_petit = "Small",
-        taille_normale = "Normal",
-        taille_grand = "Big",
-    },
+    option_taille = [
+        { key = "taille_petit", label = "Small" },
+        { key = "taille_normale", label = "Normal" },
+        { key = "taille_grand", label = "Big" },
+    ],
     #
     # === configuration des option de vent ===
     #
-    option_vent = {
-        vent_null = "None",
-        vent_normale = "Normal",
-        vent_fort = "A lot",
-    }
+    option_vent = [
+        { key = "vent_null", label = "None" },
+        { key = "vent_normale", label = "Normal" },
+        { key = "vent_fort", label = "A lot" },
+    ]
   },
    # D: Chaînes de caractères affichées lorsque le plugin est DÉSACTIVÉ.
    D = {

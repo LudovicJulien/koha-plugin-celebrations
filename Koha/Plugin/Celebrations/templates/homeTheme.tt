@@ -115,10 +115,10 @@
                                                     [% option_group_key = option_data.option_type;
                                                        option_group = T.${option_group_key};
                                                     %]
-                                                    [% FOREACH option_value_key IN option_group.keys %]
-                                                        <option value="[% option_value_key | html %]"
-                                                                [% IF option_value == option_value_key %]selected[% END %]>
-                                                            [% option_group.${option_value_key} | html %]
+                                                    [% FOREACH option_data IN option_group %]
+                                                        <option value="[% option_data.key | html %]"
+                                                                [% IF option_value == option_data.key %]selected[% END %]>
+                                                            [% option_data.label | html %]
                                                         </option>
                                                     [% END %]
                                                 </select>
@@ -144,7 +144,7 @@
                 </div>
                 <br><br>
                 <div class="buttons-row">
-                    <button type="reset" id="reset-button" class="modern-button reset">[% T.reset_button | html %]</button>
+                    <button type="button" id="reset-button" class="modern-button reset">[% T.reset_button | html %]</button>
                     <button type="button" id="preview-button" class="modern-button">[% T.preview_button | html %]</button>
                 </div>
                 <button type="submit" class="modern-button">[% T.apply_button | html %]</button>
