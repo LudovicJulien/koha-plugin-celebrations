@@ -380,15 +380,15 @@ button.reset {
   flex-wrap: wrap;
 }
 input[type="date"] {
- background-color: #ffffff; /* fond clair pour ne pas confondre avec boutons */
-  color: #2a6ebb; /* couleur texte assortie aux boutons */
-  border: 2px solid #2a6ebb; /* bordure colorée */
+ background-color: #ffffff;
+  color: #2a6ebb;
+  border: 2px solid #2a6ebb;
   border-radius: 6px;
   padding: 8px 12px;
   width: 160px;
   font-weight: 500;
   font-size: 14px;
-  appearance: none; /* supprime le style par défaut du navigateur */
+  appearance: none;
   background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="%232a6ebb" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-1.99.9-1.99 2L3 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H5V8h14v13z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
   background-repeat: no-repeat;
   background-position: right 10px center;
@@ -472,7 +472,6 @@ input[type="date"]:focus {
   transform: scale(1.05);
 }
 .theme-card-wrapper.active .theme-card {
-  /* box-shadow: 0 0 25px #00e1ff, 0 0 40px rgba(0,255,255,0.3); */
   border: 1px solid rgba(0,255,255,0.4);
 }
 .inactive-text {
