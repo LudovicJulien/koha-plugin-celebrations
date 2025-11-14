@@ -4,6 +4,7 @@
  * =======================================================
  */
 import { getById } from './utils.js';
+import { updatePreview } from './devicePreview.js';
 /**
  *
  * Met à jour dynamiquement l'affichage des options du thème sélectionné.
@@ -139,11 +140,18 @@ export function showThemeEditor(themeName, rawThemes, elements) {
     if (buttonRow) buttonRow.appendChild(cancelBtn);
     cancelBtn.addEventListener('click', () => exitThemeEditor(rawThemes, elements));
   }
-  if (elements.previewButton) elements.previewButton.disabled = false;
-  if (window.updatePreview) window.updatePreview(rawThemes, themeSelect);
+  updatePreview(rawThemes, themeName);
 }
 /**
+ *
  * Revient au mode normal (sélecteur visible, options masquées)
+ * @param {string} themeName - Nom du thème à éditer.
+ * @param {Object} rawThemes - Configuration complète des thèmes,
+ * @param {Object} elements - Références aux éléments DOM utilisés par le module.
+ *   - {HTMLSelectElement} elements.themeSelect - Sélecteur de thème global.
+ *   - {HTMLElement} [elements.themesGrid] - Grille listant les thèmes (si affichée).
+ *   - {HTMLElement} [elements.noThemeMessage] - Message affiché si aucun thème n’existe.
+ *   - {HTMLElement} [elements.themeSelectLab
  * @returns {void}
  */
 export function exitThemeEditor(rawThemes, elements) {
