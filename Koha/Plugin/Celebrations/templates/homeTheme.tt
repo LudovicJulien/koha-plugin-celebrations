@@ -224,7 +224,7 @@
         <p>[% T.documentation1 | html %] <a href="https://inlibro.com/extension-koha-celebrations/" target="_blank">[% T.documentation2 | html %]</a>.</p>
     </div>
 <script>
-    window.apiNamespace = "[% api_namespace | html %]";
+    window.api_namespace = "[% api_namespace | html %]";
   const THEMES_CONFIG_STR = '[% theme_config_json | html %]';
   const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
   const ALL_THEMES = '[% themes_list_json | html %]';
