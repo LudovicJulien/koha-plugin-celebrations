@@ -33,8 +33,13 @@
                   "type": "string",
                   "description": "Nom de base des fichiers CSS/JS pour cet élément (ex: 'noel-color')."
                 },
+                "type": {
+                  "type": "string",
+                  "description": "Indique si l'élément visuelle nécessite un fichier CSS ou JS ou les deux."
+                },
                 "toggle_id": {
                   "type": "string",
+                  "enum": ["both", "js", "css"],
                   "description": "ID unique pour l'interrupteur (toggle) dans l'interface d'administration qui active/désactive cet élément."
                 },
                 "extra_options": {
@@ -57,7 +62,7 @@
                           "properties": {
                             "type": { "const": "ignore" }
                           },
-                          "description": "Utilisé pour envoyer des données brutes au JS (ex: api_namespace) il faut donc obligatoirement mettre la valeur dans le template exmple ( window.apiNamespace = [% api_namespace | html %];)."
+                          "description": "Utilisé pour envoyer des données brutes au JS (ex: api_namespace) il faut donc obligatoirement mettre la valeur dans le template exmple ( window.api_namespace = [% api_namespace | html %];)."
                         },
                         {
                           "properties": {

@@ -235,8 +235,13 @@ function collectThemeAssets(themeData, selectedTheme) {
     const input = getById(element.setting);
     const isActive = input?.type === 'checkbox' ? input.checked : true;
     if (!isActive || !element.file) return;
-    cssFiles.push(`${baseUrl}&type=css&theme=${selectedTheme}&file=${element.file}`);
-    jsFiles.push(`${baseUrl}&type=js&theme=${selectedTheme}&file=${element.file}`);
+    const type = element.type || "both";
+    if (type === "css" || type === "both") {
+      cssFiles.push(`${baseUrl}&type=css&theme=${selectedTheme}&file=${element.file}`);
+    }
+    if (type === "js" || type === "both") {
+      jsFiles.push(`${baseUrl}&type=js&theme=${selectedTheme}&file=${element.file}`);
+    }
     if (element.extra_options) {
       Object.entries(element.extra_options).forEach(([optKey, optValue]) => {
         if (optValue.type === "ignore") {
@@ -284,7 +289,6 @@ async function injectCSSFiles(doc, cssFiles, selectedTheme) {
  * @returns {string} - Chaîne de caractères représentant le contenu du script.
  */
 function generateOptionsScript(selectedTheme, jsOptions) {
-  console.log('jsOptions', jsOptions);
   if (Object.keys(jsOptions).length === 0) return '';
   const jsonOpts = JSON.stringify(jsOptions);
   return `window["${selectedTheme}ThemeOptions"] = ${jsonOpts};`;
