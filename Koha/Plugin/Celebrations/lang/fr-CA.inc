@@ -14,10 +14,12 @@
     title = "Extension Célébrations",
     description1 = "Cette extension vous permet d’ajouter des thèmes saisonniers à l’OPAC de Koha, comme Noël, Halloween ou la Saint-Valentin.",
     description2 = "Vous pouvez également personnaliser certains effets visuels pour chaque thème actif.",
-    select_theme = "Configuration d'un thème",
+    select_theme = "Sélectionnez un thème à configurer",
+    txtConf = "Configuration du thème : ",
     apply_button = "Sauvegarder",
     reset_button = "Réinitialiser",
-    preview_button = "prévisualiser"
+    preview_button = "prévisualiser",
+    cancel = "anuler",
     apply_success = "✅ Thème appliqué avec succès !",
     reset_success = "Thème restauré avec succès !",
     apply_error = "❌ Une erreur est survenue lors de l’application du thème. :(",
@@ -25,6 +27,19 @@
     ordi = "Ordinateur",
     tablet = "Tablette",
     tel = "Téléphone",
+    #
+    # === Thèmes programmées ===
+    #
+    prog = {
+        titre = "Thèmes programmés",
+        message1 = "Aucun thème programmé pour le moment.",
+        message2 = "Programmez votre premier thème ci-dessous!",
+        debut = "Début",
+        fin = "Fin",
+        prog = "Progression",
+        btn1 = "Modifier",
+        btn2 = "Spprimer"
+    }
     #
     # === Nom des themes disponible ===
     #
@@ -35,7 +50,25 @@
       halloween = "Halloween",
       "saint-valentin" = "Saint-Valentin",
       paque = "Pâques",
-      "feux-artifice" = "Feux d’artifice"
+      "feux-artifice" = "Feux d’artifice",
+      debut = "Date de début :",
+      fin = "Date de fin :"
+    },
+    #
+    # === Grille de thème programmé (envoyé au fichier js) ===
+    #
+    grille = {
+        prog = "Progression",
+        actif = "actif",
+        nonActif = "Thème non actif",
+        modif = "modifier",
+        sup = "suppriomer"
+        debut = "début",
+        fin = "fin",
+        delete1 = "Êtes-vous sûr de vouloir supprimer le thème",
+        delete2 = "Cette action est irréversible.",
+        delNotif1 = "Thème supprimé avec succès",
+        delNotif2 = "Erreur lors de la suppression"
     },
     #
     # === configuration du theme noel ===
