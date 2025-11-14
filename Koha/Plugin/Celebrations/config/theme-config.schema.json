@@ -57,7 +57,7 @@
                           "properties": {
                             "type": { "const": "ignore" }
                           },
-                          "description": "Utilisé pour envoyer des données brutes au JS (ex: api_namespace)."
+                          "description": "Utilisé pour envoyer des données brutes au JS (ex: api_namespace) il faut donc obligatoirement mettre la valeur dans le template exmple ( window.apiNamespace = [% api_namespace | html %];)."
                         },
                         {
                           "properties": {

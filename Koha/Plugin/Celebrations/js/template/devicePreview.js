@@ -239,6 +239,10 @@ function collectThemeAssets(themeData, selectedTheme) {
     jsFiles.push(`${baseUrl}&type=js&theme=${selectedTheme}&file=${element.file}`);
     if (element.extra_options) {
       Object.entries(element.extra_options).forEach(([optKey, optValue]) => {
+        if (optValue.type === "ignore") {
+           jsOptions[optKey] = window[optKey];
+          return;
+        }
         const extraInput = getById(optKey);
         const extraActive = extraInput?.type === 'checkbox' ? extraInput.checked : !!extraInput?.value;
         if (extraActive) {
@@ -280,6 +284,7 @@ async function injectCSSFiles(doc, cssFiles, selectedTheme) {
  * @returns {string} - Chaîne de caractères représentant le contenu du script.
  */
 function generateOptionsScript(selectedTheme, jsOptions) {
+  console.log('jsOptions', jsOptions);
   if (Object.keys(jsOptions).length === 0) return '';
   const jsonOpts = JSON.stringify(jsOptions);
   return `window["${selectedTheme}ThemeOptions"] = ${jsonOpts};`;
@@ -309,14 +314,13 @@ function createLoadingOverlay() {
     background-color: #000000;
 ;
   `;
-  const apiNamespace = window.apiNamespace || 'default';
+  const apiNamespace = window.api_namespace || 'default';
   const logo = document.createElement('img');
   logo.src = `/api/v1/contrib/${apiNamespace}/static/images/inLibro_icone.png`;
   logo.alt = 'InLibro Icone';
   logo.style.cssText = `
     width: 120px;
     height: 120px;
-
     animation: pulse 1.5s ease-in-out infinite;
   `;
   const style = document.createElement('style');
