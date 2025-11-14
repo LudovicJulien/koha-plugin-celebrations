@@ -172,12 +172,12 @@ export function showThemeEditor(themeName, state, elements) {
  * @returns {void}
  */
 export function exitThemeEditor(rawThemes, elements) {
-  const confTitre = document.getElementById('ConfTitre');
+  const confTitre = getById('ConfTitre');
   const themeSelect = elements.themeSelect;
-  const cancelBtn = document.getElementById('cancel-edit-btn');
+  const cancelBtn = getById('cancel-edit-btn');
   confTitre.textContent = 'Sélectionnez un thème à configurer';
   themeSelect.style.display = 'block';
   updateThemeOptions(rawThemes, themeSelect);
-  updatePreview(rawThemes, themeSelect);
+  updatePreview(rawThemes, themeSelect.value);
   if (cancelBtn) cancelBtn.remove();
 }

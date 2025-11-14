@@ -149,8 +149,6 @@ export function toggleButtons(buttons, disabled) {
  * @returns {Promise<void>}
  */
 export async function renderThemesGrid(state, elements) {
-  console.log("state ", state);
-  console.log("elements ", elements);
   updateThemesGrid(
     state.allThemes,
     state.currentSettings.theme_name,
