@@ -137,12 +137,18 @@ export function toggleButtons(buttons, disabled) {
  *
  * Met à jour la grille des thèmes et rattache les événements associés.
  *
- * @param {Object} state - État global (allThemes, currentSettings, themesConfigStr)
- * @param {Object} elements - Références DOM utilisées pour le rendu (themesGrid, noThemeMessage, etc.)
- * @param {Object} rawThemes - Données brutes de configuration des thèmes
+ * @param {Object} state - État global comprenant :
+ *   - {Object} allThemes : liste de tous les thèmes disponibles
+ *   - {Object} currentSettings : thème actif + options actuelles
+ *   - {string} themesConfigStr : configuration brute renvoyée par la BD/API
+ *
+ * @param {Object} elements - Références DOM nécessaires au rendu :
+ *   - {HTMLElement} themesGrid : conteneur principal de la grille
+ *   - {HTMLElement} noThemeMessage : message affiché si aucun thème n'existe
+ *   - {HTMLSelectElement} themeSelect : dropdown de sélection des thèmes
  * @returns {Promise<void>}
  */
-export async function renderThemesGrid(state, elements, rawThemes) {
+export async function renderThemesGrid(state, elements) {
   updateThemesGrid(
     state.allThemes,
     state.currentSettings.theme_name,
@@ -151,11 +157,11 @@ export async function renderThemesGrid(state, elements, rawThemes) {
   );
   attachThemeCardEvents(
     themeName => {
-      showThemeEditor(themeName, rawThemes, elements);
+      showThemeEditor(themeName, state.rawThemes, elements);
     },
     async () => {
-      await refreshThemesGridFromAPI(state, elements, rawThemes);
-      refreshThemeSelect(state.allThemes, state.themesConfigStr, elements.themeSelect);
+      await refreshThemesGridFromAPI(state, elements, state.rawThemes);
+      refreshThemeSelect(state.allThemes, state.rawThemes, elements.themeSelect);
     }
   );
 }

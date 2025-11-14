@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     allThemes: safeParseJSON(ALL_THEMES, "ALL_THEMES"),
     rawThemes: safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR"),
   };
-  renderThemesGrid(state, elements, state.rawThemes);
+  renderThemesGrid(state, elements);
   elements.form.addEventListener('submit', async event => {
     event.preventDefault();
     await submitThemeForm(elements.form, state.rawThemes, elements, async () => {
