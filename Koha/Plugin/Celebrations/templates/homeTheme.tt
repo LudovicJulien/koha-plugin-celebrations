@@ -159,69 +159,72 @@
             </form>
         </div>
         <div id="previewDiv">
-        <h2 id="preVis">[% T.previs | html %]</h2>
-        <div class="radio-inputs">
-            <label class="radio">
-                <input type="radio" name="radio" value="ordi" checked="" />
-                <span class="name">[% T.ordi | html %]</span>
-            </label>
-            <label class="radio">
-                <input type="radio" name="radio" value="tel" />
-                <span class="name">[% T.tel | html %]</span>
-            </label>
-            <label class="radio">
-                <input type="radio" name="radio" value="tablette" />
-                <span class="name">[% T.tablet | html %]</span>
-            </label>
-        </div>
-        <div class="container monitor-preview" style="display: block;">
-            <div class="monitor">
-                <div class="screenOrdi">
-                    <div class="content">
+            <h2 id="preVis">[% T.previs | html %]</h2>
+            <div class="radio-inputs">
+                <label class="radio">
+                    <input type="radio" name="radio" value="ordi" checked="" />
+                    <span class="name">[% T.ordi | html %]</span>
+                </label>
+                <label class="radio">
+                    <input type="radio" name="radio" value="tel" />
+                    <span class="name">[% T.tel | html %]</span>
+                </label>
+                <label class="radio">
+                    <input type="radio" name="radio" value="tablette" />
+                    <span class="name">[% T.tablet | html %]</span>
+                </label>
+            </div>
+            <div id="prevDevice">
+                <div class="container monitor-preview" style="display: block;">
+                    <div class="monitor">
+                        <div class="screenOrdi">
+                            <div class="content">
 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="monitor-stand"></div>
+                </div>
+                <div class="ipad device" style="display: none;">
+                    <div class="case">
+                        <div class="earsection">
+                            <div class="camera"></div>
+                        </div>
+                        <div class="screenMobile">
+
+                        </div>
+                        <div class="button">
+                            <div class="buttonsquare"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="iphone device" style="display: none;">
+                    <div class="case">
+                        <div class="earsection">
+                            <div class="camera"></div>
+                            <div class="speaker"></div>
+                        </div>
+                        <div class="screenMobile">
+                        </div>
+                        <div class="button">
+                            <div class="buttonsquare"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="monitor-stand"></div>
         </div>
-        <div class="ipad device" style="display: none;">
-            <div class="case">
-                <div class="earsection">
-                    <div class="camera"></div>
-                </div>
-                <div class="screenMobile">
-
-                </div>
-                <div class="button">
-                    <div class="buttonsquare"></div>
-                </div>
-            </div>
-        </div>
-        <div class="iphone device" style="display: none;">
-            <div class="case">
-                <div class="earsection">
-                    <div class="camera"></div>
-                    <div class="speaker"></div>
-                </div>
-                <div class="screenMobile">
-                </div>
-                <div class="button">
-                    <div class="buttonsquare"></div>
-                </div>
-            </div>
-        </div>
-    </div>
     </div>
     </div>
 </div>
 <hr class="separator">
-  <div id="inlibro-header">
-            <p>[% T.extension | html %]</p>
-            <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_[% T.lang | html %].svg' alt="InLibro" id="imgInlibro" />
-            <p class="website">[% T.site_web1 | html %] <a href="https://inlibro.com/koha-plugins/">[% T.site_web2 | html %]</a> [% T.site_web3 | html %]</p>
-           <p>[% T.documentation1 | html %] <a href="https://inlibro.com/extension-koha-celebrations/" target="_blank">[% T.documentation2 | html %]</a>.</p>
-        </div>
+    <div id="inlibro-header">
+        <p>[% T.extension | html %]</p>
+        <img src='/api/v1/contrib/[% api_namespace | uri %]/static/images/inLibro_[% T.lang | html %].svg' alt="InLibro" id="imgInlibro" />
+        <p class="website">[% T.site_web1 | html %] <a href="https://inlibro.com/koha-plugins/">[% T.site_web2 | html %]</a> [% T.site_web3 | html %]</p>
+        <p>[% T.documentation1 | html %] <a href="https://inlibro.com/extension-koha-celebrations/" target="_blank">[% T.documentation2 | html %]</a>.</p>
+    </div>
 <script>
+    window.apiNamespace = "[% api_namespace | html %]";
   const THEMES_CONFIG_STR = '[% theme_config_json | html %]';
   const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
   const ALL_THEMES = '[% themes_list_json | html %]';

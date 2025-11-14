@@ -105,6 +105,59 @@
       }
     }
   },
+  "/images/inLibro_icone.png": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetImageInlibro_Icone",
+      "tags": [
+        "pluginCelebration"
+      ],
+      "responses": {
+        "200": {
+          "description": "File found",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
     "/images/blue-easter-egg.png": {
     "get": {
       "x-mojo-to": "Static#get",

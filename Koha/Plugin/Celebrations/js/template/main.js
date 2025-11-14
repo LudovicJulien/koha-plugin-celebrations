@@ -7,7 +7,7 @@ import { getById, safeParseJSON, renderThemesGrid } from './utils.js';
 import { refreshThemesGridFromAPI } from './themeGrid.js';
 import { submitThemeForm, resetConfiguration } from './formHandler.js';
 import { updateThemeOptions, refreshThemeSelect } from './themeOptions.js';
-import { updatePreview } from './preview.js';
+import { updatePreview } from './devicePreview.js';
 import { initDevicePreviewSwitcher } from './devicePreview.js';
 /**
  *
@@ -57,7 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (elements.previewButton) {
     elements.previewButton.addEventListener('click', () => {
-      updatePreview(state.rawThemes, elements.themeSelect);
+        const visibleFormGroup = document.querySelector('.form-group[style*="display: block"]');
+        if (!visibleFormGroup) return;
+        const themeName = visibleFormGroup.id.replace('-options', '');
+        console.log(themeName);
+        updatePreview(state.rawThemes, themeName);
     });
   }
   if (document.readyState === 'loading') {

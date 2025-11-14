@@ -471,7 +471,31 @@ input[type="date"] {
   border-color: #2a6ebb;
   box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
 }
-
+#preview-loading-overlay{
+   display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    transform-origin: top left;
+    pointer-events: auto;
+    z-index: 9999;
+    opacity: 0;
+    background-color: #000000;
+}
+.logoIcon{
+  width: 120px;
+  height: 120px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
 /*
     Section : Écran d'ordinateur
 	Attribution :
