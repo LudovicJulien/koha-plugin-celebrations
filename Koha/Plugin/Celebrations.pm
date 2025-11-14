@@ -176,6 +176,8 @@ sub _collect_theme_css {
     foreach my $element (keys %{ $conf->{elements} }) {
         my $enabled = $theme_conf->{elements}{$element}{enabled} // '';
         next unless $enabled eq 'on';
+        my $type = $conf->{elements}{$element}{type} // 'both';
+        next if $type eq 'js';
         my $css_file = $self->_get_asset_path('css', $theme_name, $conf->{elements}{$element}{file});
         if (-e $css_file) {
             $extra_css .= read_file($css_file, binmode => ':utf8');
@@ -217,6 +219,8 @@ sub _collect_theme_js {
         my $enabled = $theme_conf->{elements}{$element}{enabled} // '';
         warn "[Celebrations] Element $element disabled" unless $enabled eq 'on';
         next unless $enabled eq 'on';
+        my $type = $conf->{elements}{$element}{type} // 'both';
+        next if $type eq 'css';
         my $file_name = $conf->{elements}{$element}{file};
         my $js_file = $self->_get_asset_path('js', $theme_name, $file_name);
         if (my $opts = $theme_conf->{elements}{$element}{options}) {
