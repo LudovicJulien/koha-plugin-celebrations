@@ -106,7 +106,7 @@ sub _get_asset_path {
 sub _get_active_theme {
     my ($self) = @_;
     my $themes_data = $self->retrieve_data('themes_data');
-    return undef unless $themes_data;
+    return unless $themes_data;
     my $themes = decode_json(encode('UTF-8', $themes_data));
     my $now = DateTime->now();
     # permet de simuler une date pour tester !
@@ -128,7 +128,7 @@ sub _get_active_theme {
             }
         }
     }
-    return undef;
+    return;
 }
 #
 #
@@ -137,9 +137,9 @@ sub _get_active_theme {
 #
 sub _get_theme_config {
     my ($self, $theme_name) = @_;
-    return undef unless $theme_name;
+    return unless $theme_name;
     my $themes_data = $self->retrieve_data('themes_data');
-    return undef unless $themes_data;
+    return unless $themes_data;
     my $themes = decode_json(encode('UTF-8', $themes_data));
     return $themes->{$theme_name} // undef;
 }
@@ -421,7 +421,7 @@ sub _check_theme_conflicts {
             }
         }
     }
-    return undef;
+    return;
 }
 #
 #
@@ -707,11 +707,12 @@ sub _format_theme_dates {
 #
 sub _sort_themes_list {
     my ($self, @themes_list) = @_;
-    return sort {
+    my @sorted = sort {
         return -1 if $a->{is_current} && !$b->{is_current};
         return 1 if !$a->{is_current} && $b->{is_current};
         return $b->{start_date} <=> $a->{start_date};
     } @themes_list;
+    return@sorted;
 }
 #
 #

@@ -66,7 +66,7 @@ Pour garantir la qualité et la non-régression, le plugin inclut une suite de t
 Pour ajouter ou modifier un thème, il n'est pas nécessaire de modifier le code Perl. Il suffit de :
 1.  Ajouter vos fichiers `.css` et `.js` dans les dossiers `Koha/Plugin/Celebrations/css/` et `js/`.
 2.  Déclarer le nouveau thème, ses éléments et ses options dans le fichier `Koha/Plugin/Celebrations/config/theme-config.json`.
-3.  Ajouter les traductions pour les nouvelles options dans les fichiers du dossier `Koha/Plugin/Celebrations/lang/`, la clé doit toujours correspondre à la valeur du cham `"setting"` du fichier `""theme-config.json`.
+3.  Ajouter les traductions pour les nouvelles options dans les fichiers du dossier `Koha/Plugin/Celebrations/lang/`, la clé doit toujours correspondre à la valeur du champs `"setting"` du fichier `""theme-config.json`.
 
 Cette approche rend le plugin extrêmement modulaire.
 
