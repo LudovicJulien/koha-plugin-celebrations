@@ -4,7 +4,7 @@
  * ======================================================
  */
 import { API_ENDPOINTS } from './config.js';
-import { $, toggleButtons } from './utils.js';
+import { getById, toggleButtons } from './utils.js';
 /**
  *
  *  Soumet le formulaire de thème au serveur
@@ -64,14 +64,15 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
       credentials: 'same-origin'
     });
     const data = await response.json();
+    const TRANSLATION = window.translation;
     if (data.success) {
-      elements.successMessage.textContent = data.message || "Thème appliqué avec succès.";
+      elements.successMessage.textContent = TRANSLATION[data.message];
       elements.successMessage.style.display = "block";
     } else {
-      elements.erreurMessage.textContent = data.message || "Une erreur est survenue.";
+      elements.erreurMessage.textContent = TRANSLATION[data.message];
       elements.erreurMessage.style.display = "block";
     }
-    const iframe = document.getElementById('theme-preview');
+    const iframe = getById('theme-preview');
     if (iframe) iframe.contentWindow.location.reload(true);
     setTimeout(() => {
       elements.resetMessage.style.display = 'none';
@@ -82,7 +83,7 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
     if (onSuccess) onSuccess();
   } catch (error) {
     console.error("Erreur réseau:", error);
-    elements.erreurMessage.textContent = "Erreur de connexion au serveur.";
+    elements.erreurMessage.textContent = TRANSLATION[data.message];
     elements.erreurMessage.style.display = 'block';
     setTimeout(() => {
       elements.erreurMessage.style.display = 'none';

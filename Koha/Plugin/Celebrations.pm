@@ -24,7 +24,7 @@ our $metadata = {
     author          => 'Ludovic Julien',
     description     => 'Un OPAC pour chaque saison.',
     date_authored   => '2025-09-09',
-    date_updated    => '2025-11-07',
+    date_updated    => '2025-11-17',
     version         => '0.9.4',
     minimum_version => '24.05',
 };
@@ -295,7 +295,7 @@ sub _validate_theme_dates {
     unless ($start_date && $start_date ne 'null' && $end_date && $end_date ne 'null') {
         return {
             valid => 0,
-            message => 'Les dates de début et de fin sont obligatoires'
+            message => 'date_error_required'
         };
     }
     my $strp = DateTime::Format::Strptime->new(
@@ -308,13 +308,13 @@ sub _validate_theme_dates {
     unless ($start_dt && $end_dt) {
         return {
             valid => 0,
-            message => 'Format de date invalide'
+            message => 'date_error_invalid'
         };
     }
     if ($start_dt >= $end_dt) {
         return {
             valid => 0,
-            message => 'La date de début doit être avant la date de fin'
+            message => 'date_error_order'
         };
     }
     return {
@@ -419,12 +419,12 @@ sub delete_theme {
             print encode_json({
                 success => JSON::true,
                 theme   => $theme_name,
-                message => "Thème supprimé avec succès"
+                message => "theme_deleted"
             });
         } else {
             print encode_json({
                 success => JSON::false,
-                error   => "Thème '$theme_name' non trouvé"
+                error   => "theme_not_found"
             });
         }
     };
@@ -651,7 +651,7 @@ sub opac_preview {
     );
     $template->param(
         plugin_name => 'Celebrations',
-        message     => "Aperçu OPAC généré depuis le plugin Celebrations ✨",
+        message     => "Aperçu OPAC généré depuis le plugin Celebrations",
         is_preview  => 1,
     );
     my $html = $template->output;

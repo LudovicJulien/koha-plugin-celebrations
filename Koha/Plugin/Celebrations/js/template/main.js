@@ -60,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const visibleFormGroup = document.querySelector('.form-group[style*="display: block"]');
         if (!visibleFormGroup) return;
         const themeName = visibleFormGroup.id.replace('-options', '');
-        console.log(themeName);
         updatePreview(state.rawThemes, themeName);
     });
   }

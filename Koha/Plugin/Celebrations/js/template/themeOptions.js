@@ -113,7 +113,8 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
     if (themesConf[themeKey]) return;
     const option = document.createElement('option');
     option.value = themeKey;
-    option.textContent = allTheme[themeKey].theme_name || themeKey;
+    const TRANSLATION = window.translation || {};
+    option.textContent = TRANSLATION[themeKey] || themeKey;
     themeSelect.appendChild(option);
   });
   themeSelect.dispatchEvent(new Event('change'));
