@@ -27,6 +27,7 @@
     ordi = "Ordinateur",
     tablet = "Tablette",
     tel = "Téléphone",
+    yes = "oui",
     #
     # === Thèmes programmées ===
     #
@@ -62,7 +63,7 @@
         actif = "actif",
         nonActif = "Thème non actif",
         modif = "modifier",
-        sup = "suppriomer"
+        sup = "supprimer"
         debut = "début",
         fin = "fin",
         delete1 = "Êtes-vous sûr de vouloir supprimer le thème",
@@ -166,6 +167,8 @@
     theme_applied = "Thème configuré avec succes",
     theme_deleted = "Thème supprimé avec succès",
     theme_not_found = "Thème introuvable",
-    theme_conflict = "Période en conflit avec un autre thème"
+    theme_conflict = "Période en conflit avec un autre thème",
+    update_error = "Erreur lors de la mise à jour.",
+    connexion_error = "Erreur de connexion au serveur."
   };
 %]

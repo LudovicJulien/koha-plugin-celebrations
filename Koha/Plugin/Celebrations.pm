@@ -290,7 +290,7 @@ sub apply_theme {
 #
 #
 #
-#  Met à jour un thème existant
+#  Met à jour un thème existant dans la BD
 #
 sub update_theme {
     my ($self) = @_;
@@ -355,11 +355,7 @@ sub update_theme {
         updated_at => time(),
         elements   => \%elements,
     };
-
-    # 5. Sauvegarde
     $self->store_data({ themes_data => encode_json($themes) });
-
-    # 6. Réponse JSON
     print encode_json({
         success => JSON::true,
         theme   => $theme_name,

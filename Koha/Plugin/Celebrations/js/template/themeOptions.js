@@ -141,6 +141,7 @@ export function showThemeEditor(themeName, state, elements) {
   const themeSelect = elements.themeSelect;
   const createbtn = getById('create-button');
   const updatebtn = getById('update-button');
+  const resetbtn = getById('reset-button');
   confTitre.textContent = `${TRANSLATION['txtConf']} ${TRANSLATION[themeName]}`;
   labelSel.style.display = 'none';
   createbtn.style.display = 'none';
@@ -163,13 +164,13 @@ export function showThemeEditor(themeName, state, elements) {
   if (!getById('cancel-edit-btn')) {
     const cancelBtn = document.createElement('button');
     cancelBtn.id = 'cancel-edit-btn';
-    cancelBtn.className = 'modern-button cancel';
+    cancelBtn.className = 'modern-button reset';
     cancelBtn.textContent = `${TRANSLATION['cancel']}`;
-    cancelBtn.style.marginLeft = '10px';
-    const buttonRow = document.querySelector('.buttons-row');
-    if (buttonRow) buttonRow.appendChild(cancelBtn);
+    const buttonRow = getById('greyBtn');
+    if (buttonRow) buttonRow.prepend(cancelBtn);
     cancelBtn.addEventListener('click', () => exitThemeEditor(state.rawThemes, elements));
   }
+  resetbtn.style.display = 'block';
   updatePreview(state.rawThemes, themeName);
 }
 /**
@@ -190,6 +191,7 @@ export function exitThemeEditor(rawThemes, elements) {
   const themeSelect = elements.themeSelect;
   const cancelBtn = getById('cancel-edit-btn');
   const updateBtn = getById('update-button');
+  const resetbtn = getById('reset-button');
   confTitre.textContent = `${TRANSLATION['select_theme']}`;
   themeSelect.style.display = 'block';
   createbtn.style.display = 'block';
@@ -197,4 +199,5 @@ export function exitThemeEditor(rawThemes, elements) {
   updatePreview(rawThemes, themeSelect.value);
   if (cancelBtn) cancelBtn.remove();
   if (updateBtn) updateBtn.style.display = 'none';
+  if (resetbtn) resetbtn.style.display = 'none';
 }

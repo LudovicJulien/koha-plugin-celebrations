@@ -145,11 +145,13 @@
                 </div>
                 <br><br>
                 <div class="buttons-row">
-                    <button type="button" id="reset-button" class="modern-button reset">[% T.reset_button | html %]</button>
+                    <button type="submit" id="create-button" class="modern-button">[% T.apply_button | html %]</button>
+                    <button type="button" id="update-button" class="modern-button" style="display:none;">[% T.apply_button | html %]</button>
                     <button type="button" id="preview-button" class="modern-button">[% T.preview_button | html %]</button>
                 </div>
-                <button type="submit" id="create-button" class="modern-button">[% T.apply_button | html %]</button>
-                <button type="button" id="update-button" class="modern-button" style="display:none;">[% T.apply_button | html %]</button>
+                <div class="buttons-row" id="greyBtn">
+                    <button type="button" id="reset-button" class="modern-button reset" style="display:none;">[% T.reset_button | html %]</button>
+                </div>
                 <p id="success-message" style="display: none; color: green; font-weight: bold; margin-top: 1em;">
                   [% T.apply_success | html %]
                 </p><p id="reset-message" style="display: none; color: green; font-weight: bold; margin-top: 1em;">
@@ -231,6 +233,8 @@
   const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
   const ALL_THEMES = '[% themes_list_json | html %]';
   window.translation = {
+    yes: "[% T.yes | html %]",
+    cancel: "[% T.cancel | html %]",
     debut: "[% T.grille.debut | html %]",
     fin: "[% T.grille.fin | html %]",
     theme_label: "[% T.form.theme_label | html %]",
@@ -260,136 +264,9 @@
     theme_deleted: "[% B.theme_deleted | html %]",
     theme_not_found: "[% B.theme_not_found | html %]",
     theme_conflict: "[% B.theme_conflict | html %]",
+    update_error: "[% B.update_error | html %]",
+    connexion_error: "[% B.connexion_error | html %]",
   };
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <script src="/api/v1/contrib/[% api_namespace | uri %]/static/js/dist/celebrations-bundle.js" defer></script>
 [% INCLUDE 'intranet-bottom.inc' %]

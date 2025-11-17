@@ -28,6 +28,7 @@
     ordi = "Computer",
     tablet = "Tablet",
     tel = "Phone",
+    yes = "yes",
     #
     # === Thèmes programmées ===
     #
@@ -167,7 +168,9 @@
     theme_applied = "Theme configured successfully",
     theme_deleted = "Theme deleted successfully"
     theme_not_found = "Theme not found",
-    theme_conflict = "The selected period conflicts with another theme"
+    theme_conflict = "The selected period conflicts with another theme",
+    update_error = "Error during update.",
+    connexion_error = "Server connection error."
   }
 %]
 

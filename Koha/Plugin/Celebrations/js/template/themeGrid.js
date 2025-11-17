@@ -138,9 +138,11 @@ export async function refreshThemesGridFromAPI(state, elements, rawThemes) {
  */
 export async function deleteTheme(themeName, onSuccess) {
   const TRANSLATION = window.translation;
-  if (!confirm(`${TRANSLATION['delete1']} ${TRANSLATION[themeName]} ?\n\n${TRANSLATION['delete2']}`)) {
-    return;
-  }
+  const confirmed = await showNotification(
+    `${TRANSLATION['delete1']} ${TRANSLATION[themeName]} ?\n\n${TRANSLATION['delete2']}`,
+    'info'
+  );
+  if (!confirmed) return;
   try {
     const formData = new FormData();
     formData.append('class', 'Koha::Plugin::Celebrations');

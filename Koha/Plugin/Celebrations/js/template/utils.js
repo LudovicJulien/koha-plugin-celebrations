@@ -90,33 +90,88 @@ export function getThemeStatus(theme) {
   return { type: 'active', label: 'Actif' };
 }
 /**
- *
- *  Affiche une notification temporaire
- *  @param {string} message - Message à afficher.
- *  @param {'info'|'success'|'error'} [type='info'] - Type de notification (impacte la couleur).
- *  @returns {void}
+ * Affiche une notification temporaire
+ * @param {string} message - Message à afficher.
+ * @param {'info'|'success'|'error'} [type='info'] - Type de notification (impacte la couleur et le comportement)
+ * @returns {Promise<void>|void} - Pour 'info', renvoie une Promise qui se résout quand l'utilisateur confirme
  */
 export function showNotification(message, type = 'info') {
   const notification = document.createElement('div');
+  const TRANSLATION = window.translation;
+  let background = '';
+  if (type === 'success') {
+    background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+  } else if (type === 'error') {
+    background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+  } else {
+    background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
+  }
   notification.style.cssText = `
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 235px;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 16px 24px;
-    background: ${type === 'success' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'};
+    background: ${background};
     color: white;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     z-index: 10000;
     font-weight: 600;
     animation: slideIn 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   `;
   notification.textContent = message;
   document.body.appendChild(notification);
-  setTimeout(() => {
-    notification.style.animation = 'slideOut 0.3s ease';
-    setTimeout(() => notification.remove(), 300);
-  }, 3000);
+  if (type === 'info') {
+    return new Promise((resolve) => {
+      const btn = document.createElement('button');
+      btn.textContent = TRANSLATION['yes'];
+      btn.style.cssText = `
+        padding: 4px 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: rgba(255,255,255,0.2);
+        color: white;
+        font-weight: 600;
+      `;
+      notification.appendChild(btn);
+      btn.addEventListener('click', () => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          notification.remove();
+          resolve(true);
+        }, 300);
+      });
+       const btnCancel = document.createElement('button');
+      btnCancel.textContent = TRANSLATION['cancel'];
+      btnCancel.style.cssText = `
+        padding: 4px 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: rgba(255, 0, 0, 0.49);
+        color: white;
+        font-weight: 600;
+      `;
+      notification.appendChild(btnCancel);
+      btnCancel.addEventListener('click', () => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          notification.remove();
+          resolve(false);
+        }, 300);
+      });
+    });
+  } else {
+    setTimeout(() => {
+      notification.style.animation = 'slideOut 0.3s ease';
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  }
 }
 /**
  *

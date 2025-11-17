@@ -118,6 +118,7 @@ select {
     margin-bottom:10px;
 }
 .modern-button {
+    width: 125px !important;
     background-color: #2a6ebb;
     color: white;
     font-size: 1.1em;
@@ -285,7 +286,7 @@ iframe {
 .buttons-row {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 25px;
   margin-top: 20px;
   margin-bottom: 10px;
 }
@@ -298,9 +299,8 @@ iframe {
 }
 button.reset {
   background-color: #e0e0e0 !important;
-  color: #333 !important;
+  color: red !important;
 }
-
 .form-group {
   margin-top: 15px;
   display: flex;
@@ -385,7 +385,7 @@ input[type="date"] {
   border: 2px solid #2a6ebb;
   border-radius: 6px;
   padding: 8px 12px;
-  width: 160px;
+  width: 125px;
   font-weight: 500;
   font-size: 14px;
   appearance: none;

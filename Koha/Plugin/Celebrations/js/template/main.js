@@ -70,13 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!visibleFormGroup) return;
       const themeName = visibleFormGroup.id.replace('-options', '');
       await updateTheme(themeName, state.rawThemes, elements.form, elements);
-        console.log("themeName", themeName);
       await refreshThemesGridFromAPI(state, elements, state.rawThemes);
       refreshThemeSelect(state.allThemes, state.rawThemes, elements.themeSelect);
       exitThemeEditor(state.rawThemes, elements)
       const activeFormGroup = getById('theme-select')
       const activetheme = activeFormGroup.value
-      console.log('activetheme', activetheme)
       updatePreview(state.rawThemes, activetheme);
     });
   }
