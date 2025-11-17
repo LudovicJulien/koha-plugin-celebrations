@@ -10,7 +10,7 @@
     site_web2 = "site web",
     site_web3 = " pour plus d'extensions Koha",
     documentation1 = "Pour les instructions d'installation et d'utilisation, veuillez consulter notre",
-    documentation2 = "documentation de L'extension"
+    documentation2 = "documentation de L'extension",
     title = "Extension Célébrations",
     description1 = "Cette extension vous permet d’ajouter des thèmes saisonniers à l’OPAC de Koha, comme Noël, Halloween ou la Saint-Valentin.",
     description2 = "Vous pouvez également personnaliser certains effets visuels pour chaque thème actif.",
@@ -19,7 +19,7 @@
     apply_button = "Sauvegarder",
     reset_button = "Réinitialiser",
     preview_button = "prévisualiser",
-    cancel = "anuler",
+    cancel = "annuler",
     apply_success = "✅ Thème appliqué avec succès !",
     reset_success = "Thème restauré avec succès !",
     apply_error = "❌ Une erreur est survenue lors de l’application du thème. :(",
@@ -143,7 +143,7 @@
         { key = "vent_normale", label = "Normal" },
         { key = "vent_fort", label = "Fort" },
     ]
-  },
+  };
   # D: Chaînes de caractères affichées lorsque le plugin est DÉSACTIVÉ.
    D = {
     titre = "Bienvenue dans le plugin Celebration !",
@@ -156,5 +156,16 @@
     description7 = "Pour accéder à sa configuration et profiter de toutes ses fonctionnalités, retourne sur la page des plugins et",
     description8 = "active Celebration.",
     btn_back = "← Retour à la page des plugins"
-  }
+  };
+  # Backend_messages: Chaîne de caractères retourné par le backend
+  B = {
+    date_error_required = "Les dates de début et de fin sont obligatoires",
+    date_error_invalid = "Format de date invalide",
+    date_error_order = "La date de début doit être avant la date de fin",
+    theme_updated = "Thème mis à jour avec succès",
+    theme_applied = "Thème configuré avec succes",
+    theme_deleted = "Thème supprimé avec succès",
+    theme_not_found = "Thème introuvable",
+    theme_conflict = "Période en conflit avec un autre thème"
+  };
 %]

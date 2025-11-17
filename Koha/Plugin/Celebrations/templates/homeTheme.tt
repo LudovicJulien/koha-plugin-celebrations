@@ -251,8 +251,15 @@
     delete2: "[% T.grille.delete2 | html %]",
     delNotif1: "[% T.grille.delNotif1 | html %]",
     delNotif2: "[% T.grille.delNotif2 | html %]",
-
+    date_error_required: "[% B.date_error_required | html %]",
+    date_error_invalid: "[% B.date_error_invalid | html %]",
+    date_error_order: "[% B.date_error_order | html %]",
+    theme_updated: "[% B.theme_updated | html %]",
+    theme_applied: "[% B.theme_applied | html %]",
+    theme_deleted: "[% B.theme_deleted | html %]",
+    theme_not_found: "[% B.theme_not_found | html %]",
+    theme_conflict: "[% B.theme_conflict | html %]",
   };
 </script>
-<script src="/api/v1/contrib/[% api_namespace | uri %]/static/js/celebrations-bundle.js" defer></script>
+<script src="/api/v1/contrib/[% api_namespace | uri %]/static/js/dist/celebrations-bundle.js" defer></script>
 [% INCLUDE 'intranet-bottom.inc' %]

@@ -157,5 +157,17 @@
     description7 = "To access its configuration and enjoy all its features, please return to the plugins page and",
     description8 = "enable Celebration.",
     btn_back = "← Back to plugins page"
+  },
+  # Backend_messages: Chaîne de caractères retourné par le backend
+  B = {
+    date_error_required = "Start and end dates are required",
+    date_error_invalid = "Invalid date format",
+    date_error_order = "The start date must be before the end date",
+    theme_updated = "Theme updated successfully",
+    theme_applied = "Theme configured successfully",
+    theme_deleted = "Theme deleted successfully"
+    theme_not_found = "Theme not found",
+    theme_conflict = "The selected period conflicts with another theme"
   }
 %]
+

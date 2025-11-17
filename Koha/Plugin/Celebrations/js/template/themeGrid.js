@@ -115,10 +115,10 @@ export async function refreshThemesGridFromAPI(state, elements, rawThemes) {
     });
     const data = await response.json();
     if (data.success) {
-      state.allThemes = {};
-      data.themes.forEach(theme => {
-        state.allThemes[theme.name] = { ...theme, theme_name: theme.name };
-      });
+      state.allThemes = data.themes.map(theme => ({
+        ...theme,
+        theme_name: theme.name
+      }));
       state.currentSettings.theme_name = data.current_theme;
       await renderThemesGrid(state, elements, rawThemes);
     } else {
