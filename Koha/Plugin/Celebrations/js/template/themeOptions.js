@@ -101,22 +101,29 @@ export function toggleConfig(mainToggle, configDiv, themeName, themeSelect) {
 /**
  *
  * Mise à jour du sélecteur de thème qui permet d'ajouter de nouveaux thèmes
- * @param {Object} themes - Ensemble complet des thèmes {themeName: themeData}.
- * @param {HTMLSelectElement} themeSelect - Élément <select> à mettre à jour.
- * @param {string} [currentValue] - Valeur à sélectionner après mise à jour (optionnel).
+ * @param {Array<Object>} themesConf - Tableau des thèmes déjà configurés.
+ * @param {Object} allTheme - Objet de tous les thèmes possibles.
+ * @param {HTMLSelectElement} themeSelect - L'élément <select> à mettre à jour.
  * @returns {void}
  */
 export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
   if (!themeSelect) return;
+  const existingThemeNames = themesConf.map(t => t.name);
+  const selectedValue = themeSelect.value;
   themeSelect.innerHTML = '';
   Object.keys(allTheme).forEach(themeKey => {
-    if (themesConf[themeKey]) return;
+    if (existingThemeNames.includes(themeKey)) {
+      return;
+    }
     const option = document.createElement('option');
     option.value = themeKey;
     const TRANSLATION = window.translation || {};
     option.textContent = TRANSLATION[themeKey] || themeKey;
     themeSelect.appendChild(option);
   });
+  if (Array.from(themeSelect.options).some(opt => opt.value === selectedValue)) {
+    themeSelect.value = selectedValue;
+  }
   themeSelect.dispatchEvent(new Event('change'));
 }
 /**
@@ -132,8 +139,12 @@ export function showThemeEditor(themeName, state, elements) {
   const confTitre = getById('ConfTitre');
   const labelSel = getById('label-select');
   const themeSelect = elements.themeSelect;
+  const createbtn = getById('create-button');
+  const updatebtn = getById('update-button');
   confTitre.textContent = `${TRANSLATION['txtConf']} ${TRANSLATION[themeName]}`;
   labelSel.style.display = 'none';
+  createbtn.style.display = 'none';
+  updatebtn.style.display = 'block';
   if (themeSelect) themeSelect.style.display = 'none';
   console.log('rawThemes', state.rawThemes);
   console.log('state', state);
@@ -164,7 +175,6 @@ export function showThemeEditor(themeName, state, elements) {
 /**
  *
  * Revient au mode normal (sélecteur visible, options masquées)
- * @param {string} themeName - Nom du thème à éditer.
  * @param {Object} rawThemes - Configuration complète des thèmes,
  * @param {Object} elements - Références aux éléments DOM utilisés par le module.
  *   - {HTMLSelectElement} elements.themeSelect - Sélecteur de thème global.
@@ -176,11 +186,15 @@ export function showThemeEditor(themeName, state, elements) {
 export function exitThemeEditor(rawThemes, elements) {
   const TRANSLATION = window.translation;
   const confTitre = getById('ConfTitre');
+  const createbtn = getById('create-button');
   const themeSelect = elements.themeSelect;
   const cancelBtn = getById('cancel-edit-btn');
+  const updateBtn = getById('update-button');
   confTitre.textContent = `${TRANSLATION['select_theme']}`;
   themeSelect.style.display = 'block';
+  createbtn.style.display = 'block';
   updateThemeOptions(rawThemes, themeSelect);
   updatePreview(rawThemes, themeSelect.value);
   if (cancelBtn) cancelBtn.remove();
+  if (updateBtn) updateBtn.style.display = 'none';
 }

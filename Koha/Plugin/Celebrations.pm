@@ -465,12 +465,15 @@ sub _build_theme_list {
     foreach my $theme_name (keys %$themes) {
         my $theme = $themes->{$theme_name};
         my $is_current = $self->_is_theme_current($theme, $now);
+        my ($start_formatted, $end_formatted) = $self->_format_theme_dates($theme);
         push @theme_list, {
             name => $theme_name,
             active => $theme->{active},
             is_current => $is_current,
             start_date => $theme->{start_date},
             end_date => $theme->{end_date},
+            start_date_formatted => $start_formatted,
+            end_date_formatted => $end_formatted,
             created_at => $theme->{created_at}
         };
     }
