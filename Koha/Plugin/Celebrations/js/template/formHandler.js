@@ -117,3 +117,92 @@ export function resetConfiguration(form, currentSettings) {
   form.dataset.actionType = "reset";
   form.dispatchEvent(new Event('submit'));
 }
+
+/**
+ * ------------------------------------------------------
+ *  Met à jour un thème existant dans la BD
+ * ------------------------------------------------------
+ *  @param {string} themeName - Nom du thème à modifier
+ *  @param {Object} rawThemes - Toutes les configs de thèmes
+ *  @param {HTMLElement} form - Le formulaire contenant les nouvelles valeurs
+ *  @param {Object} elements - Tous les éléments DOM utiles (messages, boutons)
+ */
+export async function updateTheme(themeName, rawThemes, form, elements) {
+
+  const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+  const resetBtn = form.querySelector('button[type="reset"], input[type="reset"]');
+
+  toggleButtons([submitBtn, resetBtn], true);
+
+  const formData = new FormData();
+  formData.append('plugin_name', 'Celebrations');
+  formData.append('class', 'Koha::Plugin::Celebrations');
+  formData.append('method', 'update_theme');
+  formData.append('theme_name', themeName);
+
+  // Récupération des valeurs comme dans submitThemeForm()
+  const themeData = rawThemes[themeName];
+
+  if (themeData && themeData.elements) {
+    Object.values(themeData.elements).forEach(element => {
+      const input = getById(element.setting);
+      if (input) {
+        formData.append(
+          input.id,
+          input.type === 'checkbox' ? (input.checked ? 'on' : 'off') : input.value
+        );
+      }
+
+      if (element.extra_options) {
+        Object.keys(element.extra_options).forEach(optKey => {
+          const extraInput = getById(optKey);
+          if (extraInput) {
+            formData.append(
+              extraInput.id,
+              extraInput.type === 'checkbox'
+                ? (extraInput.checked ? 'on' : 'off')
+                : extraInput.value
+            );
+          }
+        });
+      }
+    });
+  }
+
+  // Dates
+  const start_date = form.querySelector('input[name="start_date"]').value;
+  const end_date = form.querySelector('input[name="end_date"]').value;
+
+  if (start_date) formData.append('start_date', start_date);
+  if (end_date)   formData.append('end_date', end_date);
+
+  try {
+    const response = await fetch(API_ENDPOINTS.updateTheme, {
+      method: 'POST',
+      body: formData,
+      credentials: 'same-origin'
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      elements.successMessage.textContent = "Thème mis à jour avec succès.";
+      elements.successMessage.style.display = "block";
+    } else {
+      elements.erreurMessage.textContent =  "Erreur lors de la mise à jour.";
+      elements.erreurMessage.style.display = "block";
+    }
+
+  } catch (error) {
+    console.error("Erreur réseau:", error);
+    elements.erreurMessage.textContent = "Erreur de connexion au serveur.";
+    elements.erreurMessage.style.display = "block";
+
+  } finally {
+    setTimeout(() => {
+      elements.successMessage.style.display = "none";
+      elements.erreurMessage.style.display = "none";
+      toggleButtons([submitBtn, resetBtn], false);
+    }, 4000);
+  }
+}

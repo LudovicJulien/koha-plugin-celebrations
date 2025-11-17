@@ -46,6 +46,7 @@ export const API_ENDPOINTS = {
   listThemes: '/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=list_themes',
   deleteTheme: '/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=delete_theme',
   applyTheme: '/cgi-bin/koha/plugins/run.pl?Koha::Plugin::Celebrations&method=apply_theme',
+  updateTheme: '/cgi-bin/koha/plugins/run.pl?Koha::Plugin::Celebrations&method=update_theme',
   previewAsset: '/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=preview_theme_asset',
   opacPreview: '/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Celebrations&method=opac_preview'
 };

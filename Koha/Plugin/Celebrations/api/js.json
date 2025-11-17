@@ -1,5 +1,5 @@
 {
-   "/js/celebrations-bundle.js": {
+   "/js/dist/celebrations-bundle.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSCelebrationsBundle",

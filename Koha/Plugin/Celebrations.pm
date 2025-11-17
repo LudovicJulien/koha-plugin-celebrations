@@ -284,9 +284,90 @@ sub apply_theme {
     print to_json({
         success => JSON::true,
         theme => $theme_name,
-        message => "Thème '$theme_name' activé du " . $start_date . " au " . $end_date
+        message => "theme_applied"
     });
 }
+#
+#
+#
+#  Met à jour un thème existant
+#
+sub update_theme {
+    my ($self) = @_;
+    my $cgi = $self->{cgi};
+    my $theme_name = $cgi->param('theme_name');
+    my $start_date = $cgi->param('start_date');
+    my $end_date   = $cgi->param('end_date');
+    print $cgi->header(-type => 'application/json', -charset => 'UTF-8');
+    unless ($theme_name) {
+        print encode_json({ success => JSON::false, error => "Nom du thème manquant" });
+        return;
+    }
+    my $themes_data = $self->retrieve_data('themes_data');
+    my $themes = $themes_data ? decode_json($themes_data) : {};
+    unless (exists $themes->{$theme_name}) {
+        print encode_json({ success => JSON::false, error => "Thème '$theme_name' introuvable" });
+        return;
+    }
+    my $validation = $self->_validate_theme_dates($start_date, $end_date);
+    unless ($validation->{valid}) {
+        print encode_json({ success => JSON::false, error => $validation->{message} });
+        return;
+    }
+    my ($start_dt, $end_dt) = @{$validation}{qw(start_dt end_dt)};
+    my $conflict = $self->_check_theme_conflicts($theme_name, $start_dt, $end_dt);
+    if ($conflict) {
+        print encode_json({ success => JSON::false, error => $conflict });
+        return;
+    }
+    my $base_config = $self->{themes_config}{$theme_name};
+    unless ($base_config) {
+        print encode_json({ success => JSON::false, error => "Configuration du thème introuvable" });
+        return;
+    }
+    my %elements;
+    if (exists $base_config->{elements}) {
+        foreach my $element (keys %{ $base_config->{elements} }) {
+            my $setting = $base_config->{elements}{$element}{setting};
+            my $enabled = $cgi->param($setting) // $themes->{$theme_name}{elements}{$element}{enabled} // 'off';
+            $elements{$element} = {
+                enabled => $enabled,
+                options => {}
+            };
+            if (exists $base_config->{elements}{$element}{extra_options}) {
+                foreach my $opt_key (keys %{ $base_config->{elements}{$element}{extra_options} }) {
+                    my $new_val = $cgi->param($opt_key);
+                    if ($opt_key eq 'api_namespace') {
+                        $new_val = $self->api_namespace;
+                    }
+                    $new_val //= $themes->{$theme_name}{elements}{$element}{options}{$opt_key}
+                             // $base_config->{elements}{$element}{extra_options}{$opt_key}{default}
+                             // 'off';
+                    $elements{$element}{options}{$opt_key} = $new_val;
+                }
+            }
+        }
+    }
+    $themes->{$theme_name} = {
+        %{$themes->{$theme_name}},
+        start_date => $start_dt->epoch,
+        end_date   => $end_dt->epoch,
+        updated_at => time(),
+        elements   => \%elements,
+    };
+
+    # 5. Sauvegarde
+    $self->store_data({ themes_data => encode_json($themes) });
+
+    # 6. Réponse JSON
+    print encode_json({
+        success => JSON::true,
+        theme   => $theme_name,
+        message => "theme_updated"
+    });
+}
+#
+#
 #
 #   Valide les dates de début et fin du thème
 #
