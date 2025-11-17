@@ -35,11 +35,11 @@
                 },
                 "type": {
                   "type": "string",
+                  "enum": ["both", "js", "css"],
                   "description": "Indique si l'élément visuelle nécessite un fichier CSS ou JS ou les deux."
                 },
                 "toggle_id": {
                   "type": "string",
-                  "enum": ["both", "js", "css"],
                   "description": "ID unique pour l'interrupteur (toggle) dans l'interface d'administration qui active/désactive cet élément."
                 },
                 "extra_options": {

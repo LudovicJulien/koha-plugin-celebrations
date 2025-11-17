@@ -10,23 +10,35 @@ use Koha::Plugin::Celebrations;
 #  (DELETE FROM plugin_data WHERE plugin_class = ?) et que la méthode retourne bien un indicateur de succès (1)
 #  lorsque la désinstallation se déroule sans erreur.
 #
-plan tests => 3;
+plan tests => 5;
 my $plugin = Koha::Plugin::Celebrations->new();
+# Mock du statement handle
 my $mock_sth = Test::MockObject->new();
 $mock_sth->mock('execute', sub {
-    my ( $self, $class_name ) = @_;
-    is($class_name, 'Koha::Plugin::Celebrations', 'uninstall: execute called with the correct plugin class name');
+    my ($self, $class_name) = @_;
+    is($class_name, 'Koha::Plugin::Celebrations', 'uninstall: execute() called with correct class');
     return 1;
 });
-$mock_sth->mock('finish', sub { return 1; });
+$mock_sth->mock('finish', sub { return 1 });
+# Mock du DBH
 my $mock_dbh = Test::MockObject->new();
 $mock_dbh->mock('prepare', sub {
-    my ( $self, $sql ) = @_;
-    like($sql, qr/DELETE FROM plugin_data WHERE plugin_class = \?/, 'uninstall: prepare called with the correct SQL query');
+    my ($self, $sql) = @_;
+    like($sql, qr/DELETE FROM plugin_data WHERE plugin_class = \?/, 'uninstall: correct SQL');
     return $mock_sth;
 });
+# Mock de C4::Context
 my $context_mock = Test::MockModule->new('C4::Context');
-$context_mock->redefine('dbh', sub { return $mock_dbh; });
+$context_mock->redefine('dbh', sub { return $mock_dbh });
+# Test principal
 my $result = $plugin->uninstall();
-is($result, 1, 'uninstall: method returns success on completion');
+is($result, 1, 'uninstall: returns success');
+# Vérifier que finish() a bien été appelé
+ok($mock_sth->called('finish'), 'uninstall: finish() was called');
+# Vérifier le nom de classe
+is(
+    ref($plugin),
+    'Koha::Plugin::Celebrations',
+    'Plugin class name is correct'
+);
 done_testing();

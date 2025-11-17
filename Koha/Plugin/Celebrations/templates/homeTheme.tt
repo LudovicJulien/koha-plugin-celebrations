@@ -7,9 +7,9 @@
     [%
         # Chargement du bon fichier de traduction selon la langue utilisateur
         TRY;
-        PROCESS "$PLUGIN_DIR/Celebrations/lang/${LANG}.inc";
+        PROCESS "$PLUGIN_DIR/Celebrations/i18n/${LANG}.inc";
         CATCH;
-        PROCESS "$PLUGIN_DIR/Celebrations/lang/default.inc";
+        PROCESS "$PLUGIN_DIR/Celebrations/i18n/default.inc";
         END;
     %]
     [% SET langPrefix = ( LANG == 'en' ) ? '/en' : '' %]

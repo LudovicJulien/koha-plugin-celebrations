@@ -1,88 +1,122 @@
 use strict;
 use warnings;
 use Test::More;
-use File::Spec;
 use Cwd 'abs_path';
-use File::Basename;
-use JSON;
+use File::Spec;
+use File::Basename 'dirname';
+use JSON::MaybeXS;
+# --- Chemins ---
+my $plugin_dir = abs_path(dirname(__FILE__) . '/../Koha/Plugin/Celebrations');
+my $lang_dir   = File::Spec->catdir($plugin_dir, 'i18n');
+my $config_file = File::Spec->catfile($plugin_dir, 'config', 'theme-config.json');
+BAIL_OUT("Language directory not found: $lang_dir") unless -d $lang_dir;
+BAIL_OUT("Config file not found: $config_file") unless -f $config_file;
+my ($default_file) = glob(File::Spec->catfile($lang_dir, 'default.inc'));
+BAIL_OUT("default.inc not found") unless $default_file;
+my @other_files = grep { $_ ne $default_file } glob(File::Spec->catfile($lang_dir, '*.inc'));
 #
-#   Ce test vérifie la cohérence et la complétude des fichiers de traduction du plugin Koha::Plugin::Celebrations.
-#   Il s’assure que chaque fichier de langue (.inc) compile correctement et contient toutes les clés définies dans le fichier
-#   de référence default.inc. En cas de clé manquante, le test signale les traductions absentes pour la langue concernée.
-#   Il vérifie aussi que les clés de "setting" dans theme-config.json sont présentes dans tous les fichiers de langue.
+#  Ce test vérifie l'intégrité et la cohérence des fichiers de configuration et de langue
+#  pour le plugin Koha::Plugin::Celebrations.
 #
-my $plugin_pm_path = abs_path(dirname(__FILE__) . '/../Koha/Plugin/Celebrations.pm');
-my $plugin_dir = dirname($plugin_pm_path);
-my $lang_dir = File::Spec->catdir($plugin_dir, 'Celebrations', 'lang');
-BAIL_OUT("Language directory not found") unless -d $lang_dir;
-my @lang_files = glob(File::Spec->catfile($lang_dir, '*.inc'));
-my ($default_lang_file) = grep { /default\.inc$/ } @lang_files;
-my @other_lang_files = grep { !/default\.inc$/ } @lang_files;
-BAIL_OUT("Could not find default.inc") unless $default_lang_file;
-my $default_strings;
-eval { $default_strings = do $default_lang_file; };
-BAIL_OUT("Default language file ($default_lang_file) failed to compile: $@") if $@;
-my %default_keys = map { $_ => 1 } keys %$default_strings;
-plan tests => scalar(@other_lang_files) + 1;
-foreach my $lang_file (@other_lang_files) {
-    my ($volume, $directories, $filename) = File::Spec->splitpath($lang_file);
-    my $lang_code = $filename;
-    $lang_code =~ s/\.inc$//;
-    subtest "Testing language: $lang_code" => sub {
-        my $lang_strings;
-        eval { $lang_strings = do $lang_file; };
-        ok(!$@, "Language file '$filename' compiles correctly") or return;
-        my @missing_keys;
-        foreach my $key (keys %default_keys) {
-            unless (exists $lang_strings->{$key}) {
-                push @missing_keys, $key;
+#  Il effectue plusieurs vérifications :
+#  1. Vérifie que le répertoire de langues et le fichier theme-config.json existent.
+#  2. Charge et parse le fichier default.inc, qui sert de référence pour toutes les traductions.
+#  3. Pour chaque fichier de langue supplémentaire (*.inc), il vérifie :
+#     - Que le fichier est correctement évalué en HASH Perl.
+#     - Que toutes les sections T, D et B existent.
+#     - Que toutes les clés présentes dans default.inc sont aussi présentes dans le fichier testé.
+#  4. Vérifie que pour chaque thème et chaque élément défini dans theme-config.json :
+#     - Le "setting" de l'élément existe dans la section T correspondante du fichier de langue.
+#     - Pour chaque extra_option de l'élément (sauf type "ignore") :
+#       * L'option est présente dans la section T du fichier de langue.
+#       * Si l'option a un "option_type", la section correspondante existe aussi dans T.
+#
+#  Objectif :
+#    - Assurer que toutes les traductions nécessaires sont présentes pour chaque thème et élément.
+#    - Éviter les erreurs liées à des clés manquantes ou des sections absentes dans les fichiers de langue.
+#    - Garantir la compatibilité entre la configuration JSON et les fichiers de langue utilisés par le plugin.
+#
+#
+# --- Charger default.inc ---
+my $default_data;
+{
+    local $/;
+    open my $fh, '<', $default_file or BAIL_OUT("Can't open $default_file: $!");
+    my $text = <$fh>;
+    close $fh;
+    $text =~ s/^\[%\s*|\s*%\]$//g;
+    $text = "my \$data = { $text };";
+    $default_data = eval $text;
+    BAIL_OUT("default.inc failed to eval: $@") if $@;
+}
+ok(ref $default_data eq 'HASH', "default.inc loaded");
+# --- Fonction récursive pour vérifier clés et options ---
+sub check_keys {
+    my ($default, $actual, $path) = @_;
+    for my $key (keys %$default) {
+        my $full_path = $path ? "$path.$key" : $key;
+        if (!exists $actual->{$key}) {
+            fail("Missing key: $full_path");
+        } elsif (ref $default->{$key} eq 'HASH') {
+            check_keys($default->{$key}, $actual->{$key}, $full_path);
+        } elsif (ref $default->{$key} eq 'ARRAY') {
+            my %default_keys = map { $_->{key} => 1 } @{ $default->{$key} };
+            my %actual_keys  = map { $_->{key} => 1 } @{ $actual->{$key} };
+            for my $k (keys %default_keys) {
+                fail("Missing key in array $full_path: $k") unless exists $actual_keys{$k};
             }
         }
-        is(scalar(@missing_keys), 0, "All strings from default.inc are translated in '$filename'")
-            or diag "Missing translations in '$filename' for keys: " . join(', ', @missing_keys);
-    };
+    }
 }
-# Vérifie que les settings du theme-config.json sont bien dans les fichiers de langue
-subtest "Check theme-config settings are defined in all language files" => sub {
-    my $config_file = File::Spec->catfile($plugin_dir, 'Celebrations', 'config', 'theme-config.json');
-    BAIL_OUT("Theme config file not found at $config_file") unless -f $config_file;
-    my $json_text = do {
+# --- Charger le theme-config.json ---
+open my $cfg_fh, '<', $config_file or BAIL_OUT("Can't open $config_file: $!");
+my $json_text = do { local $/; <$cfg_fh> };
+close $cfg_fh;
+my $config_data = decode_json($json_text);
+# --- Tester les fichiers de langue ---
+foreach my $file (@other_files) {
+    subtest "Testing $file" => sub {
         local $/;
-        open my $fh, '<:utf8', $config_file or die "Can't open $config_file: $!";
-        <$fh>;
-    };
-    my $config = eval { decode_json($json_text) };
-    BAIL_OUT("Failed to decode theme-config.json: $@") if $@;
-    plan tests => scalar(@lang_files); # We test every lang file
-    foreach my $lang_file (@lang_files) {
-        my (undef, undef, $filename) = File::Spec->splitpath($lang_file);
-        subtest "Testing settings for language: $filename" => sub {
-            my $lang_data;
-            eval { $lang_data = do $lang_file; };
-            if($@) {
-                fail("Language file '$filename' failed to compile: $@");
-                return;
-            }
-            my $T = $lang_data->{T};
-            BAIL_OUT("No 'T' hashref found in $filename") unless ($T && ref $T eq 'HASH');
-            my @missing_keys;
-            foreach my $theme_name (keys %$config) {
-                my $elements = $config->{$theme_name}{elements};
-                next unless ($elements && ref $elements eq 'HASH');
-
-                foreach my $element_name (keys %$elements) {
-                    my $setting_key = $elements->{$element_name}{setting};
-                    next unless $setting_key;
-
-                    # The key should exist in the hash for that theme, e.g., $T->{noel}->{couleur_noel}
-                    unless (exists $T->{$theme_name} && ref $T->{$theme_name} eq 'HASH' && exists $T->{$theme_name}{$setting_key}) {
-                        push @missing_keys, "$theme_name.$setting_key";
+        my $data;
+        open my $fh, '<', $file or do { fail("Can't open $file: $!"); return };
+        my $text = <$fh>;
+        close $fh;
+        $text =~ s/^\[%\s*|\s*%\]$//g;
+        $text = "my \$data = { $text };";
+        $data = eval $text;
+        if ($@) {
+            fail("Eval failed: $@");
+            return;
+        }
+        ok(ref $data eq 'HASH', "File loaded as HASH: $file");
+        for my $section (qw(T D B)) {
+            ok(exists $data->{$section}, "$section exists in $file");
+            check_keys($default_data->{$section}, $data->{$section}, $section);
+        }
+        # --- Vérifier les settings dans le JSON ---
+        for my $theme (keys %$config_data) {
+            my $theme_section = $config_data->{$theme}->{elements};
+            for my $elem (keys %$theme_section) {
+                my $setting = $theme_section->{$elem}->{setting};
+                ok(exists $data->{T}->{$theme}->{$setting}, "Setting '$setting' exists in T->{$theme}");
+                if (exists $theme_section->{$elem}->{extra_options}) {
+                    for my $opt (keys %{ $theme_section->{$elem}->{extra_options} }) {
+                        my $opt_data = $theme_section->{$elem}->{extra_options}->{$opt};
+                        # --- IGNORER les options de type "ignore" ---
+                        next if $opt_data->{type} && $opt_data->{type} eq 'ignore';
+                        my $opt_setting = $opt_data->{type} eq 'select'
+                                          ? $opt_data->{option_type}
+                                          : $opt;
+                        ok(exists $data->{T}->{$theme}->{$opt}, "Extra option '$opt' exists in T->{$theme}");
+                        # Vérifie que la sous-section option_type existe
+                        if ($opt_data->{option_type}) {
+                            my $otype = $opt_data->{option_type};
+                            ok(exists $data->{T}->{$otype}, "Option type section '$otype' exists in T");
+                        }
                     }
                 }
             }
-            is(scalar(@missing_keys), 0, "All settings from theme-config.json are defined in '$filename'")
-                or diag "Missing translations in '$filename' for keys: " . join(', ', @missing_keys);
-        };
-    }
-};
+        }
+    };
+}
 done_testing();
