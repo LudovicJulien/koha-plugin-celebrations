@@ -80,7 +80,7 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
       elements.erreurMessage.style.display = 'none';
       toggleButtons([submitBtn, prevBtn], false);
     }, 5000);
-    if (onSuccess) onSuccess();
+    if (onSuccess && data.success === true) onSuccess();
   } catch (error) {
     console.error("Erreur réseau:", error);
     elements.erreurMessage.textContent = TRANSLATION[data.message];

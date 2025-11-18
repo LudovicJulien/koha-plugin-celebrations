@@ -95,6 +95,7 @@ export function toggleConfig(mainToggle, configDiv, themeName, themeSelect) {
       }
     }, 100);
   };
+  mainToggle.removeEventListener('change', updateDisplay);
   mainToggle.addEventListener('change', updateDisplay);
   updateDisplay();
 }
@@ -128,6 +129,51 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
 }
 /**
  *
+ * Restaure les paramètres du thème (dates et options) aux valeurs
+ * qu'ils avaient lors de l'ouverture du mode édition.
+ * @param {string} themeName - Nom du thème en cours d'édition.
+ * @param {Object} state - Objet d'état contenant les données brutes des thèmes et l'état initial.
+ * @returns {void}
+ */
+export function resetThemeOptions(themeName, state) {
+  const themeEntry = state.allThemes.find(t => t.theme_name === themeName) || {};
+  const startDate = themeEntry.start_date_formatted;
+  const endDate = themeEntry.end_date_formatted;
+  // Réinitialiser les dates
+  const startInput = getById("start_date");
+  const endInput   = getById("end_date");
+  if (startInput && endInput) {
+   startInput.value = startDate ? startDate.slice(0, 10) : "";
+    endInput.value   = endDate ? endDate.slice(0, 10) : "";
+  }
+  //  Réinitialiser les options principales et supplémentaires
+  Object.entries(themeEntry.elements).forEach(([elementKey, element]) => {
+    const initialEnabled = element.enabled === "on";
+    const settingKey = state.rawThemes[themeName].elements[elementKey].setting;
+    const mainToggle = getById(settingKey);
+    if (!mainToggle) return;
+    if (mainToggle.type === 'checkbox') {
+      mainToggle.checked = initialEnabled;
+    }
+    // Réinitialiser les Options Supplémentaires (Sliders, Selects)
+    if (element.options) {
+      Object.entries(element.options).forEach(([optKey, opt]) => {
+        const input = getById(optKey);
+        if (!input) return;
+        input.value = opt;
+        if (input.type === 'range') {
+          const span = getById(`val_${optKey}`);
+          span.textContent = opt;
+        }
+      });
+    }
+    mainToggle.dispatchEvent(new Event('change'));
+  });
+  updatePreview(state.rawThemes, themeName);
+}
+
+/**
+ *
  * Passe en mode édition pour le thème sélectionné :
  * @param {string} themeName - Nom du thème à éditer
  * @param {Object} rawThemes - Configuration complète (THEMES_CONFIG_STR)
@@ -147,8 +193,6 @@ export function showThemeEditor(themeName, state, elements) {
   createbtn.style.display = 'none';
   updatebtn.style.display = 'block';
   if (themeSelect) themeSelect.style.display = 'none';
-  console.log('rawThemes', state.rawThemes);
-  console.log('state', state);
   updateThemeOptions(state.rawThemes, themeSelect , themeName );
   const startInput = getById("start_date");
   const endInput   = getById("end_date");
@@ -170,7 +214,14 @@ export function showThemeEditor(themeName, state, elements) {
     if (buttonRow) buttonRow.prepend(cancelBtn);
     cancelBtn.addEventListener('click', () => exitThemeEditor(state.rawThemes, elements));
   }
-  resetbtn.style.display = 'block';
+  if (resetbtn) {
+    // Retirer le listener précédent pour éviter les doubles exécutions
+    resetbtn.removeEventListener('click', resetbtn.resetListener);
+    // Créer et ajouter le nouveau listener avec les variables d'état nécessaires (closure)
+    resetbtn.resetListener = () => resetThemeOptions(themeName, state);
+    resetbtn.addEventListener('click', resetbtn.resetListener);
+    resetbtn.style.display = 'block';
+  }
   updatePreview(state.rawThemes, themeName);
 }
 /**

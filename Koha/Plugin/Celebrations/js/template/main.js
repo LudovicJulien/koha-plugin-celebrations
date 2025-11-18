@@ -50,12 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (input && label)
       input.addEventListener('input', () => (label.textContent = input.value));
   });
-  if (elements.resetBtn) {
-    elements.resetBtn.addEventListener('click', () => {
-      resetConfiguration(elements.form, state.currentSettings);
-      updateThemeOptions(state.rawThemes, elements.themeSelect);
-    });
-  }
+  // if (elements.resetBtn) {
+  //   elements.resetBtn.addEventListener('click', () => {
+  //     resetConfiguration(elements.form, state.currentSettings);
+  //     updateThemeOptions(state.rawThemes, elements.themeSelect);
+  //   });
+  // }
   if (elements.previewButton) {
     elements.previewButton.addEventListener('click', () => {
         const visibleFormGroup = document.querySelector('.form-group[style*="display: block"]');
@@ -66,6 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
    if (elements.updateBtn) {
       elements.updateBtn.addEventListener('click', async () => {
+      const editbtn = getById("update-button");
+      const prevbtn = getById("preview-button");
+      const cancelbtn = getById("cancel-edit-btn");
+      const resetbtn = getById("reset-button");
+      toggleButtons([editbtn,prevbtn, cancelbtn, resetbtn], true);
       const visibleFormGroup = document.querySelector('.form-group[style*="display: block"]');
       if (!visibleFormGroup) return;
       const themeName = visibleFormGroup.id.replace('-options', '');
@@ -76,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const activeFormGroup = getById('theme-select')
       const activetheme = activeFormGroup.value
       updatePreview(state.rawThemes, activetheme);
+      toggleButtons([editbtn,prevbtn, cancelbtn, resetbtn], false);
     });
   }
   if (document.readyState === 'loading') {

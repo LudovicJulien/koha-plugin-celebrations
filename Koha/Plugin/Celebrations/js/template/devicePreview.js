@@ -4,7 +4,7 @@
  * ======================================================
  */
 import { DEVICE_CONFIG, API_ENDPOINTS } from './config.js';
-import { getById } from './utils.js'
+import { getById, toggleButtons } from './utils.js'
 /**
  * Variables d'état utilisées pour gérer le cycle de vie et le positionnement de l'iframe de prévisualisation.
  */
@@ -387,6 +387,9 @@ function cleanOldAssets(doc) {
  */
 export async function updatePreview(rawThemes, themeName) {
   await showLoadingOverlay();
+  const previewBtn = getById('preview-button');
+  const createBtn = getById('create-button');
+  toggleButtons([previewBtn,createBtn], true);
   const iframe = getById('theme-preview');
   if (!iframe) return;
   const themeData = rawThemes[themeName];
@@ -408,6 +411,7 @@ export async function updatePreview(rawThemes, themeName) {
   await injectCSSFiles(doc, cssFiles, themeName);
   await injectJSFilesAsync(doc, jsFiles, themeName, jsOptions);
   await hideLoadingOverlay();
+  toggleButtons([previewBtn,createBtn], false);
 }
 /**
  *

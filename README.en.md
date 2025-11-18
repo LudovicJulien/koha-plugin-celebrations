@@ -101,10 +101,10 @@ Don't forget to add the translations for your new theme in the files within the 
 2.  In this *hash*, add a key/value pair for each option that has a `setting` key in `theme-config.json`. Example:
 ```perl
 paque => {
-    couleur_paque      => "Activer les couleurs de Pâques 🟡 🟢 🟣",
-    footer_paque       => "Activer les éléments du pied de page 🧺🥚",
-    activation_eggs    => "Activer le curseur d’œufs 🥚 (visible uniquement sur ordinateur)",
-}
+            couleur_paque      => "Enable Easter Color 🟡 🟢 🟣",
+            footer_paque       => "Enable Footer elements 🧺🥚",
+            activation_eggs    => "Enable eggs cursor 🥚 (visible only on desktop)",
+        },
 ```
 
 This approach makes the plugin extremely modular.
