@@ -220,3 +220,21 @@ export async function renderThemesGrid(state, elements) {
     }
   );
 }
+/**
+ *
+ *  Désactive tous les boutons d'action des cartes de thème
+ *  Empêche l'utilisateur de cliquer plusieurs fois pendant une action asynchrone
+ *  @returns {void}
+ */
+export function disableAllActionButtons() {
+  document.querySelectorAll('.btn-action').forEach(btn => btn.disabled = true);
+}
+/**
+ *
+ *  Réactive tous les boutons d'action des cartes de thème
+ *  À utiliser une fois les opérations asynchrones complétées
+ *  @returns {void}
+ */
+export function enableAllActionButtons() {
+  document.querySelectorAll('.btn-action').forEach(btn => btn.disabled = false);
+}

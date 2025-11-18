@@ -3,7 +3,7 @@
  *  Script principal du module de gestion des thèmes
  * ======================================================
  */
-import { getById, safeParseJSON, renderThemesGrid } from './utils.js';
+import { getById, safeParseJSON, renderThemesGrid, disableAllActionButtons,  } from './utils.js';
 import { refreshThemesGridFromAPI } from './themeGrid.js';
 import { submitThemeForm, resetConfiguration, updateTheme } from './formHandler.js';
 import { updateThemeOptions, refreshThemeSelect, exitThemeEditor } from './themeOptions.js';
@@ -25,8 +25,20 @@ document.addEventListener('DOMContentLoaded', () => {
     noThemeMessage: getById('no-themes-message'),
     themesGrid: getById('themes-grid'),
     resetBtn: getById('reset-button'),
-    updateBtn: getById('update-button')
+    updateBtn: getById('update-button'),
+    createBtn: getById('create-button'),
+    previewBtn: getById('preview-button')
   };
+  const observer = new MutationObserver(() => {
+    disableAllActionButtons();
+  });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+  disableAllActionButtons();
+  elements.createBtn.disabled = true;
+  elements.previewBtn.disabled  = true;
   const state = {
     currentSettings: safeParseJSON(CURRENT_SETTINGS_STR, "CURRENT_SETTINGS_STR"),
     allThemes: safeParseJSON(ALL_THEMES, "ALL_THEMES"),
@@ -50,12 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (input && label)
       input.addEventListener('input', () => (label.textContent = input.value));
   });
-  // if (elements.resetBtn) {
-  //   elements.resetBtn.addEventListener('click', () => {
-  //     resetConfiguration(elements.form, state.currentSettings);
-  //     updateThemeOptions(state.rawThemes, elements.themeSelect);
-  //   });
-  // }
   if (elements.previewButton) {
     elements.previewButton.addEventListener('click', () => {
         const visibleFormGroup = document.querySelector('.form-group[style*="display: block"]');
@@ -89,4 +95,10 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     initDevicePreviewSwitcher();
   }
+    window.addEventListener('load', () => {
+    elements.createBtn.disabled = false;
+    elements.previewBtn.disabled  = false;
+    enableAllActionButtons();
+    observer.disconnect();
+  });
 });

@@ -215,9 +215,7 @@ export function showThemeEditor(themeName, state, elements) {
     cancelBtn.addEventListener('click', () => exitThemeEditor(state.rawThemes, elements));
   }
   if (resetbtn) {
-    // Retirer le listener précédent pour éviter les doubles exécutions
     resetbtn.removeEventListener('click', resetbtn.resetListener);
-    // Créer et ajouter le nouveau listener avec les variables d'état nécessaires (closure)
     resetbtn.resetListener = () => resetThemeOptions(themeName, state);
     resetbtn.addEventListener('click', resetbtn.resetListener);
     resetbtn.style.display = 'block';

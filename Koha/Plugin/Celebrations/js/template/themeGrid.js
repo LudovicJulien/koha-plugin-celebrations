@@ -4,7 +4,7 @@
  * ======================================================
  */
 import { THEME_EMOJIS, API_ENDPOINTS } from './config.js';
-import { formatDate, calculateProgress, getThemeStatus, showNotification } from './utils.js';
+import { formatDate, calculateProgress, getThemeStatus, showNotification, disableAllActionButtons, enableAllActionButtons, renderThemesGrid } from './utils.js';
 /**
  *
  * Trie les thèmes par statut et par date de début.
@@ -159,17 +159,20 @@ export async function deleteTheme(themeName, onSuccess) {
       if (card) {
         card.style.transform = 'scale(0.8)';
         card.style.opacity = '0';
-        setTimeout(() => {
-          card.remove();
-          const remainingCards = document.querySelectorAll('.theme-card');
-          if (remainingCards.length === 0) {
-            const themesGrid = document.getElementById('themes-grid');
-            if (themesGrid) themesGrid.innerHTML = '';
-          }
-        }, 300);
+        await new Promise(resolve => {
+          setTimeout( () => {
+            card.remove();
+            const remainingCards = document.querySelectorAll('.theme-card');
+            if (remainingCards.length === 0) {
+              const themesGrid = document.getElementById('themes-grid');
+              if (themesGrid) themesGrid.innerHTML = '';
+            }
+            resolve();
+          }, 300);
+        });
       }
+      if (onSuccess) await onSuccess();
       showNotification(`${TRANSLATION['delNotif1']}`, 'success');
-      if (onSuccess) onSuccess();
     } else {
       throw new Error(`${TRANSLATION['delNotif1']}`);
     }
@@ -185,17 +188,35 @@ export async function deleteTheme(themeName, onSuccess) {
  * @param {Function} [onDelete] - Callback appelée lors du clic sur “Supprimer”.
  * @returns {void}
  */
+let isProcessingThemeAction = false;
 export function attachThemeCardEvents(onEdit, onDelete) {
   document.querySelectorAll('.action-btn-edit').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', async (e) => {
       const themeName = e.currentTarget.dataset.theme;
-      if (onEdit) onEdit(themeName);
+      disableAllActionButtons();
+      try {
+        if (onEdit) {
+          await onEdit(themeName);
+        }
+      } finally {
+        enableAllActionButtons();
+      }
     });
   });
   document.querySelectorAll('.action-btn-delete').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', async (e) => {
+       if (isProcessingThemeAction) return;
+        isProcessingThemeAction = true;
       const themeName = e.currentTarget.dataset.theme;
-      deleteTheme(themeName, onDelete);
+      disableAllActionButtons();
+      try {
+        if (onDelete) {
+          await deleteTheme(themeName, onDelete);
+        }
+      } finally {
+        enableAllActionButtons();
+         isProcessingThemeAction = false;
+      }
     });
   });
 }
