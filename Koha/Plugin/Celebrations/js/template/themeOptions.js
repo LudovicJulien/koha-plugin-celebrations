@@ -5,6 +5,7 @@
  */
 import { getById } from './utils.js';
 import { updatePreview } from './devicePreview.js';
+import { TRANSLATION_UI } from './config.js';
 /**
  *
  * Met à jour dynamiquement l'affichage des options du thème sélectionné.
@@ -118,8 +119,7 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
     }
     const option = document.createElement('option');
     option.value = themeKey;
-    const TRANSLATION = window.translation || {};
-    option.textContent = TRANSLATION[themeKey] || themeKey;
+    option.textContent = TRANSLATION_UI.form[themeKey] || themeKey;
     themeSelect.appendChild(option);
   });
   if (Array.from(themeSelect.options).some(opt => opt.value === selectedValue)) {
@@ -181,14 +181,13 @@ export function resetThemeOptions(themeName, state) {
  * @returns {void}
  */
 export function showThemeEditor(themeName, state, elements) {
-  const TRANSLATION = window.translation;
   const confTitre = getById('ConfTitre');
   const labelSel = getById('label-select');
   const themeSelect = elements.themeSelect;
   const createbtn = getById('create-button');
   const updatebtn = getById('update-button');
   const resetbtn = getById('reset-button');
-  confTitre.textContent = `${TRANSLATION['txtConf']} ${TRANSLATION[themeName]}`;
+  confTitre.textContent = `${TRANSLATION_UI['txtConf']} ${TRANSLATION_UI.form[themeName]}`;
   labelSel.style.display = 'none';
   createbtn.style.display = 'none';
   updatebtn.style.display = 'block';
@@ -209,7 +208,7 @@ export function showThemeEditor(themeName, state, elements) {
     const cancelBtn = document.createElement('button');
     cancelBtn.id = 'cancel-edit-btn';
     cancelBtn.className = 'modern-button reset';
-    cancelBtn.textContent = `${TRANSLATION['cancel']}`;
+    cancelBtn.textContent = `${TRANSLATION_UI['cancel']}`;
     const buttonRow = getById('greyBtn');
     if (buttonRow) buttonRow.prepend(cancelBtn);
     cancelBtn.addEventListener('click', () => exitThemeEditor(state.rawThemes, elements));
@@ -234,14 +233,13 @@ export function showThemeEditor(themeName, state, elements) {
  * @returns {void}
  */
 export function exitThemeEditor(rawThemes, elements) {
-  const TRANSLATION = window.translation;
   const confTitre = getById('ConfTitre');
   const createbtn = getById('create-button');
   const themeSelect = elements.themeSelect;
   const cancelBtn = getById('cancel-edit-btn');
   const updateBtn = getById('update-button');
   const resetbtn = getById('reset-button');
-  confTitre.textContent = `${TRANSLATION['select_theme']}`;
+  confTitre.textContent = `${TRANSLATION_UI['select_theme']}`;
   themeSelect.style.display = 'block';
   createbtn.style.display = 'block';
   updateThemeOptions(rawThemes, themeSelect);

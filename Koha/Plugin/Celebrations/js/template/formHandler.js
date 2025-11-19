@@ -3,7 +3,7 @@
  *  Gestion du formulaire de thème
  * ======================================================
  */
-import { API_ENDPOINTS } from './config.js';
+import { API_ENDPOINTS, TRANSLATION_BACKEND } from './config.js';
 import { getById, toggleButtons } from './utils.js';
 /**
  *
@@ -64,12 +64,11 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
       credentials: 'same-origin'
     });
     const data = await response.json();
-    const TRANSLATION = window.translation;
     if (data.success) {
-      elements.successMessage.textContent = TRANSLATION[data.message];
+      elements.successMessage.textContent = TRANSLATION_BACKEND[data.message];
       elements.successMessage.style.display = "block";
     } else {
-      elements.erreurMessage.textContent = TRANSLATION[data.message];
+      elements.erreurMessage.textContent = TRANSLATION_BACKEND[data.message];
       elements.erreurMessage.style.display = "block";
     }
     const iframe = getById('theme-preview');
@@ -83,7 +82,7 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
     if (onSuccess && data.success === true) onSuccess();
   } catch (error) {
     console.error("Erreur réseau:", error);
-    elements.erreurMessage.textContent = TRANSLATION[data.message];
+    elements.erreurMessage.textContent = TRANSLATION_BACKEND[data.message];
     elements.erreurMessage.style.display = 'block';
     setTimeout(() => {
       elements.erreurMessage.style.display = 'none';
@@ -164,7 +163,6 @@ export async function updateTheme(themeName, rawThemes, form, elements) {
   const end_date = form.querySelector('input[name="end_date"]').value;
   if (start_date) formData.append('start_date', start_date);
   if (end_date)   formData.append('end_date', end_date);
-  const TRANSLATION = window.translation;
   try {
     const response = await fetch(API_ENDPOINTS.updateTheme, {
       method: 'POST',
@@ -173,15 +171,15 @@ export async function updateTheme(themeName, rawThemes, form, elements) {
     });
     const data = await response.json();
     if (data.success) {
-      elements.successMessage.textContent = TRANSLATION['theme_updated'];
+      elements.successMessage.textContent = TRANSLATION_BACKEND['theme_updated'];
       elements.successMessage.style.display = "block";
     } else {
-      elements.erreurMessage.textContent =  TRANSLATION['update_error'];
+      elements.erreurMessage.textContent =  TRANSLATION_BACKEND['update_error'];
       elements.erreurMessage.style.display = "block";
     }
   } catch (error) {
     console.error("Erreur réseau:", error);
-    elements.erreurMessage.textContent = TRANSLATION['connexion_error'];
+    elements.erreurMessage.textContent = TRANSLATION_BACKEND['connexion_error'];
     elements.erreurMessage.style.display = "block";
   } finally {
     setTimeout(() => {

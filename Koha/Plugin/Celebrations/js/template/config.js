@@ -15,6 +15,11 @@ export const THEME_EMOJIS = {
   default: '🎨'
 };
 /**
+ * Traductions chargées depuis Perl (injectées dans window.translation)
+ */
+export const TRANSLATION_UI = window.translation?.T || {};
+export const TRANSLATION_BACKEND = window.translation?.B || {};
+/**
  *
  * Paramètres de configuration pour l'affichage de l'aperçu du thème sur différents appareils (responsive).
  * Chaque clé définit la largeur de base (baseWidth) et les sélecteurs CSS du conteneur (container) et de l'écran (screen)

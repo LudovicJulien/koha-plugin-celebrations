@@ -1,0 +1,157 @@
+{
+  "T": {
+    "extension": "This extension was created by ",
+    "lang": "en",
+    "site_web1": "Visit our",
+    "site_web2": "website",
+    "site_web3": " for more Koha extensions",
+    "documentation1": "For installation and usage instructions, please refer to our",
+    "documentation2": "extension documentation",
+    "title": "Celebrations Extension",
+    "description1": "This extension allows you to add seasonal themes to Koha's OPAC, such as Christmas, Halloween, or Valentine's Day.",
+    "description2": "You can also customize certain visual effects for each active theme.",
+    "select_theme": "Select a theme to configure",
+    "txtConf": "Theme configuration: ",
+    "apply_button": "Save",
+    "reset_button": "Reset",
+    "preview_button": "Preview",
+    "cancel": "Cancel",
+    "apply_success": "✅ Theme applied successfully!",
+    "reset_success": "Theme restored successfully!",
+    "apply_error": "❌ An error occurred while applying the theme. :(",
+    "previs": "Theme preview",
+    "ordi": "Computer",
+    "tablet": "Tablet",
+    "tel": "Phone",
+    "yes": "yes",
+
+    "prog": {
+      "titre": "Scheduled themes",
+      "message1": "No scheduled themes at the moment.",
+      "message2": "Schedule your first theme below!",
+      "debut": "Start",
+      "fin": "End",
+      "prog": "Progress",
+      "btn1": "Edit",
+      "btn2": "Delete"
+    },
+
+    "form": {
+      "theme_label": "Theme:",
+      "no_theme": "None",
+      "noel": "Christmas",
+      "halloween": "Halloween",
+      "saint-valentin": "Valentine's Day",
+      "paque": "Easter",
+      "feux-artifice": "Fireworks",
+      "debut": "Start date:",
+      "fin": "End date:"
+    },
+
+    "emoji": {
+      "noel": "🎄",
+      "halloween": "👻",
+      "saint-valentin": "💝",
+      "paque": "🐰",
+      "feux-artifice": "🎆",
+      "default": "🎨"
+    },
+
+    "grille": {
+      "prog": "Progress",
+      "actif": "active",
+      "nonActif": "Theme not active",
+      "modif": "edit",
+      "sup": "delete",
+      "debut": "start",
+      "fin": "end",
+      "delete1": "Are you sure you want to delete the theme",
+      "delete2": "This action is irreversible.",
+      "delNotif1": "Theme deleted successfully",
+      "delNotif2": "Error while deleting"
+    },
+
+    "noel": {
+      "couleur_noel": "Enable Christmas colors 🔴 🟢 ⚪",
+      "footer_noel": "Enable footer elements ✨",
+      "activation_flocons": "Enable snow effect ❄️",
+      "vitesse_flocons": "Snow speed:",
+      "taille_flocons": "Snow size:",
+      "vent_flocons": "Wind:",
+      "quantite_flocons": "Quantity:",
+      "countdown_noel": "Countdown 🕛"
+    },
+
+    "saint-valentin": {
+      "couleur_valentin": "Enable Valentine's Day colors ⚪ 🩷 ⚪",
+      "activation_coeurs": "Enable hearts effect ❤️",
+      "vitesse_coeurs": "Heart speed:",
+      "taille_coeurs": "Heart size:",
+      "vent_coeurs": "Wind:",
+      "quantite_coeurs": "Quantity:"
+    },
+
+    "halloween": {
+      "couleur_halloween": "Enable Halloween colors 🟠 ⚫",
+      "footer_halloween": "Enable footer elements 🎃",
+      "activation_spiders": "Enable spider effect 🕷️",
+      "quantite_spiders": "Number of spiders:",
+      "activation_ghost": "Enable ghost cursor 👻 (computer only)"
+    },
+
+    "paque": {
+      "couleur_paque": "Enable Easter colors 🟡 🟢 🟣",
+      "footer_paque": "Enable footer elements 🧺🥚",
+      "activation_eggs": "Enable egg cursor 🥚 (computer only)"
+    },
+
+    "feux-artifice": {
+      "couleur_feux": "Enable fireworks colors 🟣 ⚫ 🟢",
+      "animation_feux": "Enable fireworks animation 🎆"
+    },
+
+    "option_vitesse": [
+      { "key": "vitesse_lent", "label": "Slow" },
+      { "key": "vitesse_normale", "label": "Normal" },
+      { "key": "vitesse_rapide", "label": "Fast" }
+    ],
+
+    "option_taille": [
+      { "key": "taille_petit", "label": "Small" },
+      { "key": "taille_normale", "label": "Normal" },
+      { "key": "taille_grand", "label": "Large" }
+    ],
+
+    "option_vent": [
+      { "key": "vent_null", "label": "None" },
+      { "key": "vent_normale", "label": "Normal" },
+      { "key": "vent_fort", "label": "Strong" }
+    ]
+  },
+
+  "D": {
+    "titre": "Welcome to the Celebration plugin!",
+    "description1": "Holidays and celebrations remind us that we should ",
+    "description2": "take time to smile",
+    "description3": ", share joyful moments, and add a touch of color to our days ✨.",
+    "description4": "But wait!",
+    "description5": "This plugin is currently",
+    "description6": "disabled.",
+    "description7": "To access its settings and enjoy all features, go back to the plugins page and",
+    "description8": "activate Celebration.",
+    "btn_back": "← Back to the plugins page"
+  },
+
+  "B": {
+    "date_error_required": "Start and end dates are required",
+    "date_error_invalid": "Invalid date format",
+    "date_error_order": "The start date must be before the end date",
+    "theme_updated": "Theme successfully updated",
+    "theme_applied": "Theme successfully applied",
+    "theme_deleted": "Theme deleted successfully",
+    "theme_not_found": "Theme not found",
+    "theme_conflict": "Period conflicts with another theme",
+    "update_error": "Error while updating.",
+    "connexion_error": "Server connection error."
+  }
+}

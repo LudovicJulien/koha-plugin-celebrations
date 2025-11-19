@@ -3,7 +3,7 @@
  *  Gestion de la grille des thèmes
  * ======================================================
  */
-import { THEME_EMOJIS, API_ENDPOINTS } from './config.js';
+import { TRANSLATION_UI, API_ENDPOINTS } from './config.js';
 import { formatDate, calculateProgress, getThemeStatus, showNotification, disableAllActionButtons, enableAllActionButtons, renderThemesGrid } from './utils.js';
 /**
  *
@@ -26,10 +26,8 @@ export function sortThemes(themes) {
  * @returns {string} - Code HTML de la carte du thème.
  */
 export function createThemeCard(theme, currentTheme) {
-  const TRANSLATION = window.translation;
-  const status = getThemeStatus(theme);
-  const emoji = THEME_EMOJIS[theme.theme_name] || THEME_EMOJIS.default;
   const displayName = theme.theme_name;
+  const status = getThemeStatus(theme);
   const progress = calculateProgress(theme.start_date, theme.end_date);
   const isCurrent = theme.theme_name === currentTheme;
   return `
@@ -37,26 +35,26 @@ export function createThemeCard(theme, currentTheme) {
     <div class="theme-card">
       <div class="theme-card-top">
         <div class="theme-card-header">
-          <div class="theme-icon">${emoji}</div>
-          <div class="theme-name">${TRANSLATION[displayName]}</div>
+          <div class="theme-icon">${TRANSLATION_UI.emoji[displayName] || TRANSLATION_UI.emoji.default}</div>
+          <div class="theme-name">${TRANSLATION_UI.form[displayName]}</div>
         </div>
       </div>
       <div class="theme-card-body">
         <div class="theme-dates">
           <div class="date-row">
-            <span class="labelCard">${TRANSLATION['debut']}</span>
+            <span class="labelCard">${TRANSLATION_UI.prog['debut']}</span>
             <span class="value">${formatDate(theme.start_date)}</span>
           </div>
           <div class="date-row">
-            <span class="labelCard">${TRANSLATION['fin']}</span>
+            <span class="labelCard">${TRANSLATION_UI.prog['fin']}</span>
             <span class="value">${formatDate(theme.end_date)}</span>
           </div>
         </div>
         <div class="theme-progress">
           <div class="progress-label">
             ${status.type === 'current'
-              ? `<span>${TRANSLATION['prog']}</span><span class="progress-percent">${progress}% ${TRANSLATION['actif']}</span>`
-              : `<span>${TRANSLATION['prog']}</span><span class="progress-percent inactive-text">${TRANSLATION['nonActif']}</span>`}
+              ? `<span>${TRANSLATION_UI.prog['prog']}</span><span class="progress-percent">${progress}% ${TRANSLATION_UI.grille['actif']}</span>`
+              : `<span>${TRANSLATION_UI.prog['prog']}</span><span class="progress-percent inactive-text">${TRANSLATION_UI.grille['nonActif']}</span>`}
           </div>
           <div class="progress-bar" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">
             <div class="progress-fill" data-progress="${progress}"
@@ -66,8 +64,8 @@ export function createThemeCard(theme, currentTheme) {
         </div>
       </div>
       <div class="theme-card-footer">
-        <button class="btn-action action-btn-edit" data-theme="${theme.theme_name}">${TRANSLATION['modif']}</button>
-        <button class="btn-action action-btn-delete" data-theme="${theme.theme_name}">${TRANSLATION['sup']}</button>
+        <button class="btn-action action-btn-edit" data-theme="${theme.theme_name}">${TRANSLATION_UI.grille['modif']}</button>
+        <button class="btn-action action-btn-delete" data-theme="${theme.theme_name}">${TRANSLATION_UI.grille['sup']}</button>
       </div>
     </div>
   </div>`;
@@ -104,10 +102,9 @@ export function updateThemesGrid(themes, currentTheme, noThemeMessage, themesGri
  * @param {HTMLElement} elements.noThemeMessage - Élément affiché lorsqu’aucun thème n’est disponible.
  * @param {HTMLElement} elements.themesGrid - Conteneur de la grille des thèmes.
  * @param {HTMLElement} [elements.themeSelect] - Menu déroulant des thèmes (optionnel, pour le rafraîchissement du sélecteur).
- * @param {Object} rawThemes - Données brutes des thèmes, utilisées pour la configuration ou l’édition.
  * @returns {Promise<void>}
  */
-export async function refreshThemesGridFromAPI(state, elements, rawThemes) {
+export async function refreshThemesGridFromAPI(state, elements ) {
   try {
     const response = await fetch(API_ENDPOINTS.listThemes, {
       method: 'GET',
@@ -120,7 +117,7 @@ export async function refreshThemesGridFromAPI(state, elements, rawThemes) {
         theme_name: theme.name
       }));
       state.currentSettings.theme_name = data.current_theme;
-      await renderThemesGrid(state, elements, rawThemes);
+      await renderThemesGrid(state, elements, state.rawThemes);
     } else {
       console.error('Erreur lors du rafraîchissement:', data.error);
     }
@@ -137,9 +134,8 @@ export async function refreshThemesGridFromAPI(state, elements, rawThemes) {
  * @returns {Promise<void>}
  */
 export async function deleteTheme(themeName, onSuccess) {
-  const TRANSLATION = window.translation;
   const confirmed = await showNotification(
-    `${TRANSLATION['delete1']} ${TRANSLATION[themeName]} ?\n\n${TRANSLATION['delete2']}`,
+    `${TRANSLATION_UI.grille['delete1']} ${TRANSLATION_UI.form[themeName]} ?\n\n${TRANSLATION_UI.grille['delete2']}`,
     'info'
   );
   if (!confirmed) return;
@@ -172,13 +168,13 @@ export async function deleteTheme(themeName, onSuccess) {
         });
       }
       if (onSuccess) await onSuccess();
-      showNotification(`${TRANSLATION['delNotif1']}`, 'success');
+      showNotification(`${TRANSLATION_UI.grille['delNotif1']}`, 'success');
     } else {
-      throw new Error(`${TRANSLATION['delNotif1']}`);
+      throw new Error(`${TRANSLATION_UI.grille['delNotif2']}`);
     }
   } catch (error) {
     console.error('Erreur:', error);
-    showNotification(`${TRANSLATION['delNotif1']}`, 'error');
+    showNotification(`${TRANSLATION_UI.grille['delNotif2']}`, 'error');
   }
 }
 /**

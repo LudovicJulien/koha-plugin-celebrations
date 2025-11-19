@@ -217,7 +217,7 @@ sub _collect_theme_js {
     my $api_ns = $self->api_namespace;
     foreach my $element (keys %{ $conf->{elements} }) {
         my $enabled = $theme_conf->{elements}{$element}{enabled} // '';
-        warn "[Celebrations] Element $element disabled" unless $enabled eq 'on';
+        # warn "[Celebrations] Element $element disabled" unless $enabled eq 'on';
         next unless $enabled eq 'on';
         my $type = $conf->{elements}{$element}{type} // 'both';
         next if $type eq 'css';
@@ -571,6 +571,56 @@ sub _is_theme_current {
 #
 #
 #
+#   Charge et prépare les traductions i18n
+#
+sub _load_translations {
+    my ($self, $language) = @_;
+    my $json_file = $self->_get_language_file($language);
+    my $path = File::Spec->catfile($self->{plugin_dir}, 'Celebrations', 'i18n', $json_file);
+    unless (-e $path) {
+        warn "Translation file not found: $path";
+        return { text => "{}", hash => {} };
+    }
+    my ($json_text, $json_raw);
+    {
+        local $/;
+        open my $fh, '<:encoding(UTF-8)', $path
+            or die "Cannot open $path: $!";
+        $json_text = <$fh>;
+        close $fh;
+    }
+    {
+        local $/;
+        open my $fh, '<:raw', $path
+            or die "Cannot open $path: $!";
+        $json_raw = <$fh>;
+        close $fh;
+    }
+    my $data = decode_json($json_raw);
+    return {
+        text => $json_text,  # -> JS
+        hash => $data        # -> TT
+    };
+}
+#
+#
+#
+#   Détermine le fichier de langue approprié
+#
+sub _get_language_file {
+    my ($self, $language) = @_;
+    my $i18n_dir = File::Spec->catdir($self->{plugin_dir}, 'Celebrations', 'i18n');
+    my $lang_file = "$language.json";
+    my $lang_path = File::Spec->catfile($i18n_dir, $lang_file);
+    if (-e $lang_path) {
+        return $lang_file;
+    }
+    return 'default.json';
+}
+#
+#
+#
+#
 #   Gère l'interface de l'intranet
 #
 sub tool {
@@ -580,11 +630,13 @@ sub tool {
     my $plugin_class = ref $self;
     my $plugin_name  = $metadata->{name} // $plugin_class;
     my $preferredLanguage = C4::Languages::getlanguage();
+    my $translations = $self->_load_translations($preferredLanguage);
     if ($self->is_enabled) {
-        $template = $self->_build_enabled_template($cgi, $plugin_class, $plugin_name, $preferredLanguage);
+        $template = $self->_build_enabled_template($cgi, $plugin_class, $plugin_name, $preferredLanguage, $translations);
     } else {
-        $template = $self->_build_disabled_template($plugin_class, $preferredLanguage);
+        $template = $self->_build_disabled_template($plugin_class, $preferredLanguage, $translations);
     }
+    binmode STDOUT, ":encoding(UTF-8)";
     print $cgi->header(-type => 'text/html', -charset => 'utf-8');
     print $template->output();
 }
@@ -594,7 +646,7 @@ sub tool {
 #   Construit le template pour le plugin activé
 #
 sub _build_enabled_template {
-    my ($self, $cgi, $plugin_class, $plugin_name, $preferredLanguage) = @_;
+    my ($self, $cgi, $plugin_class, $plugin_name, $preferredLanguage, $translations, $translations_json) = @_;
     my $koha_session = $cgi->cookie('KohaSession') // $cgi->param('koha_session');
     my $template = $self->get_template({ file => 'templates/homeTheme.tt' });
     my $active_theme = $self->_get_active_theme();
@@ -605,20 +657,22 @@ sub _build_enabled_template {
     my $themes_list_json = encode_json(\@themes_list);
     my $theme_config_json = encode_json($self->{themes_config});
     $template->param(
-        enabled => 1,
-        CLASS => $plugin_class,
-        METHOD => 'tool',
-        plugin_name => $plugin_name,
-        plugin_class => $plugin_class,
-        api_namespace => $self->api_namespace,
-        koha_session => $koha_session,
-        active_theme => $active_theme,
-        all_themes => $all_themes,
-        themes_list_json => $themes_list_json,
-        theme_config_json => $theme_config_json,
-        theme_config => $self->{themes_config},
-        PLUGIN_DIR => $self->{plugin_dir},
-        LANG => $preferredLanguage,
+        enabled             => 1,
+        CLASS               => $plugin_class,
+        METHOD              => 'tool',
+        plugin_name         => $plugin_name,
+        plugin_class        => $plugin_class,
+        api_namespace       => $self->api_namespace,
+        koha_session        => $koha_session,
+        active_theme        => $active_theme,
+        all_themes          => $all_themes,
+        themes_list_json    => $themes_list_json,
+        theme_config_json   => $theme_config_json,
+        theme_config        => $self->{themes_config},
+        PLUGIN_DIR          => $self->{plugin_dir},
+        LANG                => $preferredLanguage,
+        translation         => $translations->{hash}, # pour Template Toolkit
+        translations_json   => $translations->{text}, # pour JavaScript
     );
     return $template;
 }

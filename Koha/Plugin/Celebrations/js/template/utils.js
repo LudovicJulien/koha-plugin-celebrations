@@ -1,5 +1,6 @@
 import { updateThemesGrid, refreshThemesGridFromAPI, attachThemeCardEvents } from './themeGrid.js';
 import { refreshThemeSelect, showThemeEditor } from './themeOptions.js';
+import { TRANSLATION_UI } from './config.js';
 /**
  *
  *  Utilitaires généraux
@@ -97,7 +98,6 @@ export function getThemeStatus(theme) {
  */
 export function showNotification(message, type = 'info') {
   const notification = document.createElement('div');
-  const TRANSLATION = window.translation;
   let background = '';
   if (type === 'success') {
     background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
@@ -128,7 +128,7 @@ export function showNotification(message, type = 'info') {
   if (type === 'info') {
     return new Promise((resolve) => {
       const btn = document.createElement('button');
-      btn.textContent = TRANSLATION['yes'];
+      btn.textContent = TRANSLATION_UI['yes'];
       btn.style.cssText = `
         padding: 4px 12px;
         border: none;
@@ -147,7 +147,7 @@ export function showNotification(message, type = 'info') {
         }, 300);
       });
        const btnCancel = document.createElement('button');
-      btnCancel.textContent = TRANSLATION['cancel'];
+      btnCancel.textContent = TRANSLATION_UI['cancel'];
       btnCancel.style.cssText = `
         padding: 4px 12px;
         border: none;
@@ -204,6 +204,7 @@ export function toggleButtons(buttons, disabled) {
  * @returns {Promise<void>}
  */
 export async function renderThemesGrid(state, elements) {
+  console.log(state.currentSetting);
   updateThemesGrid(
     state.allThemes,
     state.currentSettings.theme_name,
