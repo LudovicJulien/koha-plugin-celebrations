@@ -167,7 +167,7 @@ export async function deleteTheme(themeName, onSuccess) {
           }, 300);
         });
       }
-      if (onSuccess) await onSuccess();
+      if (onSuccess) await onSuccess(themeName);
       showNotification(`${TRANSLATION_UI.grille['delNotif1']}`, 'success');
     } else {
       throw new Error(`${TRANSLATION_UI.grille['delNotif2']}`);

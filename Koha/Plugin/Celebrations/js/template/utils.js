@@ -215,7 +215,6 @@ export function toggleButtons(buttons, disabled) {
  * @returns {Promise<void>}
  */
 export async function renderThemesGrid(state, elements) {
-  console.log(state.currentSetting);
   updateThemesGrid(
     state.allThemes,
     state.currentSettings.theme_name,
@@ -224,11 +223,20 @@ export async function renderThemesGrid(state, elements) {
   );
   attachThemeCardEvents(
     themeName => {
+      state.currentSettings = { theme_name: themeName };
       showThemeEditor(themeName, state, elements);
+      console.log('state.currentSettings.theme_name |||||||||||||||||||', state.currentSettings);
     },
-    async () => {
+    async (deletedThemeName) => {
+      const currentEditedTheme = state.currentSettings?.theme_name;
       await refreshThemesGridFromAPI(state, elements, state.rawThemes);
-      refreshThemeSelect(state.allThemes, state.rawThemes, elements.themeSelect);
+      if (currentEditedTheme == deletedThemeName) {
+        exitThemeEditor(state.rawThemes, elements);
+        refreshThemeSelect(state.allThemes, state.rawThemes, elements.themeSelect);
+        state.currentSettings = {};
+      }else{
+        state.currentSettings = { theme_name: currentEditedTheme };
+      }
     }
   );
 }
