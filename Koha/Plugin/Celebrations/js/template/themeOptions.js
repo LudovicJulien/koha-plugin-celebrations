@@ -39,7 +39,7 @@ export function updateThemeOptions(rawThemes, themeSelect = null, forcedThemeNam
   if (!selectedTheme) return;
   const themeData = rawThemes[selectedTheme];
   if (themeData && themeData.elements) {
-    Object.entries(themeData.elements).forEach(([name, element]) => {
+    Object.values(themeData.elements).forEach((element) => {
       if (element.toggle_id) {
         const el = getById(element.toggle_id);
         if (el) {
@@ -80,11 +80,9 @@ export function updateThemeOptions(rawThemes, themeSelect = null, forcedThemeNam
  * Gère l'affichage conditionnel des sous-options liées à un élément de thème.
  * @param {HTMLElement} mainToggle - Élément principal déclenchant l’affichage (checkbox, select, etc.).
  * @param {HTMLElement} configDiv - Conteneur des options supplémentaires à afficher/masquer.
- * @param {string} themeName - Nom du thème concerné.
- * @param {HTMLSelectElement} themeSelect - Sélecteur global des thèmes.
  * @returns {void}
  */
-export function toggleConfig(mainToggle, configDiv, themeName, themeSelect) {
+export function toggleConfig(mainToggle, configDiv) {
   if (!mainToggle || !configDiv) return;
   const updateDisplay = () => {
     const isChecked = mainToggle.type === 'checkbox' ? mainToggle.checked : true;

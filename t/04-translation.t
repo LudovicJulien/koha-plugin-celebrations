@@ -11,9 +11,9 @@ my $lang_dir   = File::Spec->catdir($plugin_dir, 'i18n');
 my $config_file = File::Spec->catfile($plugin_dir, 'config', 'theme-config.json');
 BAIL_OUT("Language directory not found: $lang_dir") unless -d $lang_dir;
 BAIL_OUT("Config file not found: $config_file") unless -f $config_file;
-my ($default_file) = glob(File::Spec->catfile($lang_dir, 'default.inc'));
-BAIL_OUT("default.inc not found") unless $default_file;
-my @other_files = grep { $_ ne $default_file } glob(File::Spec->catfile($lang_dir, '*.inc'));
+my ($default_file) = glob(File::Spec->catfile($lang_dir, 'default.json'));
+BAIL_OUT("default.json not found") unless $default_file;
+my @other_files = grep { $_ ne $default_file } glob(File::Spec->catfile($lang_dir, '*.json'));
 #
 #  Ce test vérifie l'intégrité et la cohérence des fichiers de configuration et de langue
 #  pour le plugin Koha::Plugin::Celebrations.
@@ -37,58 +37,65 @@ my @other_files = grep { $_ ne $default_file } glob(File::Spec->catfile($lang_di
 #    - Garantir la compatibilité entre la configuration JSON et les fichiers de langue utilisés par le plugin.
 #
 #
-# --- Charger default.inc ---
-my $default_data;
-{
+# Chargement du fichier JSON
+#
+sub load_json {
+    my ($file) = @_;
+    open my $fh, '<:raw', $file
+        or BAIL_OUT("Can't open $file: $!");
     local $/;
-    open my $fh, '<', $default_file or BAIL_OUT("Can't open $default_file: $!");
-    my $text = <$fh>;
+    my $json = <$fh>;
     close $fh;
-    $text =~ s/^\[%\s*|\s*%\]$//g;
-    $text = "my \$data = { $text };";
-    $default_data = eval $text;
-    BAIL_OUT("default.inc failed to eval: $@") if $@;
+    return decode_json($json);
 }
-ok(ref $default_data eq 'HASH', "default.inc loaded");
-# --- Fonction récursive pour vérifier clés et options ---
+#
+# Test récursif pour comparer T/D/B → structure conforme
+#
 sub check_keys {
     my ($default, $actual, $path) = @_;
+
     for my $key (keys %$default) {
-        my $full_path = $path ? "$path.$key" : $key;
+        my $full = $path ? "$path.$key" : $key;
+
         if (!exists $actual->{$key}) {
-            fail("Missing key: $full_path");
-        } elsif (ref $default->{$key} eq 'HASH') {
-            check_keys($default->{$key}, $actual->{$key}, $full_path);
-        } elsif (ref $default->{$key} eq 'ARRAY') {
+            fail("Missing key: $full");
+            next;
+        }
+
+        if (ref($default->{$key}) eq 'HASH') {
+            check_keys($default->{$key}, $actual->{$key}, $full);
+        }
+        elsif (ref($default->{$key}) eq 'ARRAY') {
+
             my %default_keys = map { $_->{key} => 1 } @{ $default->{$key} };
             my %actual_keys  = map { $_->{key} => 1 } @{ $actual->{$key} };
+
             for my $k (keys %default_keys) {
-                fail("Missing key in array $full_path: $k") unless exists $actual_keys{$k};
+                fail("Missing key in array $full: $k")
+                    unless exists $actual_keys{$k};
             }
         }
     }
 }
-# --- Charger le theme-config.json ---
-open my $cfg_fh, '<', $config_file or BAIL_OUT("Can't open $config_file: $!");
-my $json_text = do { local $/; <$cfg_fh> };
-close $cfg_fh;
-my $config_data = decode_json($json_text);
+#
+# Charger default.json
+#
+my $default_data = load_json($default_file);
+ok(ref $default_data eq 'HASH', "default.json loaded");
+#
+# Charger theme-config.json
+#
+my $config_data = load_json($config_file);
 # --- Tester les fichiers de langue ---
 foreach my $file (@other_files) {
     subtest "Testing $file" => sub {
         local $/;
-        my $data;
-        open my $fh, '<', $file or do { fail("Can't open $file: $!"); return };
-        my $text = <$fh>;
-        close $fh;
-        $text =~ s/^\[%\s*|\s*%\]$//g;
-        $text = "my \$data = { $text };";
-        $data = eval $text;
+        my $data = load_json($file);
         if ($@) {
             fail("Eval failed: $@");
             return;
         }
-        ok(ref $data eq 'HASH', "File loaded as HASH: $file");
+        ok(ref $data eq 'HASH', "File loaded as JSON: $file");
         for my $section (qw(T D B)) {
             ok(exists $data->{$section}, "$section exists in $file");
             check_keys($default_data->{$section}, $data->{$section}, $section);

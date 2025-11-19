@@ -5,20 +5,16 @@
  */
 /**
  *
- * Définit l'icône (Emoji) associée à chaque thème saisonnier pour l'affichage dans l'interface d'administration.
- */
-export const THEME_EMOJIS = {
-  halloween: '🎃',
-  noel: '🎄',
-  'saint-valentin': '💝',
-  paque: '🐰',
-  default: '🎨'
-};
-/**
  * Traductions chargées depuis Perl (injectées dans window.translation)
  */
 export const TRANSLATION_UI = window.translation?.T || {};
 export const TRANSLATION_BACKEND = window.translation?.B || {};
+/**
+ *
+ * Namespace d’API injecté dans le template Koha
+ */
+const API_NS = window.api_namespace || '';
+
 /**
  *
  * Paramètres de configuration pour l'affichage de l'aperçu du thème sur différents appareils (responsive).

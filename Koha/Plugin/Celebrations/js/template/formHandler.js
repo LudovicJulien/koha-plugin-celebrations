@@ -82,7 +82,7 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
     if (onSuccess && data.success === true) onSuccess();
   } catch (error) {
     console.error("Erreur réseau:", error);
-    elements.erreurMessage.textContent = TRANSLATION_BACKEND[data.message];
+    elements.erreurMessage.textContent = 'connexion_error';
     elements.erreurMessage.style.display = 'block';
     setTimeout(() => {
       elements.erreurMessage.style.display = 'none';
