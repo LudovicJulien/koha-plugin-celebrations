@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var flakes;
         var flakesTotal = quantite;
         var wind = ventCoeff;
-        var mouseX = 0;
-        var mouseY = 0;
+        var mouseX = -500;
+        var mouseY = -500;
         function quantite_flocons(size, x, y, vx, vy) {
             this.size = size;
             this.x = x;
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     Math.random() * window.innerWidth,
                     Math.random() * window.innerHeight,
                     Math.random() - 0.5,
-                    size * vitesseCoeff
+                    Math.max(size * vitesseCoeff, 1)
                 );
                 container.appendChild(flake.div);
                 flakes.push(flake);

@@ -12,9 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error("Les options de thème saint-valentin n'ont pas été trouvées ou sont vides. Les valeurs par défaut seront utilisées. (vitesse:normale, taille:normale, vent:off, quantite:10)");
         options = {};
     }
-    var vitesse = options.vitesse || 'vitesse_normal';
-    var taille = options.taille || 'taille_normal';
-    var vent = options.vent || 'vent_null';
+    var vitesse = options.vitesse_coeurs || 'vitesse_normal';
+    var taille = options.taille_coeurs || 'taille_normal';
+    var vent = options.vent_coeurs || 'vent_null';
     var quantite = parseInt(options.quantite_coeurs) || 10;
     var vitesseCoeff = 0.1;
     switch(vitesse) {
@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var flakes;
         var flakesTotal = quantite;
         var wind = ventCoeff;
-        var mouseX = 0;
-        var mouseY = 0;
+        var mouseX = -500;
+        var mouseY = -500;
 
        function Coeur(size, x, y, vx, vy) {
     this.size = size;
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     Math.random() * window.innerWidth,
                     Math.random() * window.innerHeight,
                     Math.random() - 0.5,
-                    size * vitesseCoeff
+                    Math.max(size * vitesseCoeff, 1)
                 );
                 container.appendChild(flake.div);
                 flakes.push(flake);
