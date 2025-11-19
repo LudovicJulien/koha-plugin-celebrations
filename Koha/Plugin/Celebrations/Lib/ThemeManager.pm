@@ -454,15 +454,12 @@ sub build_theme_list {
     foreach my $theme_name (keys %$themes) {
         my $theme = $themes->{$theme_name};
         my $is_current = $self->is_theme_current($theme, $now);
-        my ($start_formatted, $end_formatted) = $self->format_theme_dates($theme);
         push @theme_list, {
             name => $theme_name,
             active => $theme->{active},
             is_current => $is_current,
             start_date => $theme->{start_date},
             end_date => $theme->{end_date},
-            start_date_formatted => $start_formatted,
-            end_date_formatted => $end_formatted,
             created_at => $theme->{created_at}
         };
     }
@@ -481,29 +478,6 @@ sub is_theme_current {
     my $start = DateTime->from_epoch(epoch => $theme->{start_date});
     my $end = DateTime->from_epoch(epoch => $theme->{end_date});
     return ($now >= $start && $now <= $end) ? 1 : 0;
-}
-
-=head2 format_theme_dates
-
-Formate les dates du thème en : C<YYYY-MM-DDTHH:MM> pour l’interface admin.
-
-Retourne une liste : (start_formatted, end_formatted)
-
-=cut
-
-sub format_theme_dates {
-    my ($self, $theme) = @_;
-    my $start_formatted = '';
-    my $end_formatted = '';
-    if ($theme->{start_date}) {
-        my $start_dt = DateTime->from_epoch(epoch => $theme->{start_date});
-        $start_formatted = $start_dt->strftime('%Y-%m-%dT%H:%M');
-    }
-    if ($theme->{end_date}) {
-        my $end_dt = DateTime->from_epoch(epoch => $theme->{end_date});
-        $end_formatted = $end_dt->strftime('%Y-%m-%dT%H:%M');
-    }
-    return ($start_formatted, $end_formatted);
 }
 
 1;

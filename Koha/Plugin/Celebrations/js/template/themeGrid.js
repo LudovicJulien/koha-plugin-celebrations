@@ -47,7 +47,7 @@ export function createThemeCard(theme, currentTheme) {
           </div>
           <div class="date-row">
             <span class="labelCard">${TRANSLATION_UI.prog['fin']}</span>
-            <span class="value">${formatDate(theme.end_date)}</span>
+            <span class="value">${formatDate(theme.end_date, true)}</span>
           </div>
         </div>
         <div class="theme-progress">

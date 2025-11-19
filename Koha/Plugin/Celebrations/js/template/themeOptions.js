@@ -3,7 +3,7 @@
  *  Gestion du menu de configuration des options de thème
  * =======================================================
  */
-import { getById } from './utils.js';
+import { getById, formatDateForInput } from './utils.js';
 import { updatePreview } from './devicePreview.js';
 import { TRANSLATION_UI } from './config.js';
 /**
@@ -196,8 +196,8 @@ export function showThemeEditor(themeName, state, elements) {
   if (!startInput || !endInput) return;
   const themeEntry = state.allThemes.find(t => t.theme_name === themeName);
   if (themeEntry) {
-      startInput.value = themeEntry.start_date_formatted?.slice(0, 10) || "";
-      endInput.value   = themeEntry.end_date_formatted?.slice(0, 10) || "";
+    startInput.value = formatDateForInput(themeEntry.start_date);
+    endInput.value   = formatDateForInput(themeEntry.end_date);
   } else {
       startInput.value = "";
       endInput.value = "";

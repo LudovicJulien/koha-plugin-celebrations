@@ -192,7 +192,6 @@ sub prepare_themes_for_display {
     foreach my $theme_name (keys %$all_themes) {
         my $theme = $all_themes->{$theme_name};
         my $is_current = $theme_manager->is_theme_current($theme, $now);
-        my ($start_formatted, $end_formatted) = $theme_manager->format_theme_dates($theme);
         my %elements_display;
         if (exists $theme->{elements} && ref $theme->{elements} eq 'HASH') {
             foreach my $element_name (keys %{ $theme->{elements} }) {
@@ -211,8 +210,6 @@ sub prepare_themes_for_display {
             is_current => $is_current,
             start_date => $theme->{start_date},
             end_date => $theme->{end_date},
-            start_date_formatted => $start_formatted,
-            end_date_formatted => $end_formatted,
             created_at => $theme->{created_at},
             elements => \%elements_display,
             elements_count => scalar keys %{$theme->{elements} // {}}

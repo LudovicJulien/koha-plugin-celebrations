@@ -37,22 +37,33 @@ export function safeParseJSON(encodedStr, label = "JSON inconnu") {
   }
 }
 /**
- *
- *  Formate un timestamp en date lisible
- *  @param {number} timestamp - Timestamp en secondes.
- *  @returns {string} - Date formatée (ex: "12 novembre 2025, 08:42").
+ * Formate un timestamp pour l'affichage lisible aux utilisateurs.
+ * @param {number} timestamp - Timestamp en secondes.
+ * @param {boolean} [endOfDay=false] - Si vrai, force l'heure à 23:59 pour indiquer la fin de journée.
+ * @returns {string} Date formatée (ex: "12 novembre 2025 à 08:42" ou "12 novembre 2025 à 23:59").
  */
-export function formatDate(timestamp) {
+export function formatDate(timestamp, endOfDay = false) {
   const date = new Date(timestamp * 1000);
-  const options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  };
-  return date.toLocaleDateString('fr-FR', options);
+  const day = date.getDate();
+  const month = date.toLocaleString('fr-FR', { month: 'long' });
+  const year = date.getFullYear();
+  const hour = endOfDay ? '23' : String(date.getHours()).padStart(2, '0');
+  const minute = endOfDay ? '59' : String(date.getMinutes()).padStart(2, '0');
+  return `${day} ${month} ${year} à ${hour}:${minute}`;
 }
+/**
+ * Formate un timestamp pour un input HTML de type "date".
+ * @param {number} timestamp - Timestamp en secondes.
+ * @returns {string} Date au format "YYYY-MM-DD" pour l'input.
+ */
+function formatDateForInput(timestamp) {
+    const date = new Date(timestamp * 1000);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 /**
  *
  *  Calcule le pourcentage de progression
