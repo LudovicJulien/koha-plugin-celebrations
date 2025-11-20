@@ -1,8 +1,467 @@
 {
+   "/js/dist/celebrations-bundle.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSCelebrationsBundle",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
    "/js/template/homeTheme.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSHomeTheme",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/js/template/main.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSMain",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+    "/js/template/utils.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSUtils",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+    "/js/template/themeGrid.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSThemeGrid",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+    "/js/template/formHandler.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSFormHandler",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+    "/js/template/themeOptions.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSThemeOptions",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+    "/js/template/preview.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSPreview",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+    "/js/template/devicePreview.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSDevicePreview",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+ "/js/template/config.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSDConfig",
       "tags": ["pluginCelebration"],
       "responses": {
         "200": {
@@ -101,10 +560,112 @@
       }
     }
   },
-  "/js/noel/noel_flocon.js": {
+  "/js/noel/noel-flocon.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSNoelFlocon",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+   "/js/noel/noel-footer.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSNoelFooter",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+    "/js/noel/noel-countdown.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSNoelCountdown",
       "tags": ["pluginCelebration"],
       "responses": {
         "200": {
@@ -203,7 +764,58 @@
       }
     }
   },
-  "/js/halloween/halloween_ghost.js": {
+   "/js/halloween/halloween-footer.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSHalloweenFooter",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/js/halloween/halloween-ghost.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSHalloweenGhost",
@@ -254,7 +866,7 @@
       }
     }
   },
-  "/js/halloween/halloween_spider.js": {
+  "/js/halloween/halloween-spider.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSHalloweenSpider",
@@ -356,7 +968,7 @@
       }
     }
   },
-  "/js/saint-valentin/valentin_coeur.js": {
+  "/js/saint-valentin/valentin-coeur.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSSaintValentinCoeur",
@@ -458,7 +1070,7 @@
       }
     }
   },
-  "/js/paque/paque_egg.js": {
+  "/js/paque/paque-egg.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSPaqueEgg",
@@ -509,7 +1121,58 @@
       }
     }
   },
-  "/js/feux-artifice/feux-artifice.js": {
+   "/js/paque/paque-footer.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSPaqueFooter",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/js/feux-artifice/feux-artifice-animation.js": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetJSFeuxArtifice",
@@ -560,7 +1223,58 @@
       }
     }
   },
-    "/config/config.json": {
+  "/js/feux-artifice/feux-artifice.js": {
+    "get": {
+      "x-mojo-to": "Static#get",
+      "operationId": "KohaPluginCelebration_staticGetJSFeux",
+      "tags": ["pluginCelebration"],
+      "responses": {
+        "200": {
+          "description": "JS OK",
+          "schema": {
+            "type": "file"
+          }
+        },
+        "400": {
+          "description": "Bad request",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "File not found",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Error message",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+    "/config/theme-config.json": {
     "get": {
       "x-mojo-to": "Static#get",
       "operationId": "KohaPluginCelebration_staticGetConfigJSON",

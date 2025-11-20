@@ -1,60 +1,112 @@
+h1 {
+    font-size: 2.5em !important;
+    color: #2a6ebb !important;
+}
+#doc3{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 75px;
+}
 .theme-plugin-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 3em auto;
-    max-width: 700px;
+    margin: 10px 1vw;
+    max-width: 100vw;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #333;
+    color: #333 !important;
+    width: 100%;
 }
-
+.separator {
+    border: none;
+    height: 1px;
+    background-color: #ccc;
+    margin: 2em 0;
+    width: 100%;
+}
 #inlibro-header {
     text-align: center;
     font-size: 14px;
     color: #696969;
-    margin-bottom: 2em;
+    margin-bottom: 10px;
+    margin-top: 50px;
 }
-
 #inlibro-header img {
     max-width: 100%;
     height: auto;
 }
-
 #inlibro-header .right {
     text-align: right;
     font-size: 13px;
 }
-
-.plugin-card {
-    background: #f9f9f9;
-    padding: 2em;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    width: 100%;
+#plugin-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center !important;
+    align-items: flex-start;
+    width: 100% !important;
+    margin-top: 40px !important;
 }
-
-.plugin-card h1 {
+@media (max-width: 1300px) {
+  #plugin-content {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .plugin-card {
+    position: static !important;
+    width: 90% !important;
+    max-width: 450px;
+    margin-bottom: 30px !important;
+  }
+  #previewDiv {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+#ConfTitre{
+  text-align: center;
     margin-top: 0;
     font-size: 1.8em;
     color: #2a6ebb;
 }
-
+#previewDiv{
+   flex: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.plugin-card {
+    flex: 1;
+    max-width: 400px;
+    background: #f9f9f9;
+    padding: 2em 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 100%;
+}
+h2 {
+    text-align: center;
+    margin-top: 0;
+    font-size: 1.8em !important;
+    color: #2a6ebb !important;
+}
 .plugin-card p {
     font-size: 1em;
     margin-bottom: 1.5em;
     line-height: 1.6em;
 }
-
 .form-group {
     margin-bottom: 1.5em;
 }
-
 label {
     display: block;
     margin-bottom: 0.5em;
     font-weight: 600;
 }
-
 select {
     width: 50%;
     padding: 0.5em;
@@ -62,11 +114,11 @@ select {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
-
 #imgInlibro{
     margin-bottom:10px;
 }
 .modern-button {
+    width: 125px !important;
     background-color: #2a6ebb;
     color: white;
     font-size: 1.1em;
@@ -78,12 +130,10 @@ select {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     display: inline-block;
 }
-
 .modern-button:hover {
     background-color: #1e5293;
     transform: translateY(-2px);
 }
-
 .modern-button:active {
     background-color: #174272;
     transform: translateY(0);
@@ -91,34 +141,27 @@ select {
 .website{
     text-align: center;
 }
-
-
-
 .toggle-container {
     display: flex;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
     gap: 10px;
     margin-bottom: 1em;
     font-weight: 600;
     font-size: 1em;
 }
-
-/* The switch - the box around the slider */
 .switch {
     position: relative;
     display: inline-block;
     width: 50px;
     height: 26px;
 }
-
-/* Hide default HTML checkbox */
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
-
-/* The slider */
 .slider {
     position: absolute;
     cursor: pointer;
@@ -130,8 +173,6 @@ select {
     transition: .4s;
     border-radius: 34px;
 }
-
-/* Slider knob */
 .slider:before {
     position: absolute;
     content: "";
@@ -143,49 +184,38 @@ select {
     transition: .4s;
     border-radius: 50%;
 }
-
-/* Checked styles */
 .switch input:checked + .slider {
     background-color: #2a6ebb;
 }
-
 .switch input:checked + .slider:before {
     transform: translateX(24px);
 }
-
-/* Label next to switch */
 .toggle-label {
     user-select: none;
+    width: 250px;
 }
-
 input[type="range"] {
     -webkit-appearance: none;
     width: 50%;
     height: 8px;
-    background: transparent; /* On utilise les styles personnalisés */
+    background: transparent;
     margin: 10px 0;
 }
-
-/* Barre de fond */
 input[type="range"]::-webkit-slider-runnable-track {
-    background: #2a6ebb;  /* 💙 BLEU */
+    background: #2a6ebb;
     height: 8px;
     border-radius: 5px;
 }
-
 input[type="range"]::-moz-range-track {
     background: #2a6ebb;
     height: 8px;
     border-radius: 5px;
 }
-
 input[type="range"]::-ms-track {
     background: transparent;
     border-color: transparent;
     color: transparent;
 }
-
-/* Curseur (bouton) */
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -194,11 +224,10 @@ input[type="range"]::-webkit-slider-thumb {
     background: white;
     border: 2px solid #2a6ebb;
     border-radius: 50%;
-    margin-top: -6px; /* Ajustement vertical */
+    margin-top: -6px;
     cursor: pointer;
     transition: background 0.3s;
 }
-
 input[type="range"]::-moz-range-thumb {
     height: 20px;
     width: 20px;
@@ -208,7 +237,6 @@ input[type="range"]::-moz-range-thumb {
     cursor: pointer;
     transition: background 0.3s;
 }
-
 input[type="range"]::-ms-thumb {
     height: 20px;
     width: 20px;
@@ -217,11 +245,507 @@ input[type="range"]::-ms-thumb {
     border-radius: 50%;
     cursor: pointer;
 }
-
 .labelRange{
     margin-top: 10px;
 }
-
 .range-wrapper{
     width: 50%;
+}
+#preVis{
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    color: #2a6ebb;
+}
+.option-row{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.option-row label{
+ text-align: center;
+ color: #333 !important;
+}
+#theme-form{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+iframe {
+  will-change: transform;
+  transform: translateZ(0);
+}
+* {
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+  transform: translateZ(0);
+}
+.buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.buttons-row button {
+  flex: 1;
+  transition: background 0.2s, transform 0.1s;
+}
+.buttons-row button:hover {
+  transform: translateY(-1px);
+}
+button.reset {
+  background-color: #e0e0e0 !important;
+  color: red !important;
+}
+.form-group {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.themes-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+  padding: 20px;
+}
+.theme-card-wrapper {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  perspective: 1000px;
+}
+.theme-card-wrapper:hover {
+  transform: translateY(-6px) scale(1.03);
+}
+.theme-card {
+  background: linear-gradient(160deg, #141824, #1e253a);
+  border-radius: 20px;
+  overflow: hidden;
+  width: 250px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4), 0 0 25px rgba(0,255,255,0.05);
+  transition: box-shadow 0.4s, transform 0.4s;
+  position: relative;
+}
+.theme-card-top {
+  height: 50px;
+  background: linear-gradient(120deg, #00e1ff, #0077ff);
+  position: relative;
+}
+.theme-card-accent {
+  position: absolute;
+  bottom: -15px;
+  left: 30px;
+  width: 60%;
+  height: 20px;
+  background: #141824;
+  transform: skew(-40deg);
+  box-shadow: -10px -10px 0 0 #141824;
+}
+.theme-card-header {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+.theme-icon {
+  font-size: 1.5em;
+}
+.theme-card-body {
+  padding: 15px;
+  color: #d9e6f7;
+}
+.date-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.date-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+input[type="date"] {
+ background-color: #ffffff;
+  color: #2a6ebb;
+  border: 2px solid #2a6ebb;
+  border-radius: 6px;
+  padding: 8px 12px;
+  width: 125px;
+  font-weight: 500;
+  font-size: 14px;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="%232a6ebb" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-1.99.9-1.99 2L3 21c0 1.1.89 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H5V8h14v13z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px 16px;
+}
+input[type="date"]:focus {
+  outline: none;
+  border-color: #00e1ff;
+  box-shadow: 0 0 5px #00e1ff44;
+}
+.date-row label {
+  text-align: center;
+  width: 100%;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.labelCard{
+  color: white;
+  opacity: 0.8;
+}
+.value {
+  color: #00e1ff;
+}
+.theme-progress {
+  margin-top: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: inset 0 0 8px rgba(0, 255, 255, 0.3);
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  color: #aeefff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.progress-bar-container {
+  position: relative;
+  height: 10px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.4);
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #00d4ff, #00ffaa, #00d4ff);
+  background-size: 200% 100%;
+  animation: neonFlow 3s linear infinite;
+  transition: width 0.5s ease-out;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.4);
+}
+@keyframes neonFlow {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+.theme-card-footer {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px;
+  background: rgba(255,255,255,0.03);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.btn-action {
+  background: transparent;
+  border: 1px solid #00e1ff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: #00e1ff;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: all 0.3s ease;
+}
+.btn-action:hover {
+  background: #00e1ff;
+  color: #0d1320;
+  transform: scale(1.05);
+}
+.theme-card-wrapper.active .theme-card {
+  border: 1px solid rgba(0,255,255,0.4);
+}
+.inactive-text {
+  color: #ff7b7b;
+  font-style: italic;
+  opacity: 0.8;
+}
+.plugin-card.edit-mode {
+  border-color: #2a6ebb;
+  box-shadow: 0 0 12px rgba(0, 150, 255, 0.3);
+}
+#preview-loading-overlay{
+   display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    transform-origin: top left;
+    pointer-events: auto;
+    z-index: 9999;
+    opacity: 0;
+    background-color: #000000;
+}
+.logoIcon{
+  width: 120px;
+  height: 120px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+/*
+    Section : Écran d'ordinateur
+	Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Serge  - https://codepen.io/sergep/pen/VwQbqw
+*/
+.monitor-preview {
+  margin-top: 2em;
+}
+/* Dimensions et transition du conteneur */
+.container {
+  width: 80vw;
+  height: 60vw;
+  max-height: 550px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+/* Fond noir du moniteur */
+.monitor {
+  padding: 4%;
+  position: relative;
+  background: #000000;
+  border-radius: 10px;
+  height: 100%;
+}
+/* Caméra du moniteur */
+.monitor:before {
+  content: "";
+  display: block;
+  background: #E6E9ED;
+  position: absolute;
+  padding: 0.8%;
+  border-radius: 50%;
+  right: 50%;
+  top: 1.8%;
+}
+/* Bouton power */
+.monitor:after {
+  content: "";
+  display: block;
+  background: #AAB2BD;
+  position: absolute;
+  padding: 1%;
+  border-radius: 10%;
+  right: 4%;
+  bottom: 1.5%;
+}
+/* Écran principal */
+.screenOrdi {
+  height: 100%;
+  position: relative;
+}
+/* Contenu de l’écran */
+.content {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 5px;
+}
+/* L’iframe s’adapte à tout l’écran */
+.content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 5px;
+}
+/* Barre latérale grise sur la droite du moniteur */
+.screenOrdi:after {
+  content: '';
+  display: block;
+  height: 88%;
+  position: absolute;
+  right: 0;
+  top: 6%;
+  width: 4%;
+}
+/* Pied du moniteur */
+.monitor-stand {
+  position: relative;
+  margin: 0 auto;
+  height: 10%;
+  width: 20%;
+  background: #6f6f75;
+  border-top: 24px solid #6f6f75;
+}
+/* Pied inférieur */
+.monitor-stand:after {
+  content: '';
+  position: absolute;
+  background: #6f6f75;
+  height: 20%;
+  width: 200%;
+  margin-left: -50%;
+  margin-top: 18%;
+  border-radius: 5px;
+}
+@media (min-width: 690px) and (max-width: 875px) {
+    .monitor-stand::after {
+        height: 25% !important;
+        margin-top: 14% !important;
+    }
+}
+@media (min-width: 590px) and (max-width: 690px) {
+    .monitor-stand::after {
+        height: 35% !important;
+        margin-top: 10% !important;
+    }
+}
+@media (min-width: 490px) and (max-width: 590px) {
+    .monitor-stand::after {
+        height: 50% !important;
+        margin-top: 6% !important;
+    }
+}
+.content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 5px;
+  transform-origin: top left;
+  transition: transform 0.3s ease;
+}
+/*
+    Section : Écrant Iphone et Ipad
+	Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Serge  - https://codepen.io/sergep/pen/VwQbqw
+*/
+.device {display:inline-block; margin:0 20px; text-align:center; margin-top: 2em;}
+.case {border:1px solid #000; margin:auto;background:#000;}
+.iphone .case {height:70vw; width:35vw; max-width: 300px; max-height: 550px; min-width: 227px; min-height: 455px; border-radius:20px; overflow-x: hidden; overflow-y: hidden;}
+.iphone .screenMobile {width:calc(35vw - 25px);; height:calc(70vw - 50px); max-width: 275px; max-height: 501px; min-width: 202px; min-height: 405px;}
+.earsection {margin-top:8px; display: flex; justify-content: center; align-items: center; gap: 4px;   height:8px;}
+.camera { width:8px; height:8px; border:1px solid #111; border-radius:4px; background:#222;}
+.speaker { width:27px; height:3px; margin-left:8px; border:1px solid #111; background:#222; border-radius:3px;}
+.screenMobile {clear:both; width:125px; height:187px; margin:auto; margin-top:5px; border:1px solid #000; background:#222;}
+.device .button {height:18px; width:18px; border:1px solid #333; border-radius:9px; margin:auto; margin-top:4px;}
+.buttonsquare {height:6px; width:6px; border:1px solid #333; border-radius:2px; margin:auto; margin-top:5px; }
+.ipad .case {height:70vw; width:53vw; max-width: 480px; max-height: 550px; min-width: 350px; min-height: 455px; border-radius:20px; overflow-x: hidden; overflow-y: hidden;}
+.ipad .camera {float:none;margin:0 auto;position:relative;}
+.ipad .screenMobile {width:calc(53vw - 50px); height:calc(70vw - 52px); max-width: 430px; max-height: 499px; min-width: 302px; min-height: 405px; margin-top:8px; }
+/*
+    Section :  radio Button
+	Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du composant original sur Uiverse.io.
+      Copyright (c) 00Kubi  - https://uiverse.io/00Kubi/smooth-termite-31
+*/
+.radio-inputs {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 0.5rem;
+  background-color: #eee;
+  box-sizing: border-box;
+  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+  padding: 0.25rem;
+  width: 300px;
+  font-size: 14px;
+}
+.radio-inputs .radio {
+  flex: 1 1 auto;
+  text-align: center;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.radio-inputs .radio input {
+  display: none;
+}
+.radio-inputs .radio .name {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: 0.5rem 0;
+  color: rgba(51, 65, 85, 1);
+  transition: all 0.15s ease-in-out;
+}
+.radio-inputs .radio input:checked + .name {
+  background-color: #fff;
+  font-weight: 600;
+}
+.radio-inputs .radio:hover .name {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.radio-inputs .radio input:checked + .name {
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: select 0.3s ease;
+}
+@keyframes select {
+  0% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.radio-inputs .radio input:checked + .name::before,
+.radio-inputs .radio input:checked + .name::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #3b82f6;
+  opacity: 0;
+  animation: particles 0.5s ease forwards;
+}
+.radio-inputs .radio input:checked + .name::before {
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.radio-inputs .radio input:checked + .name::after {
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+@keyframes particles {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(var(--direction));
+  }
+}
+.radio-inputs .radio input:checked + .name::before {
+  --direction: -10px;
+}
+.radio-inputs .radio input:checked + .name::after {
+  --direction: 10px;
 }

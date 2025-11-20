@@ -1,0 +1,305 @@
+/*
+    Section : potion sorcière
+    Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Brandon Frye - https://codepen.io/brandonkfrye/pen/YJEoGM
+*/
+#witch-brew {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  height: auto;
+  width: 52px;
+  & svg {
+    height: auto;
+    width: 100%;
+  }
+}
+@keyframes riseAndDisappear {
+  0% {
+    transform: translateY(70%);
+    opacity: 0;
+    scale: 1;
+  }
+   10% {
+    opacity: 1;
+  }
+  90% {
+    transform: translateY(0%);
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    transform: translateY(-20%);
+    opacity: 0;
+    scale: 0;
+  }
+}
+.bubble {
+  position: relative;
+  z-index: 0;
+  transform-origin: 50% 50%;
+  animation: riseAndDisappear 3s ease-out infinite;
+  opacity: 0;
+  animation-fill-mode: forwards;
+  animation-delay: 0.1s;
+}
+.bubble--small {
+  animation-duration: 3.5s;
+}
+.bubble--red {
+  animation-delay: 2.4s;
+}
+.bubble--green {
+  animation-delay: 1.6s;
+}
+.bubble--blue {
+  animation-delay: 0.8s;
+}
+@keyframes floatGroup {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+.bubble-group {
+  animation: floatGroup 1.4s ease-in-out infinite;
+}
+@keyframes drip {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+  80% {
+    transform: translateY(192px) scaleY(1);
+  }
+  100% {
+    transform: translateY(192px) scaleY(0);
+  }
+}
+.drip {
+  transform-origin: 50% 100%;
+  animation: drip 3.5s ease-in infinite;
+}
+.drip--red {
+  animation-delay: 1.8s;
+}
+.drip--green {
+  animation-delay: 3s;
+}
+/*
+    Section : citrouille
+    Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Luis Guillermo Moreno - https://codepen.io/lu32/pen/QWYWpjr
+*/
+:root {
+  --slice-width: 40%;
+  --slice-height: 70%;
+  --spaccing: 14%;
+  --container-width: 440px;
+  --pumpkin-color: #fe8717;
+  --mouth-width: 78%;
+  --mouth-heihgt: 34%;
+}
+#changelanguage{
+  position: relative;
+}
+#pumpkin-left {
+  position: absolute;
+  top: 30px;
+  left: 46%;
+  transform: translateX(-50%) translateX(-40px);
+  z-index: 1000;
+  height: 30px;
+  width: 30px;
+}
+#pumpkin-right{
+  position: absolute;
+  top: 30px;
+   left: 54%;
+  transform: translateX(-50%) translateX(40px);
+  z-index: 1000;
+  height: 30px;
+  width: 30px;
+}
+.slice {
+  width: var(--slice-width);
+  height: var(--slice-height);
+  background: var(--pumpkin-color);
+  border-radius: 50% 50% 50% 50% / 46% 47% 53% 54%;
+  position: absolute;
+  top: calc((100% - var(--slice-height)) / 2 + 10%);
+  left: calc(50% - var(--slice-width) / 2);
+}
+.one {
+  left: calc(50% - (var(--slice-width) / 2) - 2 * var(--spaccing));
+}
+.two {
+  left: calc(50% - (var(--slice-width) / 2) - var(--spaccing));
+}
+.four {
+  left: calc(50% - (var(--slice-width) / 2) + var(--spaccing));
+}
+.five {
+  left: calc(50% - (var(--slice-width) / 2) + 2 * var(--spaccing));
+}
+.container {
+  border: 0px solid red;
+  text-align: center;
+  height: var(--container-width);
+  width: var(--container-width);
+  margin: 0 auto;
+  position: relative;
+}
+.stem-container {
+  width: 40%;
+  height: 40%;
+  left: 26%;
+  top: -1%;
+  position: absolute;
+  overflow: hidden;
+  transform: rotate(20deg);
+}
+.stem {
+  width: 100%;
+  height: 100%;
+  background: #8fbb49;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  border-radius: 50%;
+}
+.stem::after {
+  content: "";
+  width: 50%;
+  height: 50%;
+ background: var(--stem-inner-color, white);
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  border-radius: 50%;
+}
+.eyes {
+  border: 0px solid red;
+  width: 100%;
+  height: 100%;
+}
+.eye {
+  border-radius: 0% 0% 50% 50% / 0% 0% 100% 100%;
+  width: 25%;
+  height: 10%;
+  background: black;
+  position: absolute;
+  top: 45%;
+  z-index: 12;
+}
+.left-eye {
+  left: 17%;
+  transform: rotate(28deg);
+}
+.right-eye {
+  right: 17%;
+  transform: rotate(-28deg);
+}
+.nose {
+  border-radius: 50% 50% 0% 0% / 100% 100% 0% 0%;
+  width: 10%;
+  height: 15%;
+  background: black;
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  z-index: 10;
+}
+.nose::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 10%;
+  background: var(--pumpkin-color);
+  bottom: 0;
+  left: 0;
+  border-radius: 50% 50% 0% 0% / 100% 100% 0% 0%;
+  z-index: 10;
+}
+.mouth {
+  border-radius: 0% 0% 50% 50% / 0% 0% 100% 100%;
+  width: var(--mouth-width);
+  height: var(--mouth-heihgt);
+  background: black;
+  position: absolute;
+  bottom: 10%;
+  left: calc((100% - var(--mouth-width)) / 2);
+}
+.mouth::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 40%;
+  background: var(--pumpkin-color);
+  top: 0;
+  left: 0;
+  border-radius: 0% 0% 50% 50% / 0 0 100% 100%;
+}
+.tooth {
+  width: 10%;
+  height: 20%;
+  top: 24%;
+  left: 12%;
+  transform: rotate(17deg) skew(-5deg, 0deg);
+  background: red;
+  background: var(--pumpkin-color);
+  position: absolute;
+}
+.tooth2 {
+  top: 73%;
+  left: 24%;
+  transform: rotate(12deg) skew(-5deg, 0deg);
+}
+.tooth3 {
+  top: 77%;
+  left: 63%;
+  transform: rotate(-17deg) skew(-5deg, 0deg);
+}
+.tooth4 {
+  top: 38%;
+  left: 39%;
+  transform: rotate(-3deg) skew(-5deg, 0deg);
+}
+.tooth5 {
+  top: 27%;
+  left: 79%;
+  transform: rotate(-19deg) skew(-1deg, 0deg);
+}
+html, body {
+    min-height: 100vh !important;
+    height: auto !important;
+}
+#celebration-footer{
+  margin-bottom: 60px !important;
+   position: relative !important;
+  z-index: 1000 !important;
+}
+@media (min-width: 900px) {
+    #celebration-footer {
+        margin-bottom: 100px !important;
+    }
+    #pumpkin-left {
+    top: 52px;
+    height: 50px;
+    width: 50px;
+  }
+  #pumpkin-right{
+    top: 52px;
+    height: 50px;
+    width: 50px;
+  }
+  #witch-brew {
+    top: 0;
+    width: 88px;
+}
+}

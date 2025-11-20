@@ -1,265 +1,204 @@
 package Koha::Plugin::Celebrations;
+
 use Modern::Perl;
 use base qw(Koha::Plugins::Base);
-use C4::Context;
-use URI::Escape;
+use CGI;
 use JSON;
-use Koha::Plugins;
-use C4::Languages;
-use File::Slurp;
-use File::Basename;
-use Cwd 'abs_path';
-#
-#
-#
-#   Informations de base sur le plugin (métadonnées utilisées par Koha)
-#
-our $VERSION = '0.9.3';
+use C4::Context;
+# Importation des modules du plugin
+use FindBin;
+use lib "$FindBin::Bin";
+use Koha::Plugin::Celebrations::Lib::Config;
+use Koha::Plugin::Celebrations::Lib::ThemeManager;
+use Koha::Plugin::Celebrations::Lib::AssetHandler;
+use Koha::Plugin::Celebrations::Lib::TemplateBuilder;
+use Koha::Plugin::Celebrations::Lib::I18n;
+
+=head1 NAME
+
+Koha::Plugin::Celebrations - Plugin Koha permettant d'appliquer des thèmes saisonniers à l'OPAC.
+
+=head1 DESCRIPTION
+
+Ce plugin applique automatiquement des thèmes saisonniers dans l'OPAC selon
+les dates que vous configurez. Il permet :
+
+
+- Gestion de plusieurs thèmes (dates de début/fin)
+- Prévisualisation en direct avant activation
+- Gestion des fichiers CSS/JS/images propres à chaque thème
+- Interface d'administration simple
+
+=cut
+
+=head1 METADATA
+
+Métadonnées officielles du plugin Koha (nécessaires pour l'administration Koha).
+
+=cut
+
 our $metadata = {
-    name   => 'Celebrations',
-    author => 'Ludovic Julien',
-    description => 'Un OPAC pour chaque saison.',
-    date_authored => '2025-09-09',
-    date_updated    => '2025-09-15',
-    version => $VERSION,
+    name            => 'Celebrations',
+    author          => 'Ludovic Julien',
+    description     => 'Un OPAC pour chaque saison.',
+    date_authored   => '2025-09-09',
+    date_updated    => '2025-11-20',
+    version         => '0.9.5',
     minimum_version => '24.05',
 };
-#
-#
-#
-#   Constructeur du plugin (initialise avec les métadonnées)
-#
+
+=head1 METHODS
+
+=head2 new
+
+Constructeur principal.
+Initialise les gestionnaires internes (config, thèmes, assets, templates, i18n).
+
+=cut
+
 sub new {
     my ($class, $args) = @_;
     $args->{metadata} = $metadata;
-    return $class->SUPER::new($args);
+    my $self = $class->SUPER::new($args);
+    $self->{config} = Koha::Plugin::Celebrations::Lib::Config->new($self);
+    $self->{theme_manager} = Koha::Plugin::Celebrations::Lib::ThemeManager->new($self);
+    $self->{asset_handler} = Koha::Plugin::Celebrations::Lib::AssetHandler->new($self);
+    $self->{template_builder} = Koha::Plugin::Celebrations::Lib::TemplateBuilder->new($self);
+    $self->{i18n} = Koha::Plugin::Celebrations::Lib::I18n->new($self);
+    return $self;
 }
-#
-#
-#
-#   Namespace API utilisé pour exposer les routes de ce plugin
-#
+
+=head2 api_namespace
+
+Retourne le namespace des routes API du plugin.
+
+=cut
+
 sub api_namespace {
-    my ( $self ) = @_;
+    my ($self) = @_;
     return 'Celebrations-api';
 }
-#
-#
-#
-#   Définit les routes statiques de l’API en lisant le fichier JSON
-#
+
+=head2 static_routes
+
+Déclare les ressources statiques du plugin (CSS/JS/images).
+
+=cut
+
 sub static_routes {
     my $self = shift;
-    my @files = qw(css.json js.json images.json);
-    my %all_routes;
-    for my $file (@files) {
-        my $path = $self->mbf_read("api/$file");
-        my $spec = decode_json($path);
-        %all_routes = (%all_routes, %$spec);
-    }
-    return \%all_routes;
+    return $self->{asset_handler}->get_static_routes();
 }
-#
-#
-#
-#   envoie le CSS à l'OPAC (en inline pour éviter le temps de chargement long)
-#
+
+=head2 opac_head
+
+Injecte les ressources CSS dans l'en-tête OPAC.
+
+=cut
+
 sub opac_head {
     my ($self) = @_;
-    my $theme = $self->retrieve_data("selected_theme");
-    my $plugin_pm_path = abs_path(__FILE__);
-    my $plugin_dir = dirname($plugin_pm_path);
-    my $config_path = "$plugin_dir/Celebrations/config/theme_config.json";
-    my $base_css = "$plugin_dir/Celebrations/css/$theme/$theme.css";
-    return '' unless -e $base_css;
-    my $json_text = read_file($config_path, binmode => ':utf8');
-    my $theme_config = decode_json($json_text);
-    return '' unless exists $theme_config->{$theme};
-    my $conf = $theme_config->{$theme};
-    my $css_content = read_file($base_css, binmode => ':utf8');
-    my $extra_css = '';
-    my $font_link = $conf->{font_url} // '';
-    if (exists $conf->{elements}) {
-        foreach my $element (keys %{ $conf->{elements} }) {
-            my $setting = $conf->{elements}{$element}{setting};
-            my $css_file = "$plugin_dir/Celebrations/css/$theme/$conf->{elements}{$element}{file}.css";
-            my $status = $self->retrieve_data($setting) // 'off';
-            if ($status eq 'on' && -e $css_file) {
-                $extra_css .= read_file($css_file, binmode => ':utf8');
-            }
-        }
-    }
-    return qq{
-        <link href="$font_link" rel="stylesheet">
-        <style id="theme-inline-css">
-        $css_content
-        $extra_css
-        </style>
-    };
+    return $self->{asset_handler}->get_opac_head();
 }
-#
-#
-#
-#   envoie le js a l'OPAC
-#
+
+=head2 API ROUTES
+
+Méthodes exposées via l'API du plugin.
+
+=cut
+
 sub opac_js {
     my ($self) = @_;
-    my $theme = $self->retrieve_data("selected_theme") // 'null';
-    return '' if $theme eq 'null';
-    my $plugin_pm_path = abs_path(__FILE__);
-    my $plugin_dir     = dirname($plugin_pm_path);
-    my $config_path    = "$plugin_dir/Celebrations/config/theme_config.json";
-    my $json_text = read_file($config_path, binmode => ':utf8');
-    my $theme_config = decode_json($json_text);
-    return '' unless exists $theme_config->{$theme};
-    my $conf = $theme_config->{$theme};
-    my $script_options = '';
-    my @js_tags;
-    if (exists $conf->{elements}) {
-        my %js_options;
-        foreach my $element (keys %{ $conf->{elements} }) {
-            my $setting = $conf->{elements}{$element}{setting};
-            my $status  = $self->retrieve_data($setting) // 'off';
-            next unless $status eq 'on';
-            if (exists $conf->{elements}{$element}{extra_options}) {
-                foreach my $opt_key (keys %{ $conf->{elements}{$element}{extra_options} }) {
-                    $js_options{$opt_key} = $self->retrieve_data($opt_key);
-                }
-            }
-            my $element_file = $conf->{elements}{$element}{file};
-            my $element_js_file = "$plugin_dir/Celebrations/js/$theme/$element_file.js";
-            if (-e $element_js_file) {
-                my $api_ns = $self->api_namespace;
-                push @js_tags, qq{
-                    <script src="/api/v1/contrib/$api_ns/static/js/$theme/$element_file.js"></script>
-                };
-            }
-        }
-        if (%js_options) {
-            my $json_opts = encode_json(\%js_options);
-            $script_options = qq{
-                <script>
-                     window["${theme}ThemeOptions"] = $json_opts;
-                </script>
-            };
-        }
-    }
-    my $js_file = "$plugin_dir/Celebrations/js/$theme/$theme.js";
-    if (-e $js_file) {
-        my $api_ns = $self->api_namespace;
-        push @js_tags, qq{
-            <script id="theme-js" src="/api/v1/contrib/$api_ns/static/js/$theme/$theme.js"></script>
-        };
-    }
-
-    return "$script_options\n" . join("\n", @js_tags);
+    return $self->{asset_handler}->get_opac_js();
 }
 
-#
-#
-#   Enregistre les sélections de theme dans la BD
-#
+=head2 apply_theme
+
+Applique un thème saisonnier actif à l'OPAC.
+
+=cut
+
 sub apply_theme {
     my ($self) = @_;
-    my $cgi = $self->{cgi};
-    my $theme = $cgi->param('theme');
-    my %data = ( selected_theme => $theme );
-    my $plugin_pm_path = abs_path(__FILE__);
-    my $plugin_dir     = dirname($plugin_pm_path);
-    my $config_path    = "$plugin_dir/Celebrations/config/theme_config.json";
-    my $json_text = read_file($config_path, binmode => ':utf8');
-    my $theme_config = decode_json($json_text);
-    if (exists $theme_config->{$theme} && exists $theme_config->{$theme}{elements}) {
-        my $conf = $theme_config->{$theme}{elements};
-        foreach my $element (keys %$conf) {
-            my $setting = $conf->{$element}{setting};
-            $data{$setting} = $cgi->param($setting) // 'off';
-            if (exists $conf->{$element}{extra_options}) {
-                foreach my $opt_key (keys %{ $conf->{$element}{extra_options} }) {
-                    my $opt_val = $cgi->param($opt_key);
-                    $opt_val = $self->api_namespace if $opt_key eq 'api_namespace';
-                    $opt_val //= 'off';
-                    $data{$opt_key} = $opt_val;
-                }
-            }
-        }
-    }
-    $self->store_data(\%data, { flatten => 0 });
-    print $cgi->header('application/json');
-    print to_json({ success => JSON::true, theme => $theme });
+    return $self->{theme_manager}->apply_theme();
 }
-#
-#
-#
-#   Gère l'interface de l'intranet
-#
+
+=head2 update_theme
+
+Met à jour un thème existant.
+
+=cut
+
+sub update_theme {
+    my ($self) = @_;
+    return $self->{theme_manager}->update_theme();
+}
+
+=head2 delete_theme
+
+Supprime un thème.
+
+=cut
+
+sub delete_theme {
+    my ($self) = @_;
+    return $self->{theme_manager}->delete_theme();
+}
+
+=head2 list_themes
+
+Liste tous les thèmes configurés.
+
+=cut
+
+sub list_themes {
+    my ($self) = @_;
+    return $self->{theme_manager}->list_themes();
+}
+
+=head2 tool
+
+Affiche l'interface Intranet du plugin.
+
+=cut
+
 sub tool {
     my ($self, $args) = @_;
-    my $cgi = $self->{cgi};
-    my $template;
-    my $plugin_class = ref $self;
-    my $plugin_name  = $metadata->{name} // $plugin_class;
-    my $plugin_pm_path = abs_path(__FILE__);
-    my $plugin_dir     = dirname($plugin_pm_path);
-    my $config_path    = "$plugin_dir/Celebrations/config/theme_config.json";
-    my $json_text      = read_file($config_path, binmode => ':utf8');
-    my $theme_config   = decode_json($json_text);
-    my $theme_config_json = encode_json($theme_config);
-    my $theme_config_hash = decode_json($json_text);
-    my $selected_theme = $self->retrieve_data("selected_theme") // 'null';
-    my $preferredLanguage = C4::Languages::getlanguage();
-    if ($self->is_enabled) {
-        my $koha_session = $cgi->cookie('KohaSession') // $cgi->param('koha_session');
-        $template = $self->get_template({ file =>  'templates/homeTheme.tt' });
-        my %theme_data;
-        if ($selected_theme ne 'null' && exists $theme_config->{$selected_theme}{elements}) {
-            foreach my $element (keys %{ $theme_config->{$selected_theme}{elements} }) {
-                my $setting = $theme_config->{$selected_theme}{elements}{$element}{setting};
-                $theme_data{$setting} = $self->retrieve_data($setting) // 'off';
-            }
-        }
-        $template->param(
-            enabled         => 1,
-            CLASS           => $plugin_class,
-            METHOD          => 'tool',
-            plugin_name     => $plugin_name,
-            plugin_class    => $plugin_class,
-            api_namespace   => $self->api_namespace,
-            koha_session    => $koha_session,
-            selected_theme  => $selected_theme,
-            theme_config_json => $theme_config_json,
-            theme_config => $theme_config_hash,
-            PLUGIN_DIR => $plugin_dir,
-            LANG       => $preferredLanguage,
-            %theme_data,
-        );
-    }
-    else {
-        $template = $self->get_template({ file =>  'templates/disabled.tt' });
-        my $css_template = $self->get_template({ file => 'css/template/disabled-css.tt' });
-        my $css_content  = $css_template->output();
-        $template->param(
-            enabled       => 0,
-            CLASS         => $plugin_class,
-            METHOD        => 'tool',
-            api_namespace => $self->api_namespace,
-            disabled_css  => $css_content,
-            PLUGIN_DIR => $plugin_dir,
-            LANG       => $preferredLanguage
-        );
-    }
-    print $cgi->header(-type => 'text/html', -charset => 'utf-8');
-    print $template->output();
+    return $self->{template_builder}->build_tool_interface();
 }
-#
-#
-#
-#   Gère la désinstallation du plugin
-#
+
+=head2 opac_preview
+
+Génère une prévisualisation OPAC directement depuis le plugin.
+
+=cut
+
+sub opac_preview {
+    my ($self, $args) = @_;
+    my $cgi = $self->{cgi};
+    return $self->{template_builder}->build_opac_preview($cgi);
+}
+
+=head2 preview_theme_asset
+
+Permet de prévisualiser les ressources (images, CSS...) d’un thème avant application.
+
+=cut
+
+sub preview_theme_asset {
+    my ($self) = @_;
+    return $self->{asset_handler}->serve_preview_asset();
+}
+
+=head2 uninstall
+
+Supprime les données du plugin dans la base de données.
+
+=cut
 sub uninstall {
     my ($self, $args) = @_;
     my $dbh = C4::Context->dbh;
-     my $plugin_class = ref($self) || 'Koha::Plugin::Celebrations';
+    my $plugin_class = ref($self) || 'Koha::Plugin::Celebrations';
     die "Plugin class is undef" unless defined $plugin_class;
     eval {
         my $sth_delete = $dbh->prepare("DELETE FROM plugin_data WHERE plugin_class = ?");
@@ -272,4 +211,5 @@ sub uninstall {
     }
     return 1;
 }
+
 1;

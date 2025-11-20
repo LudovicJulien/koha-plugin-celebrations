@@ -1,0 +1,22 @@
+/*
+    Section : coeurs
+*/
+.Coeur{
+	position: fixed;
+	display: block;
+	width: 20px;
+	height: 20px;
+	pointer-events: none;
+	user-select: none;
+	z-index: 9999;
+	opacity: 0.9;
+	animation: float 6s linear infinite;
+	font-size: 20px;
+	color: #e91e63;
+}
+
+.Coeur::before {
+	content: '❤️';
+	display: block;
+	text-align: center;
+}

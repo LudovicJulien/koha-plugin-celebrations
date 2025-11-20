@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "scripts": {
+    "bundle": "node scripts/bundle-plugin-js.js",
+    "watch-bundle": "nodemon --watch Koha/Plugin/Celebrations/js/template --ext js --exec 'npm run bundle'",
+    "dev": "npm run watch-bundle",
+    "test": "bash scripts/test-env.sh"
+  },
+    "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

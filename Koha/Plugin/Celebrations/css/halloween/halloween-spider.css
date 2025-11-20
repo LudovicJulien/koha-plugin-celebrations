@@ -1,0 +1,185 @@
+/*
+    Section : Spider
+     Attribution :
+      Code inspiré, modifié et adapté pour l'OPAC de Koha à partir du Pen original sur CodePen.io.
+      Copyright (c) Rachel Best - https://codepen.io/rachel_web/pen/MjxzOb
+*/
+.spider {
+  position: absolute;
+  top: 0;
+  height: 40px;
+  width: 50px;
+  border-radius: 50%;
+  margin-top: 40px;
+  background: #110D04;
+  margin-top: 0;
+  z-index: 900;
+}
+.spider.bigthickline::before {
+  width: 3px;
+}
+.spider::before {
+  position: absolute;
+  content: "";
+  width: 1px;
+  background: #AAAAAA;
+  left: 50%;
+  top: -320px;
+  height: 320px;
+}
+.spider .eye {
+  position: absolute;
+  top: 16px;
+  height: 14px;
+  width: 12px;
+  background: white;
+  border-radius: 50%;
+}
+.spider .eye::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  height: 5px;
+  width: 5px;
+  background: black;
+  border-radius: 50%;
+}
+.spider .eye.left {
+  left: 14px;
+}
+.spider .eye.left::after {
+  right: 3px;
+}
+.spider .eye.right {
+  right: 14px;
+}
+.spider .eye.right::after {
+  left: 3px;
+}
+.spider .leg {
+  position: absolute;
+  height: 12px;
+  width: 14px;
+  top: 6px;
+  border-top: 2px solid #110D04;
+  border-radius: 0;
+}
+.spider .leg.left {
+  left: -8px;
+  transform-origin: top right;
+  transform: rotate(36deg) skewX(-20deg);
+  border-left: 2px solid #110D04;
+  border-radius: 60% 0 0 0;
+  animation: legs-wriggle-left 1s infinite;
+}
+.spider .leg.right {
+  right: -8px;
+  transform-origin: top left;
+  transform: rotate(-36deg) skewX(20deg);
+  border-right: 2px solid #110D04;
+  border-radius: 0 60% 0 0;
+  animation: legs-wriggle-right 1s 0.2s infinite;
+}
+.spider .leg:nth-of-type(2) {
+  top: 14px;
+  left: -11px;
+  animation-delay: 0.8s;
+}
+.spider .leg:nth-of-type(3) {
+  top: 22px;
+  left: -12px;
+  animation-delay: 0.2s;
+}
+.spider .leg:nth-of-type(4) {
+  top: 31px;
+  left: -10px;
+  animation-delay: 0.4s;
+}
+.spider .leg:nth-of-type(6) {
+  top: 14px;
+  right: -11px;
+  animation-delay: 0.4s;
+}
+.spider .leg:nth-of-type(7) {
+  top: 22px;
+  right: -12px;
+  animation-delay: 0.7s;
+}
+.spider .leg:nth-of-type(8) {
+  top: 31px;
+  right: -10px;
+  animation-delay: 0.3s;
+}
+.spider_0 { left: 5%; animation: spider-move-0 4.2s infinite; }
+.spider_1 { left: 20%; animation: spider-move-1 5.1s infinite; }
+.spider_2 { left: 35%; animation: spider-move-2 5.9s infinite; }
+.spider_3 { right: 35%; margin-top: 160px; animation: spider-move-3 4.9s infinite; }
+.spider_4 { right: 20%; margin-top: 50px; animation: spider-move-4 5.4s infinite; }
+.spider_5 { right: 5%; margin-top: 210px; animation: spider-move-5 5s infinite; }
+@keyframes legs-wriggle-left {
+  0%, 100% { transform: rotate(36deg) skewX(-20deg); }
+  25%, 75% { transform: rotate(15deg) skewX(-20deg); }
+  50% { transform: rotate(45deg) skewX(-20deg); }
+}
+@keyframes legs-wriggle-right {
+  0%, 100% { transform: rotate(-36deg) skewX(20deg); }
+  25%, 75% { transform: rotate(-15deg) skewX(20deg); }
+  50% { transform: rotate(-45deg) skewX(20deg); }
+}
+@keyframes spider-move-0 {
+  0%, 100% { margin-top: 100px; }
+  50% { margin-top: 140px; }
+}
+@keyframes spider-move-1 {
+  0%, 100% { margin-top: 80px; }
+  50% { margin-top: 130px; }
+}
+@keyframes spider-move-2 {
+  0%, 100% { margin-top: 120px; }
+  50% { margin-top: 170px; }
+}
+@keyframes spider-move-3 {
+  0%, 100% { margin-top: 100px; }
+  50% { margin-top: 150px; }
+}
+@keyframes spider-move-4 {
+  0%, 100% { margin-top: 70px; }
+  50% { margin-top: 120px; }
+}
+@keyframes spider-move-5 {
+  0%, 100% { margin-top: 90px; }
+  50% { margin-top: 140px; }
+}
+@media (max-width: 700px) {
+  .spider {
+    width: 40px;
+    height: 30px;
+  }
+  .spider .eye.left {
+    left: 20px !important;
+  }
+  .spider .eye.left::after {
+    right: 2px !important;
+  }
+  .spider .eye.right {
+    left: 12px !important;
+  }
+  .spider .eye.right::after {
+    left: 2px !important;
+  }
+  .spider .eye {
+    top: 12px !important;
+    height: 10px !important;
+    width: 8px !important;
+  }
+  .spider .eye::after {
+    top: 3px !important;
+    height: 4px !important;
+    width: 4px !important;
+  }
+  .spider .leg {
+    height: 8px !important;
+    width: 10px !important;
+    top: 6px;
+  }
+}

@@ -1,0 +1,170 @@
+{
+    "feux-artifice": {
+    "font_url": "https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap",
+    "elements": {
+      "couleurs": {
+        "setting": "couleur_feux",
+        "file": "feux-artifice-color",
+        "type": "css",
+        "toggle_id": "toggle_feux_color"
+      },
+      "feux": {
+        "setting": "animation_feux",
+        "file": "feux-artifice-animation",
+        "type": "both",
+        "toggle_id": "toggle_feux_animation"
+      }
+    }
+  },
+  "halloween": {
+    "font_url": "https://fonts.googleapis.com/css2?family=Creepster&display=swap",
+    "elements": {
+      "couleurs": {
+      "setting": "couleur_halloween",
+      "file": "halloween-color",
+       "type": "css",
+      "toggle_id": "toggle_halloween_color"
+      },
+       "footer": {
+      "setting": "footer_halloween",
+      "file": "halloween-footer",
+      "type": "both",
+      "toggle_id": "toggle_halloween_footer"
+      },
+      "ghost": {
+        "setting": "activation_ghost",
+        "file": "halloween-ghost",
+        "type": "both",
+        "toggle_id": "toggle_halloween_spider"
+      },
+      "spider": {
+        "setting": "activation_spiders",
+        "file": "halloween-spider",
+        "type": "both",
+        "toggle_id": "toggle_halloween_ghost",
+        "extra_options": {
+          "quantite_spiders": {
+            "type": "range",
+            "min": 1,
+            "max": 6,
+            "default": 6
+          }
+        }
+      }
+    }
+  },
+  "noel": {
+    "font_url": "https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&display=swap",
+    "elements": {
+      "couleurs": {
+      "setting": "couleur_noel",
+      "file": "noel-color",
+       "type": "css",
+      "toggle_id": "toggle_noel_Color"
+      },
+      "footer": {
+      "setting": "footer_noel",
+      "file": "noel-footer",
+      "type": "both",
+      "toggle_id": "toggle_noel_footer"
+      },
+      "snow": {
+        "setting": "activation_flocons",
+        "file": "noel-flocon",
+        "type": "both",
+        "toggle_id": "toggle_noel",
+        "extra_options": {
+          "vitesse_flocons": {
+              "type": "select",
+              "option_type": "option_vitesse"
+          },
+          "taille_flocons": {
+              "type": "select",
+              "option_type": "option_taille"
+          },
+          "vent_flocons": {
+              "type": "select",
+              "option_type": "option_vent"
+          },
+          "quantite_flocons": {
+              "type": "range",
+              "min": 5,
+              "max": 200,
+              "default": 100
+          }
+        }
+      },
+      "countdown": {
+      "setting": "countdown_noel",
+      "file": "noel-countdown",
+      "type": "both",
+      "toggle_id": "toggle_noel_countdown"
+      }
+    }
+  },
+  "paque": {
+    "font_url": "https://fonts.googleapis.com/css2?family=Chewy&display=swap",
+    "elements": {
+      "couleurs": {
+        "setting": "couleur_paque",
+        "file": "paque-color",
+         "type": "css",
+        "toggle_id": "toggle_paque_Color"
+      },
+      "footer": {
+        "setting": "footer_paque",
+        "file": "paque-footer",
+        "type": "both",
+        "toggle_id": "toggle_paque_footer"
+      },
+      "egg": {
+        "setting": "activation_eggs",
+        "file": "paque-egg",
+        "type": "js",
+        "toggle_id": "toggle_paque",
+        "extra_options": {
+          "api_namespace": {
+            "type": "ignore"
+          }
+        }
+      }
+    }
+  },
+  "saint-valentin": {
+    "font_url": "https://fonts.googleapis.com/css2?family=Eater&display=swap",
+    "elements": {
+      "couleurs": {
+        "setting": "couleur_valentin",
+        "file": "valentin-color",
+         "type": "css",
+        "toggle_id": "toggle_valentin_Color"
+      },
+      "coeur": {
+        "setting": "activation_coeurs",
+        "file": "valentin-coeur",
+        "type": "both",
+        "toggle_id": "toggle_stValentin",
+        "extra_options": {
+          "vitesse_coeurs": {
+              "type": "select",
+              "option_type": "option_vitesse"
+          },
+          "taille_coeurs": {
+              "type": "select",
+              "option_type": "option_taille"
+          },
+          "vent_coeurs": {
+              "type": "select",
+              "option_type": "option_vent"
+          },
+          "quantite_coeurs": {
+              "type": "range",
+              "min": 5,
+              "max": 200,
+              "default": 50
+          }
+        }
+      }
+    }
+  }
+}
