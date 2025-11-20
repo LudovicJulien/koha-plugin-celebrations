@@ -42,8 +42,8 @@ our $metadata = {
     author          => 'Ludovic Julien',
     description     => 'Un OPAC pour chaque saison.',
     date_authored   => '2025-09-09',
-    date_updated    => '2025-11-18',
-    version         => '0.9.4',
+    date_updated    => '2025-11-20',
+    version         => '0.9.5',
     minimum_version => '24.05',
 };
 
