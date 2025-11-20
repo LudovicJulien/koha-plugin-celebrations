@@ -3,6 +3,7 @@
 [![Build Status](https://github.com/inlibro/koha-plugin-celebrations/actions/workflows/generate_kpz.yml/badge.svg)](https://github.com/inlibro/koha-plugin-celebrations/releases/latest)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/inlibro/koha-plugin-celebrations)](https://github.com/inlibro/koha-plugin-celebrations/releases/latest)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Documentation Française](https://img.shields.io/badge/Docs-Français-blue?style=flat-square&logo=read-the-docs)](README.md)
 
 Add a festive touch to your library’s OPAC for every special occasion! This plugin allows you to apply seasonal themes and animations for celebrations such as Christmas, Halloween, Valentine’s Day, and many more.
 
