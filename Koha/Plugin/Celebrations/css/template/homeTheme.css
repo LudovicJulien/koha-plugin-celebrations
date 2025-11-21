@@ -130,6 +130,14 @@ select {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     display: inline-block;
 }
+.modern-button:disabled {
+    background-color: #9bb3d1;
+    color: #f0f0f0;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+    opacity: 0.7;
+}
 .modern-button:hover {
     background-color: #1e5293;
     transform: translateY(-2px);
@@ -466,6 +474,13 @@ input[type="date"]:focus {
   font-size: 0.85em;
   transition: all 0.3s ease;
 }
+.btn-action:disabled {
+    color: rgba(0, 225, 255, 0.35);
+    border-color: rgba(0, 225, 255, 0.25);
+    background: rgba(0, 225, 255, 0.03);
+    backdrop-filter: blur(1px);
+    cursor: not-allowed;
+}
 .btn-action:hover {
   background: #00e1ff;
   color: #0d1320;
@@ -518,12 +533,11 @@ input[type="date"]:focus {
   margin-top: 2em;
 }
 /* Dimensions et transition du conteneur */
-.container {
-  width: 80vw;
-  height: 60vw;
-  max-height: 550px;
-  max-width: 920px;
-  margin: 0 auto;
+.container-monitor {
+  width: 80vw !important;
+  height: 60vw !important;
+  max-height: 550px !important;
+  max-width: 920px !important;
 }
 /* Fond noir du moniteur */
 .monitor {

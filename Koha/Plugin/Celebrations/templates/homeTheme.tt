@@ -169,7 +169,7 @@
                 </label>
             </div>
             <div id="prevDevice">
-                <div class="container monitor-preview" style="display: block;">
+                <div class="container-monitor monitor-preview" style="display: block;">
                     <div class="monitor">
                         <div class="screenOrdi">
                             <div class="content">
