@@ -156,13 +156,13 @@ sub list_themes {
     return $self->{theme_manager}->list_themes();
 }
 
-=head2 tool
+=head2
 
 Affiche l'interface Intranet du plugin.
 
 =cut
 
-sub tool {
+sub configure {
     my ($self, $args) = @_;
     return $self->{template_builder}->build_tool_interface();
 }

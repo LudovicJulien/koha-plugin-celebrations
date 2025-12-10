@@ -108,8 +108,6 @@ function positionIframe() {
   const screenElement = document.querySelector(config.screen);
   if (!screenElement) return;
   const rect = screenElement.getBoundingClientRect();
-  const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
-  const scrollY = window.pageYOffset || document.documentElement.scrollTop;
   const scale = rect.width / config.baseWidth;
   iframeContainer.style.display = 'block';
   iframe.style.transform = `translate(${rect.left}px, ${rect.top}px) scale(${scale})`;
@@ -281,6 +279,27 @@ async function injectCSSFiles(doc, cssFiles, selectedTheme) {
     head.appendChild(link);
   });
 }
+async function removeCarrousel(doc) {
+  // const head = doc.head;
+  // const style = doc.createElement('style');
+  // style.textContent = `
+  //   .carousel {
+  //     display: none !important;
+  //   }
+  // `;
+  // head.appendChild(style);
+  try {
+  const w = iframe.contentWindow;
+  if (w && w.$) {
+    w.$('.carousel, #inlibro-carrousel').each(function () {
+      w.$(this).data('cloudcarousel')?.updateAll?.();
+    });
+  }
+} catch(e) {
+  console.warn("Recalcul CloudCarousel impossible :", e);
+}
+
+}
 /**
  *
  * Génère le contenu du script contenant les options JavaScript du thème (window.ThemeOptions).
@@ -368,6 +387,7 @@ async function hideLoadingOverlay() {
   overlay.style.display = 'none';
   overlay.style.pointerEvents = 'none';
 }
+
 /**
  *
  * Nettoie l'iframe en supprimant tous les assets (CSS et JS) du thème précédemment injectés.
@@ -411,6 +431,7 @@ export async function updatePreview(rawThemes, themeName) {
   const { cssFiles, jsFiles, jsOptions } = collectThemeAssets(themeData, themeName);
   await injectCSSFiles(doc, cssFiles, themeName);
   await injectJSFilesAsync(doc, jsFiles, themeName, jsOptions);
+  await removeCarrousel(doc);
   await hideLoadingOverlay();
   toggleButtons([previewBtn,createBtn], false);
 }

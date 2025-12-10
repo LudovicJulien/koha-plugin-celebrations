@@ -10,7 +10,7 @@
     Celebrations
 </div>
 <div id="doc3">
-    <div id="content" class="theme-plugin-wrapper">
+    <div id="content" class="celebrations-plugin-wrapper">
             <h1>[% translation.T.title | html %]</h1>
             <p style="text-align: center">
                [% translation.T.description1 | html %]
