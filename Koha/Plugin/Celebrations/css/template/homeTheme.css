@@ -282,14 +282,13 @@ input[type="range"]::-ms-thumb {
   align-items: center;
   justify-content: center;
 }
-iframe {
+ #iframe-fixed-container {
   will-change: transform;
   transform: translateZ(0);
-}
-* {
-  image-rendering: pixelated;
-  shape-rendering: crispEdges;
-  transform: translateZ(0);
+  backface-visibility: hidden;
+  isolation: isolate;
+  contain: paint layout;
+  pointer-events: none;
 }
 .buttons-row {
   display: flex;

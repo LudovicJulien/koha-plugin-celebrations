@@ -112,10 +112,10 @@ function positionIframe() {
   const scrollY = window.pageYOffset || document.documentElement.scrollTop;
   const scale = rect.width / config.baseWidth;
   iframeContainer.style.display = 'block';
-  iframe.style.transform = `translate(${rect.left + scrollX}px, ${rect.top + scrollY}px) scale(${scale})`;
+  iframe.style.transform = `translate(${rect.left}px, ${rect.top}px) scale(${scale})`;
   iframe.style.width = `${config.baseWidth}px`;
   iframe.style.height = `${rect.height / scale}px`;
-  overlay.style.transform = `translate(${rect.left + scrollX}px, ${rect.top + scrollY}px) scale(${scale})`;
+  overlay.style.transform = `translate(${rect.left}px, ${rect.top}px) scale(${scale})`;
   overlay.style.width = `${config.baseWidth}px`;
   overlay.style.height = `${rect.height / scale}px`;
 }
@@ -299,6 +299,7 @@ function generateOptionsScript(selectedTheme, jsOptions) {
  * @returns {HTMLDivElement} - L'élément overlay créé.
  */
 function createLoadingOverlay() {
+  createFixedIframeContainer();
   const overlay = document.createElement('div');
   overlay.id = 'preview-loading-overlay';
   overlay.style.cssText = `
@@ -336,7 +337,7 @@ function createLoadingOverlay() {
   `;
   document.head.appendChild(style);
   overlay.appendChild(logo);
-  document.body.appendChild(overlay);
+  iframeContainer.appendChild(overlay);
   return overlay;
 }
 /**
