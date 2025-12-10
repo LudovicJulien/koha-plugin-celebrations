@@ -23,7 +23,7 @@
             "^[a-z0-9-]+$": {
               "description": "Configuration pour un élément visuel spécifique au sein du thème (ex: 'couleurs', 'snow').",
               "type": "object",
-              "required": ["setting", "file", "toggle_id"],
+              "required": ["setting", "file"],
               "properties": {
                 "setting": {
                   "type": "string",
@@ -37,10 +37,6 @@
                   "type": "string",
                   "enum": ["both", "js", "css"],
                   "description": "Indique si l'élément visuelle nécessite un fichier CSS ou JS ou les deux."
-                },
-                "toggle_id": {
-                  "type": "string",
-                  "description": "ID unique pour l'interrupteur (toggle) dans l'interface d'administration qui active/désactive cet élément."
                 },
                 "extra_options": {
                   "type": "object",

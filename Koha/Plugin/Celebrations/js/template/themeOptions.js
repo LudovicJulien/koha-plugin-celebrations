@@ -20,48 +20,40 @@ export function updateThemeOptions(rawThemes, themeSelect = null, forcedThemeNam
   startInput.value = "";
   endInput.value = "";
   Object.values(rawThemes).forEach(theme => {
-    Object.values(theme.elements || {}).forEach(element => {
-      if (element.toggle_id) {
-        const el = getById(element.toggle_id);
-        if (el) el.style.display = 'none';
-      }
+    Object.entries(theme.elements || {}).forEach(([elementKey, element]) => {
+      const toggleId = `toggle_${elementKey}`;
+      const toggleEl = getById(toggleId);
+      if (toggleEl) toggleEl.style.display = 'none';
       if (element.extra_options) {
-        const elementKey = Object.keys(theme.elements).find(key => theme.elements[key] === element);
-        if (elementKey) {
-          const configDivId = `${elementKey}-config`;
-          const configDiv = getById(configDivId);
-          if (configDiv) configDiv.style.display = 'none';
-        }
+        const configDivId = `${elementKey}-config`;
+        const configDiv   = getById(configDivId);
+        if (configDiv) configDiv.style.display = 'none';
       }
     });
   });
   const selectedTheme = forcedThemeName || (themeSelect ? themeSelect.value : null);
   if (!selectedTheme) return;
   const themeData = rawThemes[selectedTheme];
-  if (themeData && themeData.elements) {
-    Object.values(themeData.elements).forEach((element) => {
-      if (element.toggle_id) {
-        const el = getById(element.toggle_id);
-        if (el) {
-          el.style.display = 'flex';
-        }
-      }
-    });
-  }
-  Object.values(themeData?.elements || {}).forEach(element => {
+  if (!themeData || !themeData.elements) return;
+  Object.entries(themeData.elements).forEach(([elementKey]) => {
+    const toggleId = `toggle_${elementKey}`;
+    const toggleEl = getById(toggleId);
+    if (toggleEl) toggleEl.style.display = 'flex';
+  });
+  Object.values(themeData.elements).forEach(element => {
     const mainToggle = getById(element.setting);
     if (mainToggle) mainToggle.dispatchEvent(new Event('change'));
   });
-  if (themeData && themeData.elements) {
-    Object.entries(themeData.elements).forEach(([elementKey, element]) => {
-      if (element.extra_options && !Object.values(element.extra_options).some(opt => opt.type === 'ignore')) {
-        const mainToggle = getById(element.setting);
-        const configDivId = `${elementKey}-config`;
-        const configDiv = getById(configDivId);
-        toggleConfig(mainToggle, configDiv, selectedTheme, themeSelect);
-      }
-    });
-  }
+  Object.entries(themeData.elements).forEach(([elementKey, element]) => {
+    if (
+      element.extra_options &&
+      !Object.values(element.extra_options).some(opt => opt.type === 'ignore')
+    ) {
+      const mainToggle = getById(element.setting);
+      const configDiv  = getById(`${elementKey}-config`);
+      toggleConfig(mainToggle, configDiv);
+    }
+  });
   setTimeout(() => {
     if (window.positionIframeGlobal) {
       window.positionIframeGlobal();

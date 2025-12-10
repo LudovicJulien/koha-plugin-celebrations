@@ -59,7 +59,7 @@
                             [% FOREACH element_key IN theme_data.elements.keys %]
                                 [% element = theme_data.elements.${element_key};
                                 setting_id = element.setting;
-                                toggle_id = element.toggle_id;
+                                toggle_id = 'toggle_' _ element_key;
                                 %]
                                 <div class="toggle-container" id="[% toggle_id | html %]" >
                                     <span class="toggle-label">[% theme_translation.${setting_id} | html %]</span>
