@@ -387,7 +387,6 @@ async function hideLoadingOverlay() {
   overlay.style.display = 'none';
   overlay.style.pointerEvents = 'none';
 }
-
 /**
  *
  * Nettoie l'iframe en supprimant tous les assets (CSS et JS) du thème précédemment injectés.

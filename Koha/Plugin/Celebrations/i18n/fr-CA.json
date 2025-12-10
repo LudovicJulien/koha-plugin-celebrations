@@ -151,6 +151,7 @@
     "theme_deleted": "Thème supprimé avec succès",
     "theme_not_found": "Thème introuvable",
     "theme_conflict": "Période en conflit avec un autre thème",
+    "no_active_elements": "Aucun element visuel actif sur le thème",
     "update_error": "Erreur lors de la mise à jour.",
     "connexion_error": "Erreur de connexion au serveur."
   }

@@ -386,6 +386,9 @@
 }
 .celebrations-plugin-wrapper .range-wrapper{
     width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center
 }
 .celebrations-plugin-wrapper #iframe-fixed-container {
   will-change: transform;

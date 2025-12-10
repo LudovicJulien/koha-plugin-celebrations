@@ -151,6 +151,7 @@
     "theme_deleted": "Theme deleted successfully",
     "theme_not_found": "Theme not found",
     "theme_conflict": "Period conflicts with another theme",
+    "no_active_elements": "No visual element is active for this them",
     "update_error": "Error while updating.",
     "connexion_error": "Server connection error."
   }

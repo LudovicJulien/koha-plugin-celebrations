@@ -173,14 +173,17 @@ export async function updateTheme(themeName, rawThemes, form, elements) {
     if (data.success) {
       elements.successMessage.textContent = TRANSLATION_BACKEND['theme_updated'];
       elements.successMessage.style.display = "block";
+      return true;
     } else {
-      elements.erreurMessage.textContent =  TRANSLATION_BACKEND['update_error'];
+      elements.erreurMessage.textContent =  TRANSLATION_BACKEND[data.message];
       elements.erreurMessage.style.display = "block";
+      return false;
     }
   } catch (error) {
     console.error("Erreur réseau:", error);
     elements.erreurMessage.textContent = TRANSLATION_BACKEND['connexion_error'];
     elements.erreurMessage.style.display = "block";
+    return false;
   } finally {
     setTimeout(() => {
       elements.successMessage.style.display = "none";

@@ -104,6 +104,7 @@ Effectue :
 - lecture des paramètres
 - validation des dates
 - vérification des conflits
+- vérifier que au moin un élément est actif
 - construction des données du thème
 - sauvegarde
 - impression d’une réponse JSON
@@ -134,6 +135,14 @@ sub apply_theme {
         });
         return;
     }
+    my $active_validation = $self->validate_at_least_one_active_element;
+    unless ($active_validation->{valid}) {
+        print to_json({
+            success => JSON::false,
+            message => $active_validation->{message}
+        });
+        return;
+    }
     my $theme_data = $self->build_theme_data($theme_name, $start_dt, $end_dt);
     $self->save_theme($theme_name, $theme_data);
     print to_json({
@@ -150,6 +159,7 @@ Vérifie :
 - l’existence du thème
 - la validité des dates
 - les conflits éventuels
+- la présence d’au moins un élément actif
 - la cohérence avec la configuration de base
 
 Retourne une réponse JSON.
@@ -164,29 +174,34 @@ sub update_theme {
     my $end_date = $cgi->param('end_date');
     print $cgi->header(-type => 'application/json', -charset => 'UTF-8');
     unless ($theme_name) {
-        print encode_json({ success => JSON::false, error => "Nom du thème manquant" });
+        print encode_json({ success => JSON::false, message => "Nom du thème manquant" });
         return;
     }
     my $themes_data = $self->{plugin}->retrieve_data('themes_data');
     my $themes = $themes_data ? decode_json($themes_data) : {};
     unless (exists $themes->{$theme_name}) {
-        print encode_json({ success => JSON::false, error => "Thème '$theme_name' introuvable" });
+        print encode_json({ success => JSON::false, message => "Thème '$theme_name' introuvable" });
         return;
     }
     my $validation = $self->validate_theme_dates($start_date, $end_date);
     unless ($validation->{valid}) {
-        print encode_json({ success => JSON::false, error => $validation->{message} });
+        print encode_json({ success => JSON::false, message => $validation->{message} });
         return;
     }
     my ($start_dt, $end_dt) = @{$validation}{qw(start_dt end_dt)};
     my $conflict = $self->check_theme_conflicts($theme_name, $start_dt, $end_dt);
     if ($conflict) {
-        print encode_json({ success => JSON::false, error => $conflict });
+        print encode_json({ success => JSON::false, message => $conflict });
+        return;
+    }
+    my $active_validation = $self->validate_at_least_one_active_element;
+    unless ($active_validation->{valid}) {
+        print encode_json({ success => JSON::false, message   => $active_validation->{message} });
         return;
     }
     my $base_config = $self->{plugin}->{config}->get_theme_config($theme_name);
     unless ($base_config) {
-        print encode_json({ success => JSON::false, error => "Configuration du thème introuvable" });
+        print encode_json({ success => JSON::false, message => "Configuration du thème introuvable" });
         return;
     }
     my $elements = $self->build_elements_from_cgi($base_config, $themes->{$theme_name});
@@ -351,6 +366,42 @@ sub check_theme_conflicts {
         }
     }
     return;
+}
+
+=head2 validate_at_least_one_active_element
+
+Vérifie qu'au moins un paramètre d'activation du thème est à "on".
+Ignore les paramètres non liés aux éléments visuels.
+Retourne :
+- { valid => 1 } si au moins un élément est actif
+- { valid => 0, message => 'no_active_elements' } sinon
+
+=cut
+
+sub validate_at_least_one_active_element {
+    my ($self) = @_;
+    my $cgi = $self->{plugin}->{cgi};
+    my %params = %{ $cgi->Vars };
+    my %ignore = map { $_ => 1 } qw(
+        theme
+        start_date
+        end_date
+        action
+        method
+        class
+        plugin_name
+    );
+    foreach my $key (keys %params) {
+        next if $ignore{$key};
+        my $val = $params{$key};
+        if (defined $val && lc($val) eq 'on') {
+            return { valid => 1 };
+        }
+    }
+    return {
+        valid   => 0,
+        message => 'no_active_elements'
+    };
 }
 
 =head2 build_theme_data

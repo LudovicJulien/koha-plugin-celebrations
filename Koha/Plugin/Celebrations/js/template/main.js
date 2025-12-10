@@ -153,7 +153,8 @@ class ThemeManager {
     try {
       const themeName = this.getActiveThemeName();
       if (!themeName) return;
-      await updateTheme(themeName, this.state.rawThemes, this.elements.form, this.elements);
+      const success = await updateTheme(themeName, this.state.rawThemes, this.elements.form, this.elements);
+      if (!success) return;
       await refreshThemesGridFromAPI(this.state, this.elements, this.state.rawThemes);
       refreshThemeSelect(this.state.allThemes, this.state.rawThemes, this.elements.themeSelect);
       exitThemeEditor(this.state.rawThemes, this.elements);
