@@ -7,17 +7,19 @@
 <!-- Body-->
 [% INCLUDE 'header.inc' %]
 [% INCLUDE 'cat-search.inc' %]
-<div class="card-wrapper">
-    <div class="card">
-        <div class="emoji">🎉🥳🎂</div>
-        <h1 class="titre_disablePage">[% translation.D.titre | html %]</h1>
-        <p>[% translation.D.description1 | html %]<b>[% translation.D.description2 | html %]</b>
-        [% translation.D.description3 | html %]</p>
+<div id="content" class="celebrations-plugin-wrapper">
+    <div class="card-wrapper">
+        <div class="card">
+            <div class="emoji">🎉🥳🎂</div>
+            <h1 class="titre_disablePage">[% translation.D.titre | html %]</h1>
+            <p>[% translation.D.description1 | html %]<b>[% translation.D.description2 | html %]</b>
+            [% translation.D.description3 | html %]</p>
 
-        <p><b>[% translation.D.description4 | html %] </b>[% translation.D.description5 | html %]  <span style="color:red;">[% translation.D.description6 | html %]</span>.</p>
-        <p>[% translation.D.description7 | html %] <b>[% translation.D.description8 | html %]</b>.</p>
+            <p><b>[% translation.D.description4 | html %] </b>[% translation.D.description5 | html %]  <span style="color:red;">[% translation.D.description6 | html %]</span>.</p>
+            <p>[% translation.D.description7 | html %] <b>[% translation.D.description8 | html %]</b>.</p>
 
-        <a class="btn_diablePage" href="/cgi-bin/koha/plugins/plugins-home.pl">[% translation.D.btn_back | html %]</a>
+            <a class="btn_diablePage" href="/cgi-bin/koha/plugins/plugins-home.pl">[% translation.D.btn_back | html %]</a>
+        </div>
     </div>
 </div>
 <!-- Footer-->
