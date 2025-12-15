@@ -102,6 +102,33 @@ export function getThemeStatus(theme) {
   return { type: 'active', label: 'Actif' };
 }
 /**
+ *
+ * Analyse les éléments d’un thème :
+ * - compte les éléments actifs
+ * - retourne la liste des noms actifs
+ * @param {Object} theme - Objet contenant les propriétés d’un thème
+ * @returns {{count: string, displayList: string}} - Type et libellé du statut.
+ */
+export function getActiveElementsInfo(theme, maxDisplay = 4) {
+  if (!theme?.elements || typeof theme.elements !== 'object') {
+    return {
+      count: 0,
+      displayList: [],
+      hasMore: false
+    };
+  }
+  const activeElements = Object.entries(theme.elements)
+    .filter(([_, element]) => element?.enabled)
+    .map(([key]) => key);
+
+  return {
+    count: activeElements.length,
+    displayList: activeElements.slice(0, maxDisplay),
+    hasMore: activeElements.length > maxDisplay
+  };
+}
+
+/**
  * Affiche une notification temporaire
  * @param {string} message - Message à afficher.
  * @param {'info'|'success'|'error'} [type='info'] - Type de notification (impacte la couleur et le comportement)

@@ -4,7 +4,7 @@
  * ======================================================
  */
 import { TRANSLATION_UI, API_ENDPOINTS } from './config.js';
-import { formatDate, calculateProgress, getThemeStatus, showNotification, disableAllActionButtons, enableAllActionButtons, renderThemesGrid } from './utils.js';
+import { formatDate, calculateProgress, getThemeStatus, showNotification, disableAllActionButtons, enableAllActionButtons, renderThemesGrid, getActiveElementsInfo } from './utils.js';
 /**
  *
  * Trie les thèmes par statut et par date de début.
@@ -30,6 +30,13 @@ export function createThemeCard(theme, currentTheme) {
   const status = getThemeStatus(theme);
   const progress = calculateProgress(theme.start_date, theme.end_date);
   const isCurrent = theme.theme_name === currentTheme;
+  const activeInfo = getActiveElementsInfo(theme, 4);
+  const activeListHTML = activeInfo.displayList
+    .map(key => {
+      const label = TRANSLATION_UI.elements?.[key] || key;
+      return `<li>${label}</li>`;
+    })
+    .join('');
   return `
   <div class="theme-card-wrapper ${isCurrent ? 'active' : ''}">
     <div class="theme-card">
@@ -61,6 +68,13 @@ export function createThemeCard(theme, currentTheme) {
                  style="width: ${status.type === 'current' ? progress : 0}%;
                         opacity: ${status.type === 'current' ? 1 : 0.3};"></div>
           </div>
+        </div>
+        <div class="theme-elements">
+          <div class="elements-label">${TRANSLATION_UI.grille['elementsActifs']} : ${activeInfo.count}</div>
+          <ul class="elements-list">
+            ${activeListHTML}
+            ${activeInfo.hasMore ? `<li>…</li>` : ""}
+          </ul>
         </div>
       </div>
       <div class="theme-card-footer">

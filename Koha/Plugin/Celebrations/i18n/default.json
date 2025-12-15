@@ -65,11 +65,25 @@
       "sup": "delete",
       "debut": "start",
       "fin": "end",
+      "elementsActifs": "Configuration",
       "delete1": "Are you sure you want to delete the theme",
       "delete2": "This action is irreversible.",
       "delNotif1": "Theme deleted successfully",
       "delNotif2": "Error while deleting"
     },
+
+    "elements": {
+      "couleurs": "Colors",
+      "footer": "Footer",
+      "snow": "Snowflakes",
+      "countdown": "Countdown",
+      "feux": "Fireworks",
+      "ghost": "Ghosts",
+      "spider": "Spiders",
+      "egg": "Eggs",
+      "coeur": "Hearts"
+    },
+
 
     "noel": {
       "couleur_noel": "Enable Christmas colors 🔴 🟢 ⚪",

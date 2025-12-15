@@ -21,16 +21,6 @@ function createFixedIframeContainer() {
   if (iframeContainer) return iframeContainer;
   iframeContainer = document.createElement('div');
   iframeContainer.id = 'iframe-fixed-container';
-  iframeContainer.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    display: none;
-  `;
   document.body.appendChild(iframeContainer);
   return iframeContainer;
 }
@@ -48,17 +38,7 @@ function createIframe() {
   iframe.title = 'Aperçu du thème OPAC';
   iframe.frameBorder = '0';
   iframe.allowFullscreen = true;
-  iframe.sandbox = 'allow-same-origin allow-scripts';
-  iframe.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    transform-origin: top left;
-    pointer-events: auto;
-  `;
+  iframe.removeAttribute('sandbox');
   iframe.addEventListener('load',  async () => {
     await showLoadingOverlay();
     isInitialized = true;
@@ -279,27 +259,6 @@ async function injectCSSFiles(doc, cssFiles, selectedTheme) {
     head.appendChild(link);
   });
 }
-async function removeCarrousel(doc) {
-  // const head = doc.head;
-  // const style = doc.createElement('style');
-  // style.textContent = `
-  //   .carousel {
-  //     display: none !important;
-  //   }
-  // `;
-  // head.appendChild(style);
-  try {
-  const w = iframe.contentWindow;
-  if (w && w.$) {
-    w.$('.carousel, #inlibro-carrousel').each(function () {
-      w.$(this).data('cloudcarousel')?.updateAll?.();
-    });
-  }
-} catch(e) {
-  console.warn("Recalcul CloudCarousel impossible :", e);
-}
-
-}
 /**
  *
  * Génère le contenu du script contenant les options JavaScript du thème (window.ThemeOptions).
@@ -321,39 +280,12 @@ function createLoadingOverlay() {
   createFixedIframeContainer();
   const overlay = document.createElement('div');
   overlay.id = 'preview-loading-overlay';
-  overlay.style.cssText = `
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    transform-origin: top left;
-    pointer-events: auto;
-    z-index: 9999;
-    opacity: 0;
-    background-color: #000000;
-;
-  `;
   const apiNamespace = window.api_namespace || 'default';
   const logo = document.createElement('img');
   logo.src = `/api/v1/contrib/${apiNamespace}/static/images/inLibro_icone.png`;
   logo.alt = 'InLibro Icone';
-  logo.style.cssText = `
-    width: 120px;
-    height: 120px;
-    animation: pulse 1.5s ease-in-out infinite;
-  `;
+  logo.classList.add('preview-loading-logo');
   const style = document.createElement('style');
-  style.textContent = `
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.8; }
-    }
-  `;
   document.head.appendChild(style);
   overlay.appendChild(logo);
   iframeContainer.appendChild(overlay);
@@ -430,7 +362,6 @@ export async function updatePreview(rawThemes, themeName) {
   const { cssFiles, jsFiles, jsOptions } = collectThemeAssets(themeData, themeName);
   await injectCSSFiles(doc, cssFiles, themeName);
   await injectJSFilesAsync(doc, jsFiles, themeName, jsOptions);
-  await removeCarrousel(doc);
   await hideLoadingOverlay();
   toggleButtons([previewBtn,createBtn], false);
 }
