@@ -130,12 +130,15 @@ export async function refreshThemesGridFromAPI(state, elements ) {
     const json = await response.json();
     const data = json.results?.result;
     if (data.success) {
-      state.allThemes = data.themes.map(theme => ({
-        ...theme,
-        theme_name: theme.name
-      }));
+      state.allThemes = {};
+      data.themes.forEach(theme => {
+        state.allThemes[theme.name] = {
+          ...theme,
+          theme_name: theme.name
+        };
+      });
       state.currentSettings.theme_name = data.current_theme;
-      await renderThemesGrid(state, elements, state.rawThemes);
+      await renderThemesGrid(state, elements);
     } else {
       console.error('Erreur lors du rafraîchissement:', data.error);
     }
@@ -168,10 +171,8 @@ export async function deleteTheme(themeName, onSuccess) {
         }
       }
     );
-
     const json = await response.json();
     const data = json.results?.result;
-    console.log("data", data);
     if (data.success) {
       const card = document.querySelector(`.theme-card[data-theme="${themeName}"]`);
       if (card) {

@@ -233,7 +233,7 @@
   // ---------------------------------------------------------
   //  permet d'indiquer quel thème est actif quand plusieurs sotn configuré
   // ---------------------------------------------------------
-  const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
+  const CURRENT_SETTINGS_STR = '[% theme_config_json | html %]';
   // ---------------------------------------------------------
   //  Liste de tous les thèmes configuré avec leurs infos de configuration
   // ---------------------------------------------------------

@@ -12,6 +12,7 @@ let iframe = null;
 let iframeContainer = null;
 let currentDevice = 'ordi';
 let isInitialized = false;
+let initialPreviewDone = false;
 /**
  *
  *  Crée le conteneur fixe utilisé pour afficher l’iframe de prévisualisation.
@@ -43,8 +44,15 @@ function createIframe() {
     await showLoadingOverlay();
     isInitialized = true;
     injectDisableInteractions();
-    positionIframe();
-    await hideLoadingOverlay();
+     if (!initialPreviewDone) {
+    initialPreviewDone = true;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        switchToDevice(currentDevice);
+      });
+    });
+  }
+  await hideLoadingOverlay();
   });
   iframeContainer.appendChild(iframe);
   return iframe;
@@ -105,9 +113,7 @@ function positionIframe() {
  */
 function switchToDevice(deviceKey) {
   if (!DEVICE_CONFIG[deviceKey]) return;
-  if (!iframe) {
-    createIframe();
-  }
+  currentDevice = deviceKey;
   Object.values(DEVICE_CONFIG).forEach(config => {
     const device = document.querySelector(config.container);
     if (device) device.style.display = 'none';
@@ -116,10 +122,20 @@ function switchToDevice(deviceKey) {
   if (activeDevice) {
     activeDevice.style.display = 'block';
   }
-  currentDevice = deviceKey;
-  requestAnimationFrame(() => {
+  if (!iframe) {
+    createIframe();
+    return;
+  }
+  showLoadingOverlay();
+  const oldSrc = iframe.src;
+  iframe.src = '';
+  iframe.src = oldSrc;
+  iframe.onload = async () => {
+    isInitialized = true;
+    injectDisableInteractions();
     positionIframe();
-  });
+    await hideLoadingOverlay();
+  };
 }
 /**
  *
@@ -416,7 +432,7 @@ export function initDevicePreviewSwitcher() {
   if (existing) existing.remove();
   initRadioListeners();
   createIframe();
-  switchToDevice('ordi');
   setupAutoReposition();
+  switchToDevice(currentDevice);
   window.positionIframeGlobal = positionIframe;
 }

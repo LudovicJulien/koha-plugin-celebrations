@@ -451,7 +451,8 @@ sub build_theme_list {
             is_current => $is_current,
             start_date => $theme->{start_date},
             end_date => $theme->{end_date},
-            created_at => $theme->{created_at}
+            created_at => $theme->{created_at},
+            elements    => $theme->{elements} || {}
         };
     }
     return @theme_list;

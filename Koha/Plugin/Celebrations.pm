@@ -163,6 +163,7 @@ sub preview_theme_asset {
 Supprime les données du plugin dans la base de données.
 
 =cut
+
 sub uninstall {
     my ($self, $args) = @_;
     my $dbh = C4::Context->dbh;

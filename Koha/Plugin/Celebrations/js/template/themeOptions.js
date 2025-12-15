@@ -100,19 +100,22 @@ export function toggleConfig(mainToggle, configDiv) {
  */
 export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
   if (!themeSelect) return;
-  const existingThemeNames = themesConf.map(t => t.name);
+  const themeArray = Array.isArray(themesConf)
+    ? themesConf
+    : Object.values(themesConf || {});
+  const existingThemeNames = themeArray.map(
+    t => t.name || t.theme_name
+  );
   const selectedValue = themeSelect.value;
   themeSelect.innerHTML = '';
   Object.keys(allTheme).forEach(themeKey => {
-    if (existingThemeNames.includes(themeKey)) {
-      return;
-    }
+    if (existingThemeNames.includes(themeKey)) return;
     const option = document.createElement('option');
     option.value = themeKey;
     option.textContent = TRANSLATION_UI.form[themeKey] || themeKey;
     themeSelect.appendChild(option);
   });
-  if (Array.from(themeSelect.options).some(opt => opt.value === selectedValue)) {
+  if ([...themeSelect.options].some(opt => opt.value === selectedValue)) {
     themeSelect.value = selectedValue;
   }
   themeSelect.dispatchEvent(new Event('change'));
@@ -126,7 +129,7 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
  * @returns {void}
  */
 export function resetThemeOptions(themeName, state) {
-  const themeEntry = state.allThemes.find(t => t.theme_name === themeName) || {};
+  const themeEntry = state.allThemes[themeName];
   const startDate = themeEntry.start_date_formatted;
   const endDate = themeEntry.end_date_formatted;
   // Réinitialiser les dates
@@ -161,7 +164,6 @@ export function resetThemeOptions(themeName, state) {
   });
   updatePreview(state.rawThemes, themeName);
 }
-
 /**
  *
  * Passe en mode édition pour le thème sélectionné :
@@ -186,7 +188,7 @@ export function showThemeEditor(themeName, state, elements) {
   const startInput = getById("start_date");
   const endInput   = getById("end_date");
   if (!startInput || !endInput) return;
-  const themeEntry = state.allThemes.find(t => t.theme_name === themeName);
+  const themeEntry = state.allThemes[themeName];
   if (themeEntry) {
     startInput.value = formatDateForInput(themeEntry.start_date);
     endInput.value   = formatDateForInput(themeEntry.end_date);

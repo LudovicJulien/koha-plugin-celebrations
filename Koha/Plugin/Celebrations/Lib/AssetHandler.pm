@@ -161,7 +161,6 @@ sub collect_theme_css {
     return $extra_css;
 }
 
-
 =head2 collect_theme_js
 
 Construit les balises <script> pour les fichiers JS d’un thème actif et collecte
