@@ -225,7 +225,6 @@ export async function renderThemesGrid(state, elements) {
     themeName => {
       state.currentSettings = { theme_name: themeName };
       showThemeEditor(themeName, state, elements);
-      console.log('state.currentSettings.theme_name |||||||||||||||||||', state.currentSettings);
     },
     async (deletedThemeName) => {
       const currentEditedTheme = state.currentSettings?.theme_name;

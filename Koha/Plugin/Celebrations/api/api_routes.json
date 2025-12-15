@@ -1,0 +1,121 @@
+{
+  "/themes": {
+    "get": {
+      "x-mojo-to": "Celebrations::Lib::ThemeController#list",
+      "operationId": "listThemes",
+      "produces": ["application/json"],
+      "responses": {
+        "200": {
+          "description": "List themes"
+        }
+      }
+    },
+    "post": {
+      "x-mojo-to": "Celebrations::Lib::ThemeController#apply",
+      "operationId": "applyTheme",
+      "produces": ["application/json"],
+      "consumes": ["application/json"],
+      "tags": ["celebration-apply"],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "required": ["theme", "start_date", "end_date"],
+            "properties": {
+              "theme": {
+                "type": "string"
+              },
+              "start_date": {
+                "type": "string"
+              },
+              "end_date": {
+                "type": "string"
+              },
+              "elements": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Theme applied"
+        },
+        "422": {
+          "description": "Validation error"
+        }
+      }
+    }
+  },
+
+  "/themes/{theme_name}": {
+    "delete": {
+      "x-mojo-to": "Celebrations::Lib::ThemeController#delete",
+      "operationId": "deleteTheme",
+      "produces": ["application/json"],
+      "parameters": [
+        {
+          "name": "theme_name",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Theme deleted"
+        },
+        "404": {
+          "description": "Theme not found"
+        }
+      }
+    },
+
+    "put": {
+      "x-mojo-to": "Celebrations::Lib::ThemeController#update",
+      "operationId": "updateTheme",
+      "consumes": ["application/json"],
+      "produces": ["application/json"],
+      "parameters": [
+        {
+          "name": "theme_name",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "required": ["start_date", "end_date", "elements"],
+            "properties": {
+              "start_date": {
+                "type": "string"
+              },
+              "end_date": {
+                "type": "string"
+              },
+              "elements": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Theme updated"
+        },
+        "422": {
+          "description": "Validation error"
+        }
+      }
+    }
+  }
+}

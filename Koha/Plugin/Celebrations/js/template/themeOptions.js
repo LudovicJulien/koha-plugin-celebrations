@@ -138,7 +138,7 @@ export function resetThemeOptions(themeName, state) {
   }
   //  Réinitialiser les options principales et supplémentaires
   Object.entries(themeEntry.elements).forEach(([elementKey, element]) => {
-    const initialEnabled = element.enabled === "on";
+   const initialEnabled = Boolean(element.enabled);
     const settingKey = state.rawThemes[themeName].elements[elementKey].setting;
     const mainToggle = getById(settingKey);
     if (!mainToggle) return;

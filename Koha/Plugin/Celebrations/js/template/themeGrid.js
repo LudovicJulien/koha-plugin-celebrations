@@ -106,11 +106,15 @@ export function updateThemesGrid(themes, currentTheme, noThemeMessage, themesGri
  */
 export async function refreshThemesGridFromAPI(state, elements ) {
   try {
-    const response = await fetch(API_ENDPOINTS.listThemes, {
+    const response = await fetch(API_ENDPOINTS.themes, {
       method: 'GET',
-      credentials: 'same-origin'
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json'
+      }
     });
-    const data = await response.json();
+    const json = await response.json();
+    const data = json.results?.result;
     if (data.success) {
       state.allThemes = data.themes.map(theme => ({
         ...theme,
@@ -140,16 +144,20 @@ export async function deleteTheme(themeName, onSuccess) {
   );
   if (!confirmed) return;
   try {
-    const formData = new FormData();
-    formData.append('class', 'Koha::Plugin::Celebrations');
-    formData.append('method', 'delete_theme');
-    formData.append('theme_name', themeName);
-    const response = await fetch(API_ENDPOINTS.deleteTheme, {
-      method: 'POST',
-      body: formData,
-      credentials: 'same-origin'
-    });
-    const data = await response.json();
+    const response = await fetch(
+      `${API_ENDPOINTS.themes}/${encodeURIComponent(themeName)}`,
+      {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'application/json'
+        }
+      }
+    );
+
+    const json = await response.json();
+    const data = json.results?.result;
+    console.log("data", data);
     if (data.success) {
       const card = document.querySelector(`.theme-card[data-theme="${themeName}"]`);
       if (card) {

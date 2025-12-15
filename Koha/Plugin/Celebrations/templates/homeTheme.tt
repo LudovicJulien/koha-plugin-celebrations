@@ -67,7 +67,7 @@
                                         [% theme_name = theme_id; %]
                                         [% element_state = all_themes.${theme_name}.elements.${element_key}; %]
                                         <input type="checkbox" id="[% setting_id | html %]" name="[% setting_id | html %]"
-                                            [% IF element_state.enabled == 'on' %]checked[% END %]>
+                                            [% IF element_state.enabled == 1 %]checked[% END %]>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
