@@ -1,3 +1,8 @@
+/**
+ * =======================================================
+ *  Utilitaires généraux du plugin Celebrations
+ * =======================================================
+ */
 import { updateThemesGrid, refreshThemesGridFromAPI, attachThemeCardEvents } from './themeGrid.js';
 import { refreshThemeSelect, showThemeEditor } from './themeOptions.js';
 import { TRANSLATION_UI } from './config.js';

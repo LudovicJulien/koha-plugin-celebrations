@@ -48,15 +48,6 @@
       "fin": "Date de fin :"
     },
 
-    "emoji": {
-      "noel": "🎄",
-      "halloween": "👻",
-      "saint-valentin": "💝",
-      "paque": "🐰",
-      "feux-artifice": "🎆",
-      "default": "🎨"
-    },
-
     "grille": {
       "prog": "Progression",
       "actif": "actif",
@@ -84,7 +75,14 @@
       "coeur": "Cœurs"
     },
 
-
+    "emoji": {
+      "noel": "🎄",
+      "halloween": "👻",
+      "saint-valentin": "💝",
+      "paque": "🐰",
+      "feux-artifice": "🎆",
+      "default": "🎨"
+    },
 
     "noel": {
       "couleur_noel": "Activer les couleurs de Noël 🔴 🟢 ⚪",
