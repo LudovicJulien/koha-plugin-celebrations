@@ -19,8 +19,9 @@ window.addEventListener('DOMContentLoaded', () => {
   const daysTextLine = document.getElementById('days');
   if (!daysTextLine) return;
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const xmas = new Date(`Dec 25, ${today.getFullYear()}`);
-  const daysToChristmas = Math.round((xmas - today) / (1000 * 60 * 60 * 24));
+  const daysToChristmas = Math.floor((xmas - today) / (1000 * 60 * 60 * 24));
   const messages = {
     en: {
       today: "It's Christmas!! Merry Christmas!",
