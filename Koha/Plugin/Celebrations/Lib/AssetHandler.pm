@@ -52,14 +52,41 @@ l’ensemble des routes statiques disponibles sous forme de hashref.
 sub get_static_routes {
     my ($self) = @_;
     my @files = qw(css.json js.json images.json);
-    my %all_routes;
-    for my $file (@files) {
-        my $path = $self->{plugin}->mbf_read("api/$file");
-        my $spec = decode_json($path);
-        %all_routes = (%all_routes, %$spec);
+    my %routes;
+    foreach my $file (@files) {
+        my $json_str = eval { $self->{plugin}->mbf_read("api/$file") };
+        if ( !$json_str ) {
+            warn "[Celebrations] Impossible de lire api/$file : $@" if $@;
+            next;
+        }
+        my $spec = eval { decode_json($json_str) };
+        if ($@) {
+            warn "[Celebrations] JSON invalide dans api/$file : $@";
+            next;
+        }
+        %routes = (%routes, %$spec);
     }
-    return \%all_routes;
+    return \%routes;
 }
+
+=head2 get_api_routes
+
+Charge et décode la définition OpenAPI des routes REST du plugin.
+
+=cut
+
+sub get_api_routes {
+    my ($self) = @_;
+    my $json_str = $self->{plugin}->mbf_read('api/api_routes.json');
+    return {} unless $json_str;
+    my $spec = eval { decode_json($json_str) };
+    if ($@) {
+        warn "[Celebrations] api_routes.json invalide: $@";
+        return {};
+    }
+    return $spec;
+}
+
 
 =head2 get_opac_head
 
@@ -116,19 +143,20 @@ Retourne une grosse chaîne CSS.
 
 sub collect_theme_css {
     my ($self, $theme_name, $conf, $theme_conf) = @_;
+    return ''
+        unless ref $conf->{elements} eq 'HASH' && ref $theme_conf->{elements} eq 'HASH';
     my $extra_css = '';
-    return $extra_css unless exists $conf->{elements};
     foreach my $element (keys %{ $conf->{elements} }) {
-        my $enabled = $theme_conf->{elements}{$element}{enabled} // '';
-        next unless $enabled eq 'on';
+        my $element_state = $theme_conf->{elements}{$element};
+        next unless ref $element_state eq 'HASH';
+        next unless $element_state->{enabled};
         my $type = $conf->{elements}{$element}{type} // 'both';
         next if $type eq 'js';
-        my $css_file = $self->get_asset_path('css', $theme_name, $conf->{elements}{$element}{file});
-        if (-e $css_file) {
-            $extra_css .= read_file($css_file, binmode => ':utf8');
-        } else {
-            warn "[Celebrations] CSS manquant pour $element : $css_file";
-        }
+        my $file = $conf->{elements}{$element}{file};
+        next unless $file;
+        my $css_file = $self->get_asset_path('css', $theme_name, $file);
+        next unless -e $css_file;
+        $extra_css .= read_file($css_file, binmode => ':utf8');
     }
     return $extra_css;
 }
@@ -151,7 +179,7 @@ sub collect_theme_js {
     my $api_ns = $self->{plugin}->api_namespace;
     foreach my $element (keys %{ $conf->{elements} }) {
         my $enabled = $theme_conf->{elements}{$element}{enabled} // '';
-        next unless $enabled eq 'on';
+        next unless $enabled;
         my $type = $conf->{elements}{$element}{type} // 'both';
         next if $type eq 'css';
         my $file_name = $conf->{elements}{$element}{file};

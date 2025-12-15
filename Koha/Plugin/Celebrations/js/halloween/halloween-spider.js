@@ -5,7 +5,6 @@
       Copyright (c) Rachel Best - https://codepen.io/rachel_web/pen/MjxzOb
 */
 document.addEventListener('DOMContentLoaded', function() {
-  const isInIframe = window.self !== window.top;
   const options = window.halloweenThemeOptions || {};
   const quantite = parseInt(options.quantite_spiders) || 2;
   const navbar = document.querySelector('nav.breadcrumbs');

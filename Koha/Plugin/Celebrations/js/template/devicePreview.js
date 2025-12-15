@@ -12,6 +12,7 @@ let iframe = null;
 let iframeContainer = null;
 let currentDevice = 'ordi';
 let isInitialized = false;
+let initialPreviewDone = false;
 /**
  *
  *  Crée le conteneur fixe utilisé pour afficher l’iframe de prévisualisation.
@@ -21,16 +22,6 @@ function createFixedIframeContainer() {
   if (iframeContainer) return iframeContainer;
   iframeContainer = document.createElement('div');
   iframeContainer.id = 'iframe-fixed-container';
-  iframeContainer.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    display: none;
-  `;
   document.body.appendChild(iframeContainer);
   return iframeContainer;
 }
@@ -48,23 +39,20 @@ function createIframe() {
   iframe.title = 'Aperçu du thème OPAC';
   iframe.frameBorder = '0';
   iframe.allowFullscreen = true;
-  iframe.sandbox = 'allow-same-origin allow-scripts';
-  iframe.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    transform-origin: top left;
-    pointer-events: auto;
-  `;
+  iframe.removeAttribute('sandbox');
   iframe.addEventListener('load',  async () => {
     await showLoadingOverlay();
     isInitialized = true;
     injectDisableInteractions();
-    positionIframe();
-    await hideLoadingOverlay();
+     if (!initialPreviewDone) {
+    initialPreviewDone = true;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        switchToDevice(currentDevice);
+      });
+    });
+  }
+  await hideLoadingOverlay();
   });
   iframeContainer.appendChild(iframe);
   return iframe;
@@ -108,14 +96,12 @@ function positionIframe() {
   const screenElement = document.querySelector(config.screen);
   if (!screenElement) return;
   const rect = screenElement.getBoundingClientRect();
-  const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
-  const scrollY = window.pageYOffset || document.documentElement.scrollTop;
   const scale = rect.width / config.baseWidth;
   iframeContainer.style.display = 'block';
-  iframe.style.transform = `translate(${rect.left + scrollX}px, ${rect.top + scrollY}px) scale(${scale})`;
+  iframe.style.transform = `translate(${rect.left}px, ${rect.top}px) scale(${scale})`;
   iframe.style.width = `${config.baseWidth}px`;
   iframe.style.height = `${rect.height / scale}px`;
-  overlay.style.transform = `translate(${rect.left + scrollX}px, ${rect.top + scrollY}px) scale(${scale})`;
+  overlay.style.transform = `translate(${rect.left}px, ${rect.top}px) scale(${scale})`;
   overlay.style.width = `${config.baseWidth}px`;
   overlay.style.height = `${rect.height / scale}px`;
 }
@@ -127,9 +113,7 @@ function positionIframe() {
  */
 function switchToDevice(deviceKey) {
   if (!DEVICE_CONFIG[deviceKey]) return;
-  if (!iframe) {
-    createIframe();
-  }
+  currentDevice = deviceKey;
   Object.values(DEVICE_CONFIG).forEach(config => {
     const device = document.querySelector(config.container);
     if (device) device.style.display = 'none';
@@ -138,10 +122,20 @@ function switchToDevice(deviceKey) {
   if (activeDevice) {
     activeDevice.style.display = 'block';
   }
-  currentDevice = deviceKey;
-  requestAnimationFrame(() => {
+  if (!iframe) {
+    createIframe();
+    return;
+  }
+  showLoadingOverlay();
+  const oldSrc = iframe.src;
+  iframe.src = '';
+  iframe.src = oldSrc;
+  iframe.onload = async () => {
+    isInitialized = true;
+    injectDisableInteractions();
     positionIframe();
-  });
+    await hideLoadingOverlay();
+  };
 }
 /**
  *
@@ -299,44 +293,18 @@ function generateOptionsScript(selectedTheme, jsOptions) {
  * @returns {HTMLDivElement} - L'élément overlay créé.
  */
 function createLoadingOverlay() {
+  createFixedIframeContainer();
   const overlay = document.createElement('div');
   overlay.id = 'preview-loading-overlay';
-  overlay.style.cssText = `
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    transform-origin: top left;
-    pointer-events: auto;
-    z-index: 9999;
-    opacity: 0;
-    background-color: #000000;
-;
-  `;
   const apiNamespace = window.api_namespace || 'default';
   const logo = document.createElement('img');
   logo.src = `/api/v1/contrib/${apiNamespace}/static/images/inLibro_icone.png`;
   logo.alt = 'InLibro Icone';
-  logo.style.cssText = `
-    width: 120px;
-    height: 120px;
-    animation: pulse 1.5s ease-in-out infinite;
-  `;
+  logo.classList.add('preview-loading-logo');
   const style = document.createElement('style');
-  style.textContent = `
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.8; }
-    }
-  `;
   document.head.appendChild(style);
   overlay.appendChild(logo);
-  document.body.appendChild(overlay);
+  iframeContainer.appendChild(overlay);
   return overlay;
 }
 /**
@@ -464,7 +432,7 @@ export function initDevicePreviewSwitcher() {
   if (existing) existing.remove();
   initRadioListeners();
   createIframe();
-  switchToDevice('ordi');
   setupAutoReposition();
+  switchToDevice(currentDevice);
   window.positionIframeGlobal = positionIframe;
 }

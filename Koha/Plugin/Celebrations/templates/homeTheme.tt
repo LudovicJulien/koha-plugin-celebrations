@@ -10,7 +10,7 @@
     Celebrations
 </div>
 <div id="doc3">
-    <div id="content" class="theme-plugin-wrapper">
+    <div id="content" class="celebrations-plugin-wrapper">
             <h1>[% translation.T.title | html %]</h1>
             <p style="text-align: center">
                [% translation.T.description1 | html %]
@@ -59,7 +59,7 @@
                             [% FOREACH element_key IN theme_data.elements.keys %]
                                 [% element = theme_data.elements.${element_key};
                                 setting_id = element.setting;
-                                toggle_id = element.toggle_id;
+                                toggle_id = 'toggle_' _ element_key;
                                 %]
                                 <div class="toggle-container" id="[% toggle_id | html %]" >
                                     <span class="toggle-label">[% theme_translation.${setting_id} | html %]</span>
@@ -67,7 +67,7 @@
                                         [% theme_name = theme_id; %]
                                         [% element_state = all_themes.${theme_name}.elements.${element_key}; %]
                                         <input type="checkbox" id="[% setting_id | html %]" name="[% setting_id | html %]"
-                                            [% IF element_state.enabled == 'on' %]checked[% END %]>
+                                            [% IF element_state.enabled == 1 %]checked[% END %]>
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
@@ -169,7 +169,7 @@
                 </label>
             </div>
             <div id="prevDevice">
-                <div class="container monitor-preview" style="display: block;">
+                <div class="container-monitor monitor-preview" style="display: block;">
                     <div class="monitor">
                         <div class="screenOrdi">
                             <div class="content">
@@ -233,7 +233,7 @@
   // ---------------------------------------------------------
   //  permet d'indiquer quel thème est actif quand plusieurs sotn configuré
   // ---------------------------------------------------------
-  const CURRENT_SETTINGS_STR = '[% current_settings_json | html %]';
+  const CURRENT_SETTINGS_STR = '[% theme_config_json | html %]';
   // ---------------------------------------------------------
   //  Liste de tous les thèmes configuré avec leurs infos de configuration
   // ---------------------------------------------------------

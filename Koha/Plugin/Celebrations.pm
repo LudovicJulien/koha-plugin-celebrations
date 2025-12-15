@@ -43,7 +43,7 @@ our $metadata = {
     description     => 'Un OPAC pour chaque saison.',
     date_authored   => '2025-09-09',
     date_updated    => '2025-11-20',
-    version         => '0.9.5',
+    version         => '0.9.6',
     minimum_version => '24.05',
 };
 
@@ -59,6 +59,7 @@ Initialise les gestionnaires internes (config, thèmes, assets, templates, i18n)
 sub new {
     my ($class, $args) = @_;
     $args->{metadata} = $metadata;
+    $args->{enable_plugins_api} = 1;
     my $self = $class->SUPER::new($args);
     $self->{config} = Koha::Plugin::Celebrations::Lib::Config->new($self);
     $self->{theme_manager} = Koha::Plugin::Celebrations::Lib::ThemeManager->new($self);
@@ -90,6 +91,17 @@ sub static_routes {
     return $self->{asset_handler}->get_static_routes();
 }
 
+=head2 api_routes
+
+Déclare les routes API REST exposées par le plugin.
+
+=cut
+
+sub api_routes {
+    my $self = shift;
+    return $self->{asset_handler}->get_api_routes();
+}
+
 =head2 opac_head
 
 Injecte les ressources CSS dans l'en-tête OPAC.
@@ -101,9 +113,9 @@ sub opac_head {
     return $self->{asset_handler}->get_opac_head();
 }
 
-=head2 API ROUTES
+=head2 opac_js
 
-Méthodes exposées via l'API du plugin.
+inject les ressources JS dans l'en-tête OPAC
 
 =cut
 
@@ -112,57 +124,13 @@ sub opac_js {
     return $self->{asset_handler}->get_opac_js();
 }
 
-=head2 apply_theme
-
-Applique un thème saisonnier actif à l'OPAC.
-
-=cut
-
-sub apply_theme {
-    my ($self) = @_;
-    return $self->{theme_manager}->apply_theme();
-}
-
-=head2 update_theme
-
-Met à jour un thème existant.
-
-=cut
-
-sub update_theme {
-    my ($self) = @_;
-    return $self->{theme_manager}->update_theme();
-}
-
-=head2 delete_theme
-
-Supprime un thème.
-
-=cut
-
-sub delete_theme {
-    my ($self) = @_;
-    return $self->{theme_manager}->delete_theme();
-}
-
-=head2 list_themes
-
-Liste tous les thèmes configurés.
-
-=cut
-
-sub list_themes {
-    my ($self) = @_;
-    return $self->{theme_manager}->list_themes();
-}
-
-=head2 tool
+=head2 configure
 
 Affiche l'interface Intranet du plugin.
 
 =cut
 
-sub tool {
+sub configure {
     my ($self, $args) = @_;
     return $self->{template_builder}->build_tool_interface();
 }
@@ -195,6 +163,7 @@ sub preview_theme_asset {
 Supprime les données du plugin dans la base de données.
 
 =cut
+
 sub uninstall {
     my ($self, $args) = @_;
     my $dbh = C4::Context->dbh;

@@ -104,6 +104,7 @@ Effectue :
 - lecture des paramètres
 - validation des dates
 - vérification des conflits
+- vérifier que au moin un élément est actif
 - construction des données du thème
 - sauvegarde
 - impression d’une réponse JSON
@@ -111,36 +112,37 @@ Effectue :
 =cut
 
 sub apply_theme {
-    my ($self) = @_;
-    my $cgi = $self->{plugin}->{cgi};
-    print $cgi->header(-type => 'application/json', -charset => 'UTF-8');
-    my $theme_name = $cgi->param('theme');
-    my $start_date = $cgi->param('start_date');
-    my $end_date = $cgi->param('end_date');
-    my $validation_result = $self->validate_theme_dates($start_date, $end_date);
-    unless ($validation_result->{valid}) {
-        print to_json({
-            success => JSON::false,
-            message => $validation_result->{message}
-        });
-        return;
+    my ( $self, $params ) = @_;
+    my $theme_name = $params->{theme};
+    my $start_date = $params->{start_date};
+    my $end_date   = $params->{end_date};
+    return { success => 0, message => 'theme_missing' }
+      unless $theme_name;
+    return { success => 0, message => 'theme_unknown' }
+      unless $self->{plugin}->{config}->theme_exists($theme_name);
+    my $validation = $self->validate_theme_dates($start_date, $end_date);
+    return { success => 0, message => $validation->{message} }
+      unless $validation->{valid};
+    my ( $start_dt, $end_dt ) = @{$validation}{qw(start_dt end_dt)};
+    if ( my $conflict = $self->check_theme_conflicts($theme_name, $start_dt, $end_dt) ) {
+        return { success => 0, message => $conflict };
     }
-    my ($start_dt, $end_dt) = @{$validation_result}{qw(start_dt end_dt)};
-    my $conflict = $self->check_theme_conflicts($theme_name, $start_dt, $end_dt);
-    if ($conflict) {
-        print to_json({
-            success => JSON::false,
-            message => $conflict
-        });
-        return;
-    }
-    my $theme_data = $self->build_theme_data($theme_name, $start_dt, $end_dt);
-    $self->save_theme($theme_name, $theme_data);
-    print to_json({
-        success => JSON::true,
-        theme => $theme_name,
-        message => "theme_applied"
-    });
+    my $active_validation = $self->validate_at_least_one_active_element($params);
+    return { success => 0, message => $active_validation->{message} }
+        unless $active_validation->{valid};
+    my $theme_data = $self->build_theme_data_from_params(
+        $theme_name,
+        $start_dt,
+        $end_dt,
+        $params
+    );
+    $self->save_theme( $theme_name, $theme_data );
+    return {
+        success => 1,
+        theme   => $theme_name,
+        theme_data => $theme_data,
+        message => 'theme_applied'
+    };
 }
 
 =head2 update_theme
@@ -150,6 +152,7 @@ Vérifie :
 - l’existence du thème
 - la validité des dates
 - les conflits éventuels
+- la présence d’au moins un élément actif
 - la cohérence avec la configuration de base
 
 Retourne une réponse JSON.
@@ -157,52 +160,63 @@ Retourne une réponse JSON.
 =cut
 
 sub update_theme {
-    my ($self) = @_;
-    my $cgi = $self->{plugin}->{cgi};
-    my $theme_name = $cgi->param('theme_name');
-    my $start_date = $cgi->param('start_date');
-    my $end_date = $cgi->param('end_date');
-    print $cgi->header(-type => 'application/json', -charset => 'UTF-8');
-    unless ($theme_name) {
-        print encode_json({ success => JSON::false, error => "Nom du thème manquant" });
-        return;
-    }
+    my ( $self, $theme_name, $params ) = @_;
+    return {
+        success => 0,
+        message => 'theme_missing'
+    } unless $theme_name;
     my $themes_data = $self->{plugin}->retrieve_data('themes_data');
-    my $themes = $themes_data ? decode_json($themes_data) : {};
-    unless (exists $themes->{$theme_name}) {
-        print encode_json({ success => JSON::false, error => "Thème '$theme_name' introuvable" });
-        return;
-    }
+    my $themes = $themes_data
+        ? decode_json( encode('UTF-8', $themes_data) )
+        : {};
+    return {
+        success => 0,
+        message => 'theme_not_found'
+    } unless exists $themes->{$theme_name};
+    my $start_date = $params->{start_date};
+    my $end_date   = $params->{end_date};
+    my $elements   = $params->{elements};
     my $validation = $self->validate_theme_dates($start_date, $end_date);
-    unless ($validation->{valid}) {
-        print encode_json({ success => JSON::false, error => $validation->{message} });
-        return;
+    return {
+        success => 0,
+        message => $validation->{message}
+    } unless $validation->{valid};
+    my ( $start_dt, $end_dt ) = @{$validation}{qw(start_dt end_dt)};
+    if ( my $conflict = $self->check_theme_conflicts(
+        $theme_name, $start_dt, $end_dt
+    )) {
+        return {
+            success => 0,
+            message => $conflict
+        };
     }
-    my ($start_dt, $end_dt) = @{$validation}{qw(start_dt end_dt)};
-    my $conflict = $self->check_theme_conflicts($theme_name, $start_dt, $end_dt);
-    if ($conflict) {
-        print encode_json({ success => JSON::false, error => $conflict });
-        return;
-    }
-    my $base_config = $self->{plugin}->{config}->get_theme_config($theme_name);
-    unless ($base_config) {
-        print encode_json({ success => JSON::false, error => "Configuration du thème introuvable" });
-        return;
-    }
-    my $elements = $self->build_elements_from_cgi($base_config, $themes->{$theme_name});
-    $themes->{$theme_name} = {
-        %{$themes->{$theme_name}},
+    my $active_validation = $self->validate_at_least_one_active_element($params);
+    return {
+        success => 0,
+        message => $active_validation->{message}
+    } unless $active_validation->{valid};
+    my $theme_data = {
+        %{ $themes->{$theme_name} },
         start_date => $start_dt->epoch,
         end_date   => $end_dt->epoch,
         updated_at => time(),
-        elements   => $elements,
+        elements   => $self->build_theme_data_from_params(
+            $theme_name,
+            $start_dt,
+            $end_dt,
+            $params
+        )->{elements},
     };
-    $self->{plugin}->store_data({ themes_data => encode_json($themes) });
-    print encode_json({
-        success => JSON::true,
-        theme   => $theme_name,
-        message => "theme_updated"
+    $themes->{$theme_name} = $theme_data;
+    $self->{plugin}->store_data({
+        themes_data => encode('UTF-8', encode_json($themes))
     });
+    return {
+        success    => 1,
+        theme      => $theme_name,
+        message    => 'theme_updated',
+        theme_data => $theme_data
+    };
 }
 
 =head2 delete_theme
@@ -213,40 +227,28 @@ Retourne un JSON indiquant le résultat.
 =cut
 
 sub delete_theme {
-    my ($self) = @_;
-    my $cgi = CGI->new;
-    my $theme_name = $cgi->param('theme_name');
-    binmode STDOUT, ':encoding(UTF-8)';
-    print $cgi->header(-type => 'application/json', -charset => 'UTF-8');
-    eval {
-        my $themes_data = $self->{plugin}->retrieve_data('themes_data');
-        if (!$themes_data) {
-            print encode_json({ success => JSON::false, error => 'Aucune donnée de thème trouvée' });
-            return;
-        }
-        my $themes = decode_json(encode('UTF-8', $themes_data));
-        if (exists $themes->{$theme_name}) {
-            delete $themes->{$theme_name};
-            $self->{plugin}->store_data({ themes_data => encode_json($themes) });
-
-            print encode_json({
-                success => JSON::true,
-                theme   => $theme_name,
-                message => "theme_deleted"
-            });
-        } else {
-            print encode_json({
-                success => JSON::false,
-                error   => "theme_not_found"
-            });
-        }
+    my ( $self, $theme_name ) = @_;
+    return {
+        success => JSON::false,
+        message => 'theme_missing'
+    } unless $theme_name;
+    my $themes_data = $self->{plugin}->retrieve_data('themes_data');
+    my $themes = $themes_data
+        ? decode_json( encode('UTF-8', $themes_data) )
+        : {};
+    return {
+        success => JSON::false,
+        message => 'theme_not_found'
+    } unless exists $themes->{$theme_name};
+    delete $themes->{$theme_name};
+    $self->{plugin}->store_data({
+        themes_data => encode('UTF-8', encode_json($themes))
+    });
+    return {
+        success => JSON::true,
+        theme   => $theme_name,
+        message => 'theme_deleted'
     };
-    if ($@) {
-        print encode_json({
-            success => JSON::false,
-            error   => "Erreur serveur: $@"
-        });
-    }
 }
 
 =head2 list_themes
@@ -261,20 +263,19 @@ Retourne en JSON la liste complète de tous les thèmes enregistrés, incluant :
 
 =cut
 
-
 sub list_themes {
     my ($self) = @_;
-    my $cgi = $self->{plugin}->{cgi};
     my $themes_data = $self->{plugin}->retrieve_data('themes_data');
-    my $themes = $themes_data ? decode_json(encode('UTF-8', $themes_data)) : {};
+    my $themes = $themes_data
+        ? decode_json( encode('UTF-8', $themes_data) )
+        : {};
     my $now = DateTime->now();
     my @theme_list = $self->build_theme_list($themes, $now);
-    print $cgi->header('application/json');
-    print to_json({
-        success => JSON::true,
-        themes => \@theme_list,
+    return {
+        success       => JSON::true,
+        themes        => \@theme_list,
         current_theme => $self->get_active_theme()
-    });
+    };
 }
 
 =head2 validate_theme_dates
@@ -353,71 +354,61 @@ sub check_theme_conflicts {
     return;
 }
 
-=head2 build_theme_data
+=head2 validate_at_least_one_active_element
 
-Construit toutes les données d’un thème lors de son application :
-- active => 1
-- dates (epoch)
-- horodatage de création
-- éléments configurés selon la configuration de base
-
-=cut
-
-sub build_theme_data {
-    my ($self, $theme_name, $start_dt, $end_dt) = @_;
-    my %theme_data = (
-        theme_name => $theme_name,
-        active => 1,
-        start_date => $start_dt->epoch,
-        end_date => $end_dt->epoch,
-        created_at => time(),
-        elements => {}
-    );
-    my $base_config = $self->{plugin}->{config}->get_theme_config($theme_name);
-    return \%theme_data unless $base_config && exists $base_config->{elements};
-    $theme_data{elements} = $self->build_elements_from_cgi($base_config, {});
-    return \%theme_data;
-}
-
-=head2 build_elements_from_cgi
-
-Construit la configuration des éléments d’un thème en fonction :
-- de la configuration de base du thème
-- des paramètres CGI
-- des valeurs existantes (mise à jour)
-
-Gère automatiquement les extra_options.
+Vérifie qu'au moins un paramètre d'activation du thème est à "on".
+Ignore les paramètres non liés aux éléments visuels.
+Retourne :
+- { valid => 1 } si au moins un élément est actif
+- { valid => 0, message => 'no_active_elements' } sinon
 
 =cut
 
-sub build_elements_from_cgi {
-    my ($self, $base_config, $existing_theme) = @_;
-    my $cgi = $self->{plugin}->{cgi};
-    my %elements;
-    return %elements unless exists $base_config->{elements};
-    foreach my $element (keys %{ $base_config->{elements} }) {
-        my $setting = $base_config->{elements}{$element}{setting};
-        my $enabled = $cgi->param($setting)
-                      // $existing_theme->{elements}{$element}{enabled}
-                      // 'off';
-        $elements{$element} = {
-            enabled => $enabled,
-            options => {}
-        };
-        if (exists $base_config->{elements}{$element}{extra_options}) {
-            foreach my $opt_key (keys %{ $base_config->{elements}{$element}{extra_options} }) {
-                my $new_val = $cgi->param($opt_key);
-                if ($opt_key eq 'api_namespace') {
-                    $new_val = $self->{plugin}->api_namespace;
-                }
-                $new_val //= $existing_theme->{elements}{$element}{options}{$opt_key}
-                         // $base_config->{elements}{$element}{extra_options}{$opt_key}{default}
-                         // 'off';
-                $elements{$element}{options}{$opt_key} = $new_val;
-            }
+sub validate_at_least_one_active_element {
+     my ( $self, $params ) = @_;
+    my $elements = $params->{elements};
+    return {
+        valid   => 0,
+        message => 'no_active_elements'
+    } unless $elements && ref $elements eq 'HASH';
+    foreach my $element_key ( keys %$elements ) {
+        my $element = $elements->{$element_key};
+        next unless ref $element eq 'HASH';
+        if ( $element->{enabled} ) {
+            return { valid => 1 };
         }
     }
-    return \%elements;
+    return {
+        valid   => 0,
+        message => 'no_active_elements'
+    };
+}
+
+sub build_theme_data_from_params {
+    my ( $self, $theme_name, $start_dt, $end_dt, $params ) = @_;
+    my $base_config = $self->{plugin}->{config}->get_theme_config($theme_name);
+    my $elements_param = $params->{elements} || {};
+    my %elements;
+    foreach my $element_key ( keys %{ $base_config->{elements} } ) {
+        my $element_conf = $base_config->{elements}{$element_key};
+        my $setting      = $element_conf->{setting};
+        my $param = $elements_param->{$setting} || {};
+        $elements{$element_key} = {
+            enabled => $param->{enabled} ? 1 : 0,
+            options => {}
+        };
+        if ( exists $param->{options} && ref $param->{options} eq 'HASH' ) {
+            $elements{$element_key}{options} = { %{ $param->{options} } };
+        }
+    }
+    return {
+        theme_name => $theme_name,
+        active     => 1,
+        start_date => $start_dt->epoch,
+        end_date   => $end_dt->epoch,
+        created_at => time(),
+        elements   => \%elements,
+    };
 }
 
 =head2 save_theme
@@ -460,7 +451,8 @@ sub build_theme_list {
             is_current => $is_current,
             start_date => $theme->{start_date},
             end_date => $theme->{end_date},
-            created_at => $theme->{created_at}
+            created_at => $theme->{created_at},
+            elements    => $theme->{elements} || {}
         };
     }
     return @theme_list;

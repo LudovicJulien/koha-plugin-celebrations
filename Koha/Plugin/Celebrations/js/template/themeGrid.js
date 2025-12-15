@@ -4,7 +4,7 @@
  * ======================================================
  */
 import { TRANSLATION_UI, API_ENDPOINTS } from './config.js';
-import { formatDate, calculateProgress, getThemeStatus, showNotification, disableAllActionButtons, enableAllActionButtons, renderThemesGrid } from './utils.js';
+import { formatDate, calculateProgress, getThemeStatus, showNotification, disableAllActionButtons, enableAllActionButtons, renderThemesGrid, getActiveElementsInfo } from './utils.js';
 /**
  *
  * Trie les thèmes par statut et par date de début.
@@ -30,6 +30,13 @@ export function createThemeCard(theme, currentTheme) {
   const status = getThemeStatus(theme);
   const progress = calculateProgress(theme.start_date, theme.end_date);
   const isCurrent = theme.theme_name === currentTheme;
+  const activeInfo = getActiveElementsInfo(theme, 4);
+  const activeListHTML = activeInfo.displayList
+    .map(key => {
+      const label = TRANSLATION_UI.elements?.[key] || key;
+      return `<li>${label}</li>`;
+    })
+    .join('');
   return `
   <div class="theme-card-wrapper ${isCurrent ? 'active' : ''}">
     <div class="theme-card">
@@ -61,6 +68,13 @@ export function createThemeCard(theme, currentTheme) {
                  style="width: ${status.type === 'current' ? progress : 0}%;
                         opacity: ${status.type === 'current' ? 1 : 0.3};"></div>
           </div>
+        </div>
+        <div class="theme-elements">
+          <div class="elements-label">${TRANSLATION_UI.grille['elementsActifs']} : ${activeInfo.count}</div>
+          <ul class="elements-list">
+            ${activeListHTML}
+            ${activeInfo.hasMore ? `<li>…</li>` : ""}
+          </ul>
         </div>
       </div>
       <div class="theme-card-footer">
@@ -106,18 +120,25 @@ export function updateThemesGrid(themes, currentTheme, noThemeMessage, themesGri
  */
 export async function refreshThemesGridFromAPI(state, elements ) {
   try {
-    const response = await fetch(API_ENDPOINTS.listThemes, {
+    const response = await fetch(API_ENDPOINTS.themes, {
       method: 'GET',
-      credentials: 'same-origin'
+      credentials: 'same-origin',
+      headers: {
+        'Accept': 'application/json'
+      }
     });
-    const data = await response.json();
+    const json = await response.json();
+    const data = json.results?.result;
     if (data.success) {
-      state.allThemes = data.themes.map(theme => ({
-        ...theme,
-        theme_name: theme.name
-      }));
+      state.allThemes = {};
+      data.themes.forEach(theme => {
+        state.allThemes[theme.name] = {
+          ...theme,
+          theme_name: theme.name
+        };
+      });
       state.currentSettings.theme_name = data.current_theme;
-      await renderThemesGrid(state, elements, state.rawThemes);
+      await renderThemesGrid(state, elements);
     } else {
       console.error('Erreur lors du rafraîchissement:', data.error);
     }
@@ -140,16 +161,18 @@ export async function deleteTheme(themeName, onSuccess) {
   );
   if (!confirmed) return;
   try {
-    const formData = new FormData();
-    formData.append('class', 'Koha::Plugin::Celebrations');
-    formData.append('method', 'delete_theme');
-    formData.append('theme_name', themeName);
-    const response = await fetch(API_ENDPOINTS.deleteTheme, {
-      method: 'POST',
-      body: formData,
-      credentials: 'same-origin'
-    });
-    const data = await response.json();
+    const response = await fetch(
+      `${API_ENDPOINTS.themes}/${encodeURIComponent(themeName)}`,
+      {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'application/json'
+        }
+      }
+    );
+    const json = await response.json();
+    const data = json.results?.result;
     if (data.success) {
       const card = document.querySelector(`.theme-card[data-theme="${themeName}"]`);
       if (card) {

@@ -20,48 +20,40 @@ export function updateThemeOptions(rawThemes, themeSelect = null, forcedThemeNam
   startInput.value = "";
   endInput.value = "";
   Object.values(rawThemes).forEach(theme => {
-    Object.values(theme.elements || {}).forEach(element => {
-      if (element.toggle_id) {
-        const el = getById(element.toggle_id);
-        if (el) el.style.display = 'none';
-      }
+    Object.entries(theme.elements || {}).forEach(([elementKey, element]) => {
+      const toggleId = `toggle_${elementKey}`;
+      const toggleEl = getById(toggleId);
+      if (toggleEl) toggleEl.style.display = 'none';
       if (element.extra_options) {
-        const elementKey = Object.keys(theme.elements).find(key => theme.elements[key] === element);
-        if (elementKey) {
-          const configDivId = `${elementKey}-config`;
-          const configDiv = getById(configDivId);
-          if (configDiv) configDiv.style.display = 'none';
-        }
+        const configDivId = `${elementKey}-config`;
+        const configDiv   = getById(configDivId);
+        if (configDiv) configDiv.style.display = 'none';
       }
     });
   });
   const selectedTheme = forcedThemeName || (themeSelect ? themeSelect.value : null);
   if (!selectedTheme) return;
   const themeData = rawThemes[selectedTheme];
-  if (themeData && themeData.elements) {
-    Object.values(themeData.elements).forEach((element) => {
-      if (element.toggle_id) {
-        const el = getById(element.toggle_id);
-        if (el) {
-          el.style.display = 'flex';
-        }
-      }
-    });
-  }
-  Object.values(themeData?.elements || {}).forEach(element => {
+  if (!themeData || !themeData.elements) return;
+  Object.entries(themeData.elements).forEach(([elementKey]) => {
+    const toggleId = `toggle_${elementKey}`;
+    const toggleEl = getById(toggleId);
+    if (toggleEl) toggleEl.style.display = 'flex';
+  });
+  Object.values(themeData.elements).forEach(element => {
     const mainToggle = getById(element.setting);
     if (mainToggle) mainToggle.dispatchEvent(new Event('change'));
   });
-  if (themeData && themeData.elements) {
-    Object.entries(themeData.elements).forEach(([elementKey, element]) => {
-      if (element.extra_options && !Object.values(element.extra_options).some(opt => opt.type === 'ignore')) {
-        const mainToggle = getById(element.setting);
-        const configDivId = `${elementKey}-config`;
-        const configDiv = getById(configDivId);
-        toggleConfig(mainToggle, configDiv, selectedTheme, themeSelect);
-      }
-    });
-  }
+  Object.entries(themeData.elements).forEach(([elementKey, element]) => {
+    if (
+      element.extra_options &&
+      !Object.values(element.extra_options).some(opt => opt.type === 'ignore')
+    ) {
+      const mainToggle = getById(element.setting);
+      const configDiv  = getById(`${elementKey}-config`);
+      toggleConfig(mainToggle, configDiv);
+    }
+  });
   setTimeout(() => {
     if (window.positionIframeGlobal) {
       window.positionIframeGlobal();
@@ -108,19 +100,22 @@ export function toggleConfig(mainToggle, configDiv) {
  */
 export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
   if (!themeSelect) return;
-  const existingThemeNames = themesConf.map(t => t.name);
+  const themeArray = Array.isArray(themesConf)
+    ? themesConf
+    : Object.values(themesConf || {});
+  const existingThemeNames = themeArray.map(
+    t => t.name || t.theme_name
+  );
   const selectedValue = themeSelect.value;
   themeSelect.innerHTML = '';
   Object.keys(allTheme).forEach(themeKey => {
-    if (existingThemeNames.includes(themeKey)) {
-      return;
-    }
+    if (existingThemeNames.includes(themeKey)) return;
     const option = document.createElement('option');
     option.value = themeKey;
     option.textContent = TRANSLATION_UI.form[themeKey] || themeKey;
     themeSelect.appendChild(option);
   });
-  if (Array.from(themeSelect.options).some(opt => opt.value === selectedValue)) {
+  if ([...themeSelect.options].some(opt => opt.value === selectedValue)) {
     themeSelect.value = selectedValue;
   }
   themeSelect.dispatchEvent(new Event('change'));
@@ -134,7 +129,7 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
  * @returns {void}
  */
 export function resetThemeOptions(themeName, state) {
-  const themeEntry = state.allThemes.find(t => t.theme_name === themeName) || {};
+  const themeEntry = state.allThemes[themeName];
   const startDate = themeEntry.start_date_formatted;
   const endDate = themeEntry.end_date_formatted;
   // Réinitialiser les dates
@@ -146,7 +141,7 @@ export function resetThemeOptions(themeName, state) {
   }
   //  Réinitialiser les options principales et supplémentaires
   Object.entries(themeEntry.elements).forEach(([elementKey, element]) => {
-    const initialEnabled = element.enabled === "on";
+   const initialEnabled = Boolean(element.enabled);
     const settingKey = state.rawThemes[themeName].elements[elementKey].setting;
     const mainToggle = getById(settingKey);
     if (!mainToggle) return;
@@ -169,7 +164,6 @@ export function resetThemeOptions(themeName, state) {
   });
   updatePreview(state.rawThemes, themeName);
 }
-
 /**
  *
  * Passe en mode édition pour le thème sélectionné :
@@ -194,7 +188,7 @@ export function showThemeEditor(themeName, state, elements) {
   const startInput = getById("start_date");
   const endInput   = getById("end_date");
   if (!startInput || !endInput) return;
-  const themeEntry = state.allThemes.find(t => t.theme_name === themeName);
+  const themeEntry = state.allThemes[themeName];
   if (themeEntry) {
     startInput.value = formatDateForInput(themeEntry.start_date);
     endInput.value   = formatDateForInput(themeEntry.end_date);

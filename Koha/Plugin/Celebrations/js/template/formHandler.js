@@ -24,46 +24,52 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
   const start_date = form.querySelector('input[name="start_date"]').value;
   const end_date = form.querySelector('input[name="end_date"]').value;
   toggleButtons([submitBtn, prevBtn], true);
-  const formData = new FormData();
-  formData.append('plugin_name', 'Celebrations');
-  formData.append('class', 'Koha::Plugin::Celebrations');
-  formData.append('method', 'apply_theme');
-  formData.append('action', actionType);
-  formData.append('action', 'apply_theme');
-  formData.append('theme', selectedTheme);
+  const elementsPayload = {};
   if (themeData && themeData.elements) {
     Object.values(themeData.elements).forEach(element => {
-      const input = getById(element.setting);
-      if (input) {
-        formData.append(
-          input.id,
-          input.type === 'checkbox' ? (input.checked ? 'on' : 'off') : input.value
-        );
+      const elementPayload = {
+        enabled: false,
+        options: {}
+      };
+      const mainInput = getById(element.setting);
+      if (mainInput) {
+        elementPayload.enabled =
+          mainInput.type === 'checkbox'
+            ? mainInput.checked
+            : Boolean(mainInput.value);
       }
       if (element.extra_options) {
         Object.keys(element.extra_options).forEach(optKey => {
           const extraInput = getById(optKey);
           if (extraInput) {
-            formData.append(
-              extraInput.id,
+            elementPayload.options[optKey] =
               extraInput.type === 'checkbox'
-                ? (extraInput.checked ? 'on' : 'off')
-                : extraInput.value
-            );
+                ? extraInput.checked
+                : extraInput.value;
           }
         });
       }
+      elementsPayload[element.setting] = elementPayload;
     });
   }
-  formData.append('start_date', start_date || null);
-  formData.append('end_date', end_date || null);
+  const payload = {
+    theme: selectedTheme,
+    start_date,
+    end_date,
+    elements: elementsPayload
+  };
   try {
-    const response = await fetch(API_ENDPOINTS.applyTheme, {
+    const response = await fetch(API_ENDPOINTS.themes, {
       method: 'POST',
-      body: formData,
-      credentials: 'same-origin'
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      credentials: 'same-origin',
+      body: JSON.stringify(payload)
     });
-    const data = await response.json();
+    const json = await response.json();
+    const data = json.results?.result;
     if (data.success) {
       elements.successMessage.textContent = TRANSLATION_BACKEND[data.message];
       elements.successMessage.style.display = "block";
@@ -79,7 +85,7 @@ export async function submitThemeForm(form, rawThemes, elements, onSuccess) {
       elements.erreurMessage.style.display = 'none';
       toggleButtons([submitBtn, prevBtn], false);
     }, 5000);
-    if (onSuccess && data.success === true) onSuccess();
+    if (onSuccess && data.success) onSuccess();
   } catch (error) {
     console.error("Erreur réseau:", error);
     elements.erreurMessage.textContent = 'connexion_error';
@@ -129,58 +135,61 @@ export async function updateTheme(themeName, rawThemes, form, elements) {
   const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
   const resetBtn = form.querySelector('button[type="reset"], input[type="reset"]');
   toggleButtons([submitBtn, resetBtn], true);
-  const formData = new FormData();
-  formData.append('plugin_name', 'Celebrations');
-  formData.append('class', 'Koha::Plugin::Celebrations');
-  formData.append('method', 'update_theme');
-  formData.append('theme_name', themeName);
   const themeData = rawThemes[themeName];
-  if (themeData && themeData.elements) {
+  const start_date = form.querySelector('input[name="start_date"]').value;
+  const end_date   = form.querySelector('input[name="end_date"]').value;
+  const elementsPayload = {};
+  if (themeData?.elements) {
     Object.values(themeData.elements).forEach(element => {
-      const input = getById(element.setting);
-      if (input) {
-        formData.append(
-          input.id,
-          input.type === 'checkbox' ? (input.checked ? 'on' : 'off') : input.value
-        );
-      }
+      const mainInput = getById(element.setting);
+      elementsPayload[element.setting] = {
+        enabled: mainInput?.checked || false,
+        options: {}
+      };
       if (element.extra_options) {
         Object.keys(element.extra_options).forEach(optKey => {
-          const extraInput = getById(optKey);
-          if (extraInput) {
-            formData.append(
-              extraInput.id,
-              extraInput.type === 'checkbox'
-                ? (extraInput.checked ? 'on' : 'off')
-                : extraInput.value
-            );
+          const input = getById(optKey);
+          if (input) {
+            elementsPayload[element.setting].options[optKey] =
+              input.type === 'checkbox'
+                ? input.checked
+                : input.value;
           }
         });
       }
     });
   }
-  const start_date = form.querySelector('input[name="start_date"]').value;
-  const end_date = form.querySelector('input[name="end_date"]').value;
-  if (start_date) formData.append('start_date', start_date);
-  if (end_date)   formData.append('end_date', end_date);
+  const payload = {
+    start_date,
+    end_date,
+    elements: elementsPayload
+  };
   try {
-    const response = await fetch(API_ENDPOINTS.updateTheme, {
-      method: 'POST',
-      body: formData,
-      credentials: 'same-origin'
+    const response = await fetch(`${API_ENDPOINTS.themes}/${encodeURIComponent(themeName)}`, {
+      method: 'PUT',
+      credentials: 'same-origin',
+      body: JSON.stringify(payload),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
     });
-    const data = await response.json();
-    if (data.success) {
+    const json = await response.json();
+    const data = json.results?.result;
+    if (data?.success) {
       elements.successMessage.textContent = TRANSLATION_BACKEND['theme_updated'];
       elements.successMessage.style.display = "block";
+      return true;
     } else {
-      elements.erreurMessage.textContent =  TRANSLATION_BACKEND['update_error'];
+      elements.erreurMessage.textContent =  TRANSLATION_BACKEND[data.message];
       elements.erreurMessage.style.display = "block";
+      return false;
     }
   } catch (error) {
     console.error("Erreur réseau:", error);
     elements.erreurMessage.textContent = TRANSLATION_BACKEND['connexion_error'];
     elements.erreurMessage.style.display = "block";
+    return false;
   } finally {
     setTimeout(() => {
       elements.successMessage.style.display = "none";

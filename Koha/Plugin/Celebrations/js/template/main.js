@@ -43,9 +43,18 @@ class ThemeManager {
    * Initialise l'état de l'application
    */
   initializeState() {
+    const allThemesRaw = safeParseJSON(ALL_THEMES, "ALL_THEMES");
+    const allThemes = Array.isArray(allThemesRaw)
+    ? Object.fromEntries(
+        allThemesRaw.map(t => [
+          t.theme_name || t.name,
+          t
+        ])
+      )
+    : allThemesRaw;
     return {
       currentSettings: safeParseJSON(CURRENT_SETTINGS_STR, "CURRENT_SETTINGS_STR"),
-      allThemes: safeParseJSON(ALL_THEMES, "ALL_THEMES"),
+      allThemes,
       rawThemes: safeParseJSON(THEMES_CONFIG_STR, "THEMES_CONFIG_STR"),
     };
   }
@@ -153,7 +162,8 @@ class ThemeManager {
     try {
       const themeName = this.getActiveThemeName();
       if (!themeName) return;
-      await updateTheme(themeName, this.state.rawThemes, this.elements.form, this.elements);
+      const success = await updateTheme(themeName, this.state.rawThemes, this.elements.form, this.elements);
+      if (!success) return;
       await refreshThemesGridFromAPI(this.state, this.elements, this.state.rawThemes);
       refreshThemeSelect(this.state.allThemes, this.state.rawThemes, this.elements.themeSelect);
       exitThemeEditor(this.state.rawThemes, this.elements);

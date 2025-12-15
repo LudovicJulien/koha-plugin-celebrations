@@ -67,7 +67,6 @@ sub build_tool_interface {
     my $plugin_name = 'Celebrations';
     my $preferredLanguage = C4::Languages::getlanguage();
     my $translations = $self->{plugin}->{i18n}->load_translations($preferredLanguage);
-    # warn "Translations loaded: " . Dumper($translations);
     my $template;
     if ($self->{plugin}->is_enabled) {
         $template = $self->build_enabled_template(
@@ -159,13 +158,14 @@ sub build_disabled_template {
     my $css_template = $self->{plugin}->get_template({ file => 'css/template/disabled-css.tt' });
     my $css_content = $css_template->output();
     $template->param(
-        enabled => 0,
-        CLASS => $plugin_class,
-        METHOD => 'tool',
-        api_namespace => $self->{plugin}->api_namespace,
-        disabled_css => $css_content,
-        PLUGIN_DIR => $self->{plugin}->{config}->get_plugin_dir(),
-        LANG => $preferredLanguage
+        enabled         => 0,
+        CLASS           => $plugin_class,
+        METHOD          => 'tool',
+        api_namespace   => $self->{plugin}->api_namespace,
+        disabled_css    => $css_content,
+        PLUGIN_DIR      => $self->{plugin}->{config}->get_plugin_dir(),
+        LANG            => $preferredLanguage,
+        translation     => $translations->{hash},
     );
     return $template;
 }

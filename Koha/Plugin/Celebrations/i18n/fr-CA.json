@@ -48,15 +48,6 @@
       "fin": "Date de fin :"
     },
 
-    "emoji": {
-      "noel": "🎄",
-      "halloween": "👻",
-      "saint-valentin": "💝",
-      "paque": "🐰",
-      "feux-artifice": "🎆",
-      "default": "🎨"
-    },
-
     "grille": {
       "prog": "Progression",
       "actif": "actif",
@@ -65,10 +56,32 @@
       "sup": "supprimer",
       "debut": "début",
       "fin": "fin",
+      "elementsActifs": "Configuration",
       "delete1": "Êtes-vous sûr de vouloir supprimer le thème",
       "delete2": "Cette action est irréversible.",
       "delNotif1": "Thème supprimé avec succès",
       "delNotif2": "Erreur lors de la suppression"
+    },
+
+    "elements": {
+      "couleurs": "Couleurs",
+      "footer": "Pied de page",
+      "snow": "Flocons",
+      "countdown": "Compte à rebours",
+      "feux": "Feux d’artifice",
+      "ghost": "Fantômes",
+      "spider": "Araignées",
+      "egg": "Œufs",
+      "coeur": "Cœurs"
+    },
+
+    "emoji": {
+      "noel": "🎄",
+      "halloween": "👻",
+      "saint-valentin": "💝",
+      "paque": "🐰",
+      "feux-artifice": "🎆",
+      "default": "🎨"
     },
 
     "noel": {
@@ -151,6 +164,7 @@
     "theme_deleted": "Thème supprimé avec succès",
     "theme_not_found": "Thème introuvable",
     "theme_conflict": "Période en conflit avec un autre thème",
+    "no_active_elements": "Aucun element visuel actif sur le thème",
     "update_error": "Erreur lors de la mise à jour.",
     "connexion_error": "Erreur de connexion au serveur."
   }
