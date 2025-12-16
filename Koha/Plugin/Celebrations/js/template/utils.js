@@ -261,9 +261,9 @@ export async function renderThemesGrid(state, elements) {
     async (deletedThemeName) => {
       const currentEditedTheme = state.currentSettings?.theme_name;
       await refreshThemesGridFromAPI(state, elements, state.rawThemes);
+      refreshThemeSelect(state.allThemes, state.rawThemes, elements.themeSelect);
       if (currentEditedTheme == deletedThemeName) {
         exitThemeEditor(state.rawThemes, elements);
-        refreshThemeSelect(state.allThemes, state.rawThemes, elements.themeSelect);
         state.currentSettings = {};
       }else{
         state.currentSettings = { theme_name: currentEditedTheme };
