@@ -119,6 +119,11 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
     themeSelect.value = selectedValue;
   }
   themeSelect.dispatchEvent(new Event('change'));
+  if (themeSelect.options.length === 0) {
+    themeSelect.dispatchEvent(new Event('allConfigured'));
+  } else {
+    themeSelect.dispatchEvent(new Event('notAllConfigured'));
+  }
 }
 /**
  *
@@ -239,4 +244,62 @@ export function exitThemeEditor(rawThemes, elements) {
   if (cancelBtn) cancelBtn.remove();
   if (updateBtn) updateBtn.style.display = 'none';
   if (resetbtn) resetbtn.style.display = 'none';
+}
+
+export function enterAllConfiguredMode(elements) {
+  console.log('enterAllConfiguredMode');
+  if (!elements) return;
+
+  if (elements.themeSelect) {
+    elements.themeSelect.style.display = 'none';
+  }
+
+  const form = getById('theme-form');
+  if (form) form.style.display = 'none';
+
+  const title = getById('ConfTitre');
+  if (title) title.style.display = 'none';
+
+  const createBtn = getById('create-button');
+  if (createBtn) createBtn.style.display = 'none';
+
+  const resetBtn = getById('preview-button');
+  if (resetBtn) resetBtn.style.display = 'none';
+
+  const completeSection = getById('celebration-complete');
+  if (completeSection) {
+    completeSection.style.display = 'block';
+  }else{
+    console.log('no celebration-complete');
+  }
+}
+
+export function exitAllConfiguredMode(elements) {
+  console.log('exitAllConfiguredMode');
+ if (!elements) return;
+
+  if (elements.themeSelect) {
+    elements.themeSelect.style.display = 'block';
+  }
+
+  const form = getById('theme-form');
+  if (form) form.style.display = 'flex';
+
+  const title = getById('ConfTitre');
+  if (title) titlestyle.display = 'block';
+
+  const createBtn = getById('create-button');
+  if (createBtn) createBtn.style.display = 'block';
+
+  const updateBtn = getById('preview-button');
+  if (updateBtn) updateBtn.style.display = 'block';
+
+  const completeSection = getById('celebration-complete');
+  if (completeSection) completeSection.style.display = 'none';
+
+}
+
+
+export function areAllThemesConfigured(allThemes, rawThemes) {
+  return Object.keys(allThemes).length >= Object.keys(rawThemes).length;
 }

@@ -25,6 +25,12 @@
     "tel": "Téléphone",
     "yes": "oui",
 
+    "complete": {
+      "title": "Tous les thèmes sont configurés",
+      "desc1": "Vous avez planifié l’ensemble des thèmes disponibles.",
+      "desc2": "Le plugin Celebration s’occupera du reste automatiquement."
+    },
+
     "prog": {
       "titre": "Thèmes programmés",
       "message1": "Aucun thème programmé pour le moment.",
