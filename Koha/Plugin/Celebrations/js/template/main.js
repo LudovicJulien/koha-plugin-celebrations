@@ -3,7 +3,7 @@
  *  Script principal du module de gestion des thèmes
  * ======================================================
  */
-import { getById, safeParseJSON, renderThemesGrid, disableAllActionButtons, enableAllActionButtons } from './utils.js';
+import { getById, safeParseJSON, renderThemesGrid, disableAllActionButtons, enableAllActionButtons, areAllThemesConfigured } from './utils.js';
 import { refreshThemesGridFromAPI } from './themeGrid.js';
 import { submitThemeForm, updateTheme } from './formHandler.js';
 import { updateThemeOptions, refreshThemeSelect, exitThemeEditor } from './themeOptions.js';
@@ -17,6 +17,7 @@ class ThemeManager {
     this.elements = this.initializeElements();
     this.state = this.initializeState();
     this.observer = null;
+    this.state.isAllConfigured = false;
   }
   /**
    *
@@ -92,6 +93,18 @@ class ThemeManager {
     this.elements.themeSelect.addEventListener('change', () => {
       updateThemeOptions(this.state.rawThemes, this.elements.themeSelect);
     });
+    this.elements.themeSelect.addEventListener('allConfigured', () => {
+      if (!this.state.isAllConfigured) {
+        this.state.isAllConfigured = true;
+        enterAllConfiguredMode(this.elements);
+      }
+    });
+    this.elements.themeSelect.addEventListener('notAllConfigured', () => {
+      if (this.state.isAllConfigured) {
+        this.state.isAllConfigured = false;
+        exitAllConfiguredMode(this.elements);
+      }
+    });
   }
   /**
    *
@@ -105,6 +118,10 @@ class ThemeManager {
       async () => {
         await refreshThemesGridFromAPI(this.state, this.elements, this.state.rawThemes);
         refreshThemeSelect(this.state.allThemes, this.state.rawThemes, this.elements.themeSelect);
+        if (areAllThemesConfigured(this.state.allThemes, this.state.rawThemes)) {
+          this.state.isAllConfigured = true;
+          enterAllConfiguredMode(this.elements);
+        }
       }
     );
   }
@@ -215,6 +232,20 @@ class ThemeManager {
       initDevicePreviewSwitcher();
     }
   }
+   /**
+   *
+   * Vérifie au chargement si tous les thèmes sont configurés
+   * et bascule l’interface dans le mode approprié.
+   */
+  checkAllConfiguredOnLoad() {
+  if (areAllThemesConfigured(this.state.allThemes, this.state.rawThemes)) {
+    this.state.isAllConfigured = true;
+    enterAllConfiguredMode(this.elements);
+  } else {
+    this.state.isAllConfigured = false;
+    exitAllConfiguredMode(this.elements);
+  }
+}
   /**
    *
    * Initialise tous les composants de l'application
@@ -230,6 +261,7 @@ class ThemeManager {
     this.setupDevicePreviewSwitcher();
     this.setupWindowLoadEvent();
     updateThemeOptions(this.state.rawThemes, this.elements.themeSelect);
+    this.checkAllConfiguredOnLoad();
   }
 }
 /**

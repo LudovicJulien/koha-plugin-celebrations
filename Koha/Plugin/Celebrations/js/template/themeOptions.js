@@ -119,6 +119,11 @@ export function refreshThemeSelect(themesConf, allTheme, themeSelect) {
     themeSelect.value = selectedValue;
   }
   themeSelect.dispatchEvent(new Event('change'));
+  if (themeSelect.options.length === 0) {
+    themeSelect.dispatchEvent(new Event('allConfigured'));
+  } else {
+    themeSelect.dispatchEvent(new Event('notAllConfigured'));
+  }
 }
 /**
  *
@@ -239,4 +244,71 @@ export function exitThemeEditor(rawThemes, elements) {
   if (cancelBtn) cancelBtn.remove();
   if (updateBtn) updateBtn.style.display = 'none';
   if (resetbtn) resetbtn.style.display = 'none';
+}
+/**
+ *
+ * Passe l’interface en mode "configuration complète".
+ * Ce mode est activé lorsque tous les thèmes disponibles sont déjà configurés.
+ * @param {Object} elements - Références aux éléments DOM utilisés par l’interface.
+ * @param {HTMLSelectElement} [elements.themeSelect] - Sélecteur principal des thèmes.
+ * @param {HTMLElement} [elements.form] - Formulaire principal de configuration.
+ * @param {HTMLElement} [elements.createButton] - Bouton de création de thème.
+ * @param {HTMLElement} [elements.previewButton] - Bouton de prévisualisation.
+ * @param {HTMLElement} [elements.completeSection] - Section affichée lorsque tout est configuré.
+ *
+ * @returns {void}
+ */
+export function enterAllConfiguredMode(elements) {
+  if (!elements) return;
+  const card = document.getElementsByClassName('plugin-card')[0];
+  const form = getById('theme-form');
+  const title = getById('ConfTitre');
+  const createBtn = getById('create-button');
+  const resetBtn = getById('preview-button');
+  const completeSection = getById('celebration-complete');
+  if (elements.themeSelect) elements.themeSelect.style.display = 'none';
+  if (card) card.style.justifyContent = 'center';
+  if (form) form.style.display = 'none';
+  if (title) title.style.display = 'none';
+  if (createBtn) createBtn.style.display = 'none';
+  if (resetBtn) resetBtn.style.display = 'none';
+  if (completeSection) completeSection.style.display = 'block';
+}
+/**
+ *
+ * Quitte le mode "configuration complète" et restaure l’interface normale.
+ * @param {Object} elements - Références aux éléments DOM utilisés par l’interface.
+ * @param {HTMLSelectElement} [elements.themeSelect] - Sélecteur principal des thèmes.
+ * @param {HTMLElement} [elements.form] - Formulaire principal de configuration.
+ * @param {HTMLElement} [elements.createButton] - Bouton de création de thème.
+ * @param {HTMLElement} [elements.previewButton] - Bouton de prévisualisation.
+ * @param {HTMLElement} [elements.completeSection] - Section "tout configuré" à masquer.
+ *
+ * @returns {void}
+ */
+export function exitAllConfiguredMode(elements) {
+  if (!elements) return;
+  const card = document.getElementsByClassName('plugin-card')[0];
+  const form = getById('theme-form');
+  const title = getById('ConfTitre');
+  const createBtn = getById('create-button');
+  const updateBtn = getById('preview-button');
+  const completeSection = getById('celebration-complete');
+  if (elements.themeSelect) elements.themeSelect.style.display = 'block';
+  if (card) card.style.justifyContent = 'normal';
+  if (form) form.style.display = 'flex';
+  if (title) title.style.display = 'block';
+  if (createBtn) createBtn.style.display = 'block';
+  if (updateBtn) updateBtn.style.display = 'block';
+  if (completeSection) completeSection.style.display = 'none';
+}
+/**
+ *
+ * Vérifie si tous les thèmes disponibles ont déjà été configurés.
+ * @param {Object} allThemes - Thèmes actuellement configurés par l’utilisateur
+ * @param {Object} rawThemes - Configuration complète de tous les thèmes disponibles
+ * @returns {boolean} `true` si tous les thèmes sont configurés, sinon `false`.
+ */
+export function areAllThemesConfigured(allThemes, rawThemes) {
+  return Object.keys(allThemes).length >= Object.keys(rawThemes).length;
 }
