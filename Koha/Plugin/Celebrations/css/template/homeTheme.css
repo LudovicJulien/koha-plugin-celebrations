@@ -110,6 +110,10 @@
     width: 100%;
 }
 .celebrations-plugin-wrapper .plugin-card {
+    display: flex;
+    align-items: center;
+    justify-content: normal;
+    flex-direction: column;
     flex: 1;
     max-width: 400px;
     background: #f9f9f9;

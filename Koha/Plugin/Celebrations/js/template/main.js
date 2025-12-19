@@ -232,6 +232,11 @@ class ThemeManager {
       initDevicePreviewSwitcher();
     }
   }
+   /**
+   *
+   * Vérifie au chargement si tous les thèmes sont configurés
+   * et bascule l’interface dans le mode approprié.
+   */
   checkAllConfiguredOnLoad() {
   if (areAllThemesConfigured(this.state.allThemes, this.state.rawThemes)) {
     this.state.isAllConfigured = true;

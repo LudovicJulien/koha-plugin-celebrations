@@ -23,7 +23,6 @@ Koha::Plugin::Celebrations - Plugin Koha permettant d'appliquer des thèmes sais
 Ce plugin applique automatiquement des thèmes saisonniers dans l'OPAC selon
 les dates que vous configurez. Il permet :
 
-
 - Gestion de plusieurs thèmes (dates de début/fin)
 - Prévisualisation en direct avant activation
 - Gestion des fichiers CSS/JS/images propres à chaque thème
@@ -43,7 +42,7 @@ our $metadata = {
     description     => 'Un OPAC pour chaque saison.',
     date_authored   => '2025-09-09',
     date_updated    => '2025-11-20',
-    version         => '0.9.6',
+    version         => '1',
     minimum_version => '24.05',
 };
 
